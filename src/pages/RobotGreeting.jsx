@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import robotImage from '../assets/robot.png';
-import ARCPuzzle from './ARCPuzzle';
 
 export default function RobotGreeting() {
+  const navigate = useNavigate();
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
   const [userName, setUserName] = useState('');
   const [showInput, setShowInput] = useState(true);
   const [isTyping, setIsTyping] = useState(true);
-  const [showNewPage, setShowNewPage] = useState(false);
 
   const dialogues = [
     "Hello there! My name is Robo! What's your name?",
     "It's great to meet you, {name}!",
-    "In today’s exercise, you’ll try solving some puzzles on your own… ",
-    "Then I’ll show you how I can solve them, and maybe I’ll do them even faster! Think you can beat me?",
+    "In today's exercise, you'll try solving some puzzles on your own… ",
+    "Then I'll show you how I can solve them, and maybe I'll do them even faster! Think you can beat me?",
   ];
 
   const typingSpeed = 50;
@@ -33,20 +33,16 @@ export default function RobotGreeting() {
   }, [displayedText, isTyping, currentDialogueIndex, userName, dialogues]);
 
   const handleScreenClick = () => {
-    // Don't advance if we're still showing the input
     if (showInput) return;
-    
-    // Don't advance if still typing
     if (isTyping) return;
     
-    // Move to next dialogue if available
     if (currentDialogueIndex < dialogues.length - 1) {
       setCurrentDialogueIndex(currentDialogueIndex + 1);
       setDisplayedText('');
       setIsTyping(true);
     } else {
-      // We've reached the final dialogue, switch to new page
-      setShowNewPage(true);
+      // Navigate to puzzle page with userName as state
+      navigate('/puzzle', { state: { userName } });
     }
   };
 
@@ -69,12 +65,8 @@ export default function RobotGreeting() {
     }
   };
 
-  if (showNewPage) {
-    return <ARCPuzzle userName={userName} />;
-  }
-
   return (
-    <div style={styles.container}>
+    <div className="page-container">
       <div 
         style={styles.mainContent} 
         onClick={handleScreenClick}
@@ -118,31 +110,18 @@ export default function RobotGreeting() {
 }
 
 const styles = {
-  container: {
-    fontFamily: "'Arial', sans-serif",
-    margin: '0 auto',
-    backgroundColor: '#87CEEB',
-    padding: '40px 20px',
-    textAlign: 'center',
-    minHeight: '800px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-  },
   mainContent: {
     width: '100%',
     maxWidth: '600px',
     margin: '0 auto',
-    backgroundColor: '#87CEEB',
     borderRadius: '8px',
     padding: '40px 20px',
     textAlign: 'center',
-    minHeight: '500px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
+    gap: '30px',
     cursor: 'pointer',
   },
   dialogBox: {
