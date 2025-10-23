@@ -1,10 +1,20 @@
 import { useState } from 'react';
 import '../styles/PuzzleInteractive.css';
-import p1input from '../assets/p1input.png';
 
-export default function PuzzleInteractive() {
+export default function PuzzleInteractive({ onSubmitResult }) {
   const greenCells = [
     [1, 2], [2, 1], [2, 3], [3, 2], [4, 3], [3, 4]
+  ];
+
+  // Define the correct solution grid
+  // 0 = empty, 1 = green (prefilled), 2 = yellow (user should add)
+  const resultGrid = [
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0],
+    [0, 1, 2, 1, 0, 0],
+    [0, 0, 1, 2, 1, 0],
+    [0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0]
   ];
 
   // 6x6 grid state: 0 = empty, 1 = green (prefilled), 2 = yellow (user added)
@@ -15,6 +25,10 @@ export default function PuzzleInteractive() {
     });
     return initialGrid;
   });
+
+  const [showButtons, setShowButtons] = useState(true);
+  const [showResult, setShowResult] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
 
   const handleCellClick = (row, col) => {
     if (grid[row][col] === 1) return;
@@ -31,11 +45,31 @@ export default function PuzzleInteractive() {
       resetGrid[row][col] = 1;
     });
     setGrid(resetGrid);
+    setShowButtons(true);
+    setShowResult(false);
+  };
+
+  const checkGridMatch = () => {
+    for (let row = 0; row < 6; row++) {
+      for (let col = 0; col < 6; col++) {
+        if (resultGrid[row][col] !== grid[row][col]) {
+          return false;
+        }
+      }
+    }
+    return true;
   };
 
   const handleSubmit = () => {
-    // TODO: Add submission logic
-    console.log('Submitted grid:', grid);
+    const correct = checkGridMatch();
+    setIsCorrect(correct);
+    setShowButtons(false);
+    setShowResult(true);
+    
+    // Call the parent callback with the result
+    if (onSubmitResult) {
+      onSubmitResult(correct);
+    }
   };
 
   const getCellColor = (value) => {
@@ -43,6 +77,12 @@ export default function PuzzleInteractive() {
     if (value === 2) return '#ffaa00';
     return 'black';
   };
+
+  // Create a static grid for the left side
+  const staticGrid = Array(6).fill(null).map(() => Array(6).fill(0));
+  greenCells.forEach(([row, col]) => {
+    staticGrid[row][col] = 1;
+  });
 
   return (
     <>
@@ -53,7 +93,19 @@ export default function PuzzleInteractive() {
           <div className="puzzle-side">
             <p className="label">Start</p>
             <div className="puzzle-outside-container">
-                <img src={p1input} alt="Puzzle 1 Output" className="puzzle-image" />
+                <div className="grid-interactive">
+                {staticGrid.map((row, rowIndex) => (
+                    <div key={rowIndex} className="grid-row">
+                    {row.map((cell, colIndex) => (
+                        <div
+                        key={`${rowIndex}-${colIndex}`}
+                        className="grid-cell"
+                        style={{ backgroundColor: getCellColor(cell) }}
+                        />
+                    ))}
+                    </div>
+                ))}
+                </div>
             </div>
           </div>
 
@@ -81,10 +133,12 @@ export default function PuzzleInteractive() {
         </div>
       </div>
 
-      <div className="button-container">
-        <button className="reset-button" onClick={handleReset}>Reset</button>
-        <button className="submit-button" onClick={handleSubmit}>Submit</button>
-      </div>
+      {showButtons && (
+        <div className="button-container">
+          <button className="reset-button" onClick={handleReset}>Reset</button>
+          <button className="submit-button" onClick={handleSubmit}>Submit</button>
+        </div>
+      )}
     </>
   );
 }

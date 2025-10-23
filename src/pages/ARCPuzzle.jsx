@@ -13,12 +13,23 @@ export default function ARCPuzzle() {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [showInteractive, setShowInteractive] = useState(false);
+  const [puzzleResult, setPuzzleResult] = useState(null); // null, 'correct', or 'incorrect'
 
   const examplesText = "Here are two examples that show how the pattern works.\nThe first image in each puzzle is the input, and the second one is the output.\nWatch for what changes: the color, shape, or position.\nTry to guess the rule that transforms the input into the output.\nWhen you think you've got it, press Continue to try one yourself!";
   
   const interactiveText = "Now that you've seen the examples, it's your turn to give it a try!\nUse what you learned from the Start and Finish patterns to solve this puzzle.\nCan you figure out what rule connects them?";
   
-  const currentText = showInteractive ? interactiveText : examplesText;
+  const correctText = "Nice work! Now, let’s compare how you think and how I think.";
+  
+  const incorrectText = "Oof, not quite right. Let’s compare how you think and how I think.";
+  
+  const getCurrentText = () => {
+    if (puzzleResult === 'correct') return correctText;
+    if (puzzleResult === 'incorrect') return incorrectText;
+    return showInteractive ? interactiveText : examplesText;
+  };
+  
+  const currentText = getCurrentText();
   const typingSpeed = 30;
 
   useEffect(() => {
@@ -34,6 +45,12 @@ export default function ARCPuzzle() {
 
   const handleContinue = () => {
     setShowInteractive(true);
+    setDisplayedText('');
+    setIsTyping(true);
+  };
+
+  const handleSubmitResult = (isCorrect) => {
+    setPuzzleResult(isCorrect ? 'correct' : 'incorrect');
     setDisplayedText('');
     setIsTyping(true);
   };
@@ -63,7 +80,7 @@ export default function ARCPuzzle() {
           </button>
         </>
       ) : (
-        <PuzzleInteractive />
+        <PuzzleInteractive onSubmitResult={handleSubmitResult} />
       )}
     </div>
   );
