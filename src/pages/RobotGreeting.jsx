@@ -71,8 +71,8 @@ export default function RobotGreeting() {
         style={styles.mainContent} 
         onClick={handleScreenClick}
       >
-        <div style={styles.dialogBox}>
-          <p style={styles.dialogText}>{displayedText}</p>
+        <div className="dialog-box">
+          <p className="dialog-text">{displayedText}</p>
         </div>
 
         <div style={styles.robotContainer}>
@@ -123,24 +123,6 @@ const styles = {
     justifyContent: 'center',
     gap: '30px',
     cursor: 'pointer',
-  },
-  dialogBox: {
-    backgroundColor: 'white',
-    borderRadius: '8px',
-    padding: '16px 24px',
-    minHeight: '50px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '90%',
-    maxWidth: '400px',
-  },
-  dialogText: {
-    margin: 0,
-    fontSize: '16px',
-    color: '#333',
-    minHeight: '24px',
-    wordWrap: 'break-word',
   },
   robotContainer: {
     display: 'flex',
