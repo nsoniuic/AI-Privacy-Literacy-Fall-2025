@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import PuzzleGrid from './PuzzleGrid';
-import { PUZZLE_CONFIG, getCellColor, createInitialGrid } from '../utils/puzzleConfig';
+import { PUZZLE_1_CONFIG, getCellColor, createInitialGrid } from '../utils/puzzleConfig';
 import '../styles/PuzzleInteractive.css';
 
-export default function PuzzleInteractive({ onSubmitResult }) {
-  const { greenCells, gridSize, resultGrid } = PUZZLE_CONFIG;
+export default function PuzzleInteractive({ onSubmitResult, puzzleConfig = PUZZLE_1_CONFIG, puzzleNumber = 1 }) {
+  const { greenCells, gridSize, resultGrid } = puzzleConfig;
 
   // 6x6 grid state: 0 = empty, 1 = green (prefilled), 2 = yellow (user added)
   const [grid, setGrid] = useState(() => createInitialGrid(greenCells, gridSize));
@@ -57,7 +57,7 @@ export default function PuzzleInteractive({ onSubmitResult }) {
   return (
     <>
       <div className="puzzle-interactive-container">
-        <h2 className="puzzle-title">Puzzle 1</h2>
+        <h2 className="puzzle-title">Puzzle {puzzleNumber}</h2>
         
         <div className="puzzle-grid-row">
           <div className="puzzle-side">

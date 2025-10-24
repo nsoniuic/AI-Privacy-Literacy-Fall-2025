@@ -58,8 +58,8 @@
 }
 
 .user-grid-container .grid-cell {
-  width: 35px;
-  height: 35px;
+  width: 25px;
+  height: 25px;
   border: 1px solid #444;
   border-radius: 2px;
 }
@@ -68,19 +68,4 @@
   font-size: 48px;
   color: white;
   font-weight: bold;
-}
-
-@media (max-width: 768px) {
-  .user-puzzle-grids {
-    flex-direction: column;
-  }
-  
-  .user-arrow-large {
-    transform: rotate(90deg);
-  }
-  
-  .user-grid-container .grid-cell {
-    width: 30px;
-    height: 30px;
-  }
 }

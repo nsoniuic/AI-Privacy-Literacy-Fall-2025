@@ -1,5 +1,4 @@
-// Shared puzzle configuration for Puzzle 1
-export const PUZZLE_CONFIG = {
+export const PUZZLE_1_CONFIG = {
   greenCells: [
     [1, 2], [2, 1], [2, 3], [3, 2], [4, 3], [3, 4]
   ],
@@ -11,6 +10,37 @@ export const PUZZLE_CONFIG = {
     [0, 0, 1, 2, 1, 0],
     [0, 0, 0, 1, 0, 0],
     [0, 0, 0, 0, 0, 0]
+  ],
+};
+
+export const PUZZLE_2_CONFIG = {
+  greenCells: [
+    // Top left broken area
+    [0, 1], [1, 1],
+    // Top section with complete loop
+    [1, 3], [1, 4], [1, 5],
+    [2, 3], [2, 5],
+    [3, 3], [3, 4], [3, 5],
+    // Middle scattered cells
+    [4, 1], [4, 2],
+    [5, 1],
+    // Bottom right complete loop
+    [5, 4],
+    [6, 4], [6, 5],
+    [7, 4], [7, 5],
+  ],
+  gridSize: 10,
+  resultGrid: [
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 0, 1, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 1, 2, 1, 0, 0, 0, 0],
+    [0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+    [0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ],
 };
 

@@ -5,21 +5,20 @@ import PuzzleExamples from '../components/PuzzleExamples';
 import PuzzleInteractive from '../components/PuzzleInteractive';
 import SamplePuzzle from '../components/SamplePuzzle';
 import UserPuzzleDisplay from '../components/UserPuzzleDisplay';
-import './ARCPuzzle.css';
+import '../styles/Puzzles.css';
 import '../App.css';
 
-export default function ARCPuzzle() {
+export default function FirstPuzzle() {
   const location = useLocation();
   const navigate = useNavigate();
   const userName = location.state?.userName || 'Friend';
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [showInteractive, setShowInteractive] = useState(false);
-  const [puzzleResult, setPuzzleResult] = useState(null); // null, 'correct', or 'incorrect'
+  const [puzzleResult, setPuzzleResult] = useState(null);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
-  const [showPuzzle, setShowPuzzle] = useState(true); // controls puzzle visibility
+  const [showPuzzle, setShowPuzzle] = useState(true);
 
-  // Define all dialogues in sequence
   const dialogues = [
     {
       id: 'examples',
@@ -70,6 +69,7 @@ export default function ARCPuzzle() {
       text: "...So only that inside becomes yellow!",
       showUserPuzzle: true,
       showResult: true,
+      navigateTo: '/second_puzzle',
     },
   ];
 
@@ -116,6 +116,12 @@ export default function ARCPuzzle() {
   };
 
   const handleScreenClick = () => {
+    // Check if current dialogue has navigation
+    if (!isTyping && puzzleResult && currentDialogue?.navigateTo) {
+      navigate(currentDialogue.navigateTo, { state: { userName } });
+      return;
+    }
+
     // Only allow clicking when typing is finished and there's a puzzle result
     if (!isTyping && puzzleResult && currentDialogueIndex < dialogues.length - 1) {
       // Skip to next valid dialogue
@@ -135,7 +141,7 @@ export default function ARCPuzzle() {
   };
 
   return (
-    <div className="page-container arc-puzzle-page" onClick={handleScreenClick}>
+    <div className="page-container first-puzzle-page" onClick={handleScreenClick}>
       <div className="dialog-box instruction-dialog">
         <p className="dialog-text">{displayedText}</p>
       </div>
@@ -175,20 +181,8 @@ export default function ARCPuzzle() {
       )}
 
       {!isTyping && puzzleResult && currentDialogueIndex < dialogues.length - 1 && (
-        <p style={styles.clickHint}>Click to continue...</p>
+        <p className="click-hint">Click to continue...</p>
       )}
     </div>
   );
 }
-
-const styles = {
-  clickHint: {
-    fontSize: '16px',
-    color: '#ffffff',
-    fontWeight: 'bold',
-    fontStyle: 'italic',
-    margin: '20px 0',
-    textShadow: '0 0 10px rgba(255, 255, 255, 0.8)',
-    animation: 'pulse 2s infinite',
-  },
-};

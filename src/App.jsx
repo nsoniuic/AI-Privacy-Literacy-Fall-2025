@@ -1,13 +1,15 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import RobotGreeting from './pages/RobotGreeting'
-import ARCPuzzle from './pages/ARCPuzzle'
+import FirstPuzzle from './pages/FirstPuzzle'
+import SecondPuzzle from './pages/SecondPuzzle'
 import './App.css'
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<RobotGreeting />} />
-      <Route path="/puzzle" element={<ARCPuzzle />} />
+      <Route path="/puzzle" element={<FirstPuzzle />} />
+      <Route path="/second_puzzle" element={<SecondPuzzle />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

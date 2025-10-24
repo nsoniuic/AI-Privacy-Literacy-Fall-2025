@@ -56,13 +56,3 @@
   color: white;
   font-weight: bold;
 }
-
-@media (max-width: 768px) {
-  .sample-puzzle-grids {
-    flex-direction: column;
-  }
-  
-  .sample-arrow-large {
-    transform: rotate(90deg);
-  }
-}

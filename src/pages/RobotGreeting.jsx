@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import robotImage from '../assets/robot.png';
-import './RobotGreeting.css';
 import '../App.css';
 
 export default function RobotGreeting() {
@@ -19,7 +18,7 @@ export default function RobotGreeting() {
     "Then I'll show you how I can solve them, and maybe I'll do them even faster! Think you can beat me?",
   ];
 
-  const typingSpeed = 50;
+  const typingSpeed = 30;
 
   useEffect(() => {
     const currentDialogue = dialogues[currentDialogueIndex].replace('{name}', userName);
