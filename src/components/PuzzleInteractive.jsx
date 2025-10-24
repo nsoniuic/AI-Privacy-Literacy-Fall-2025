@@ -1,30 +1,13 @@
 import { useState } from 'react';
+import PuzzleGrid from './PuzzleGrid';
+import { PUZZLE_CONFIG, getCellColor, createInitialGrid } from '../utils/puzzleConfig';
 import '../styles/PuzzleInteractive.css';
 
 export default function PuzzleInteractive({ onSubmitResult }) {
-  const greenCells = [
-    [1, 2], [2, 1], [2, 3], [3, 2], [4, 3], [3, 4]
-  ];
-
-  // Define the correct solution grid
-  // 0 = empty, 1 = green (prefilled), 2 = yellow (user should add)
-  const resultGrid = [
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 1, 0, 0, 0],
-    [0, 1, 2, 1, 0, 0],
-    [0, 0, 1, 2, 1, 0],
-    [0, 0, 0, 1, 0, 0],
-    [0, 0, 0, 0, 0, 0]
-  ];
+  const { greenCells, gridSize, resultGrid } = PUZZLE_CONFIG;
 
   // 6x6 grid state: 0 = empty, 1 = green (prefilled), 2 = yellow (user added)
-  const [grid, setGrid] = useState(() => {
-    const initialGrid = Array(6).fill(null).map(() => Array(6).fill(0));
-    greenCells.forEach(([row, col]) => {
-      initialGrid[row][col] = 1;
-    });
-    return initialGrid;
-  });
+  const [grid, setGrid] = useState(() => createInitialGrid(greenCells, gridSize));
 
   const [showButtons, setShowButtons] = useState(true);
   const [showResult, setShowResult] = useState(false);
@@ -40,18 +23,14 @@ export default function PuzzleInteractive({ onSubmitResult }) {
   };
 
   const handleReset = () => {
-    const resetGrid = Array(6).fill(null).map(() => Array(6).fill(0));
-    greenCells.forEach(([row, col]) => {
-      resetGrid[row][col] = 1;
-    });
-    setGrid(resetGrid);
+    setGrid(createInitialGrid(greenCells, gridSize));
     setShowButtons(true);
     setShowResult(false);
   };
 
   const checkGridMatch = () => {
-    for (let row = 0; row < 6; row++) {
-      for (let col = 0; col < 6; col++) {
+    for (let row = 0; row < gridSize; row++) {
+      for (let col = 0; col < gridSize; col++) {
         if (resultGrid[row][col] !== grid[row][col]) {
           return false;
         }
@@ -72,17 +51,8 @@ export default function PuzzleInteractive({ onSubmitResult }) {
     }
   };
 
-  const getCellColor = (value) => {
-    if (value === 1) return '#03b703ff';
-    if (value === 2) return '#ffaa00';
-    return 'black';
-  };
-
   // Create a static grid for the left side
-  const staticGrid = Array(6).fill(null).map(() => Array(6).fill(0));
-  greenCells.forEach(([row, col]) => {
-    staticGrid[row][col] = 1;
-  });
+  const staticGrid = createInitialGrid(greenCells, gridSize);
 
   return (
     <>
@@ -93,19 +63,7 @@ export default function PuzzleInteractive({ onSubmitResult }) {
           <div className="puzzle-side">
             <p className="label">Start</p>
             <div className="puzzle-outside-container">
-                <div className="grid-interactive">
-                {staticGrid.map((row, rowIndex) => (
-                    <div key={rowIndex} className="grid-row">
-                    {row.map((cell, colIndex) => (
-                        <div
-                        key={`${rowIndex}-${colIndex}`}
-                        className="grid-cell"
-                        style={{ backgroundColor: getCellColor(cell) }}
-                        />
-                    ))}
-                    </div>
-                ))}
-                </div>
+              <PuzzleGrid grid={staticGrid} getCellColor={getCellColor} interactive={false} />
             </div>
           </div>
 
@@ -114,20 +72,7 @@ export default function PuzzleInteractive({ onSubmitResult }) {
           <div className="puzzle-side">
             <p className="label">Finish</p>
             <div className="puzzle-outside-container">
-                <div className="grid-interactive">
-                {grid.map((row, rowIndex) => (
-                    <div key={rowIndex} className="grid-row">
-                    {row.map((cell, colIndex) => (
-                        <div
-                        key={`${rowIndex}-${colIndex}`}
-                        className={`grid-cell ${cell === 1 ? 'locked' : 'clickable'}`}
-                        style={{ backgroundColor: getCellColor(cell) }}
-                        onClick={() => handleCellClick(rowIndex, colIndex)}
-                        />
-                    ))}
-                    </div>
-                ))}
-                </div>
+              <PuzzleGrid grid={grid} getCellColor={getCellColor} onCellClick={handleCellClick} interactive={true} />
             </div>
           </div>
         </div>

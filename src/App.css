@@ -15,11 +15,26 @@
   background-color: white;
   border-radius: 8px;
   padding: 16px 24px;
-  min-height: 50px;
+  min-height: 120px;
+  min-width: 900px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
+  position: relative;
+}
+
+.dialog-box::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 15px solid white;
 }
 
 .dialog-text {
@@ -30,4 +45,14 @@
   word-wrap: break-word;
   line-height: 1.8;
   white-space: pre-line;
+}
+
+clickHint {
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: bold;
+  font-style: italic;
+  margin: 20px 0;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  animation: pulse 2s infinite;
 }

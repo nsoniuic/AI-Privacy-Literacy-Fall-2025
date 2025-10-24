@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import robotImage from '../assets/robot.png';
+import './RobotGreeting.css';
+import '../App.css';
 
 export default function RobotGreeting() {
   const navigate = useNavigate();
@@ -66,11 +68,8 @@ export default function RobotGreeting() {
   };
 
   return (
-    <div className="page-container">
-      <div 
-        style={styles.mainContent} 
-        onClick={handleScreenClick}
-      >
+    <div className="page-container" onClick={handleScreenClick} style={{ cursor: !showInput && !isTyping ? 'pointer' : 'default' }}>
+      <div style={styles.mainContent}>
         <div className="dialog-box">
           <p className="dialog-text">{displayedText}</p>
         </div>
@@ -101,7 +100,7 @@ export default function RobotGreeting() {
           </div>
         )}
 
-        {!showInput && !isTyping && currentDialogueIndex < dialogues.length - 1 && (
+        {!showInput && !isTyping && currentDialogueIndex < dialogues.length && (
           <p style={styles.clickHint}>Click to continue...</p>
         )}
       </div>
@@ -122,7 +121,6 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     gap: '30px',
-    cursor: 'pointer',
   },
   robotContainer: {
     display: 'flex',
@@ -160,10 +158,12 @@ const styles = {
     color: '#333',
   },
   clickHint: {
-    fontSize: '14px',
-    color: 'rgba(255, 255, 255, 0.8)',
+    fontSize: '16px',
+    color: '#ffffff',
+    fontWeight: 'bold',
     fontStyle: 'italic',
-    margin: '10px 0',
+    margin: '20px 0',
+    textShadow: '0 0 10px rgba(255, 255, 255, 0.8)',
     animation: 'pulse 2s infinite',
   },
 };

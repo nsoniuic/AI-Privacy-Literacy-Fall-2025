@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import robotImage from '../assets/robot.png';
 import PuzzleExamples from '../components/PuzzleExamples';
 import PuzzleInteractive from '../components/PuzzleInteractive';
+import SamplePuzzle from '../components/SamplePuzzle';
+import UserPuzzleDisplay from '../components/UserPuzzleDisplay';
 import './ARCPuzzle.css';
 import '../App.css';
 
@@ -14,22 +16,75 @@ export default function ARCPuzzle() {
   const [isTyping, setIsTyping] = useState(true);
   const [showInteractive, setShowInteractive] = useState(false);
   const [puzzleResult, setPuzzleResult] = useState(null); // null, 'correct', or 'incorrect'
+  const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
+  const [showPuzzle, setShowPuzzle] = useState(true); // controls puzzle visibility
 
-  const examplesText = "Here are two examples that show how the pattern works.\nThe first image in each puzzle is the input, and the second one is the output.\nWatch for what changes: the color, shape, or position.\nTry to guess the rule that transforms the input into the output.\nWhen you think you've got it, press Continue to try one yourself!";
-  
-  const interactiveText = "Now that you've seen the examples, it's your turn to give it a try!\nUse what you learned from the Start and Finish patterns to solve this puzzle.\nCan you figure out what rule connects them?";
-  
-  const correctText = "Nice work! Now, let’s compare how you think and how I think.";
-  
-  const incorrectText = "Oof, not quite right. Let’s compare how you think and how I think.";
-  
-  const getCurrentText = () => {
-    if (puzzleResult === 'correct') return correctText;
-    if (puzzleResult === 'incorrect') return incorrectText;
-    return showInteractive ? interactiveText : examplesText;
+  // Define all dialogues in sequence
+  const dialogues = [
+    {
+      id: 'examples',
+      text: "Here are two examples that show how the pattern works.\nThe first image in each puzzle is the input, and the second one is the output.\nWatch for what changes: the color, shape, or position.\nTry to guess the rule that transforms the input into the output.\nWhen you think you've got it, press Continue to try one yourself!",
+      showExamples: true,
+      showContinueButton: true,
+    },
+    {
+      id: 'interactive',
+      text: "Now that you've seen the examples, it's your turn to give it a try!\nUse what you learned from the Start and Finish patterns to solve this puzzle.\nCan you figure out what rule connects them?",
+      showPuzzle: true,
+    },
+    {
+      id: 'result-correct',
+      text: "Nice work! Now, let's compare how you think and how I think.",
+      condition: () => puzzleResult === 'correct',
+    },
+    {
+      id: 'result-incorrect',
+      text: "Oof, not quite right. Let's compare how you think and how I think.",
+      condition: () => puzzleResult === 'incorrect',
+    },
+    {
+      id: 'explanation1',
+      text: "First, I look at all the green lines. I pretend they're little fences. If a fence is broken, I do nothing. You can't keep paint inside a broken fence!",
+    },
+    {
+      id: 'explanation2',
+      text: "If a fence makes a complete loop, I say, \"Nice—this fence can hold paint,\" and I fill everything inside with yellow.",
+    },
+    {
+      id: 'sample-puzzle-1',
+      text: "For puzzle 1, I see one neat green loop, so I paint its inside yellow.",
+      showSamplePuzzle: 1,
+    },
+    {
+      id: 'sample-puzzle-2',
+      text: "For puzzle 2, some green bits are broken (no paint), but the true loops get their insides painted yellow.",
+      showSamplePuzzle: 2,
+    },
+    {
+      id: 'user-puzzle-explanation',
+      text: "For the puzzle, only the tiny loops is complete...",
+      showUserPuzzle: true,
+    },
+    {
+      id: 'user-puzzle-result',
+      text: "...So only that inside becomes yellow!",
+      showUserPuzzle: true,
+      showResult: true,
+    },
+  ];
+
+  // Get current dialogue, skipping any with unsatisfied conditions
+  const getCurrentDialogue = () => {
+    const dialogue = dialogues[currentDialogueIndex];
+    if (dialogue?.condition && !dialogue.condition()) {
+      // Skip this dialogue if condition not met
+      return null;
+    }
+    return dialogue;
   };
-  
-  const currentText = getCurrentText();
+
+  const currentDialogue = getCurrentDialogue();
+  const currentText = currentDialogue?.text || '';
   const typingSpeed = 30;
 
   useEffect(() => {
@@ -44,6 +99,8 @@ export default function ARCPuzzle() {
   }, [displayedText, isTyping, currentText]);
 
   const handleContinue = () => {
+    // Move to interactive dialogue
+    setCurrentDialogueIndex(1);
     setShowInteractive(true);
     setDisplayedText('');
     setIsTyping(true);
@@ -51,12 +108,34 @@ export default function ARCPuzzle() {
 
   const handleSubmitResult = (isCorrect) => {
     setPuzzleResult(isCorrect ? 'correct' : 'incorrect');
+    setShowPuzzle(false); // Hide puzzle immediately on submit
+    // Move to result dialogue (index 2 for correct, 3 for incorrect)
+    setCurrentDialogueIndex(isCorrect ? 2 : 3);
     setDisplayedText('');
     setIsTyping(true);
   };
 
+  const handleScreenClick = () => {
+    // Only allow clicking when typing is finished and there's a puzzle result
+    if (!isTyping && puzzleResult && currentDialogueIndex < dialogues.length - 1) {
+      // Skip to next valid dialogue
+      let nextIndex = currentDialogueIndex + 1;
+      while (nextIndex < dialogues.length) {
+        const nextDialogue = dialogues[nextIndex];
+        // If no condition or condition is met, use this dialogue
+        if (!nextDialogue.condition || nextDialogue.condition()) {
+          setCurrentDialogueIndex(nextIndex);
+          setDisplayedText('');
+          setIsTyping(true);
+          break;
+        }
+        nextIndex++;
+      }
+    }
+  };
+
   return (
-    <div className="page-container arc-puzzle-page">
+    <div className="page-container arc-puzzle-page" onClick={handleScreenClick}>
       <div className="dialog-box instruction-dialog">
         <p className="dialog-text">{displayedText}</p>
       </div>
@@ -69,19 +148,47 @@ export default function ARCPuzzle() {
         />
       </div>
 
-      {!showInteractive ? (
+      {currentDialogue?.showExamples && (
         <>
           <PuzzleExamples />
-          <button 
-            className="continue-button"
-            onClick={handleContinue}
-          >
-            Continue
-          </button>
+          {currentDialogue?.showContinueButton && (
+            <button 
+              className="continue-button"
+              onClick={handleContinue}
+            >
+              Continue
+            </button>
+          )}
         </>
-      ) : (
+      )}
+
+      {currentDialogue?.showPuzzle && showPuzzle && (
         <PuzzleInteractive onSubmitResult={handleSubmitResult} />
+      )}
+
+      {currentDialogue?.showSamplePuzzle && (
+        <SamplePuzzle puzzleNumber={currentDialogue.showSamplePuzzle} />
+      )}
+
+      {currentDialogue?.showUserPuzzle && (
+        <UserPuzzleDisplay showResult={currentDialogue?.showResult || false} />
+      )}
+
+      {!isTyping && puzzleResult && currentDialogueIndex < dialogues.length - 1 && (
+        <p style={styles.clickHint}>Click to continue...</p>
       )}
     </div>
   );
 }
+
+const styles = {
+  clickHint: {
+    fontSize: '16px',
+    color: '#ffffff',
+    fontWeight: 'bold',
+    fontStyle: 'italic',
+    margin: '20px 0',
+    textShadow: '0 0 10px rgba(255, 255, 255, 0.8)',
+    animation: 'pulse 2s infinite',
+  },
+};
