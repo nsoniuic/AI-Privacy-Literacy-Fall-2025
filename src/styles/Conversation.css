@@ -1,0 +1,215 @@
+.conversation-page {
+  min-height: 100vh;
+}
+
+.conversation-content {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  position: relative;
+}
+
+/* Brain/Memory System */
+.brain-system {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  padding: 15px 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  min-width: 150px;
+  text-align: center;
+  z-index: 100;
+}
+
+.brain-icon {
+  font-size: 40px;
+  margin-bottom: 5px;
+}
+
+.brain-label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.collected-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.collected-info-item {
+  background-color: rgba(100, 200, 255, 0.3);
+  border: 2px solid rgba(100, 200, 255, 0.6);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #333;
+  font-weight: 600;
+  animation: fadeIn 0.5s ease-in;
+}
+
+/* Animated text that flies from dialogue to brain */
+.animated-info-text {
+  position: fixed;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  background-color: rgba(100, 200, 255, 0.9);
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 2px solid rgba(100, 200, 255, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  animation: flyToBrain 2s ease-in-out forwards;
+}
+
+@keyframes flyToBrain {
+  0% {
+    left: 25%;
+    top: 35%;
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    left: calc(100% - 120px);
+    top: 80px;
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.characters-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 600px;
+  gap: 80px;
+  margin-top: 200px;
+}
+
+.character-avatar,
+.robot-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+  position: relative;
+}
+
+.character-avatar.speaking,
+.robot-avatar.speaking {
+  opacity: 1;
+}
+
+/* Dialogue boxes positioned above characters */
+.character-dialog-box,
+.robot-dialog-box {
+  position: absolute;
+  bottom: 100%;
+  margin-bottom: 10px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 20px 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  max-width: 350px;
+  min-width: 250px;
+  z-index: 10;
+}
+
+.character-dialog-box {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.robot-dialog-box {
+  left: 50%;
+  transform: translateX(-50%);
+} 
+
+.dialog-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+  margin: 0;
+} 
+
+/* Speech bubble arrow */
+.character-dialog-box::after,
+.robot-dialog-box::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 15px solid rgba(255, 255, 255, 0.95);
+}
+
+.character-image,
+.robot-conversation-image {
+  max-width: 200px;
+  max-height: 250px;
+  object-fit: contain;
+}
+
+.character-placeholder-img {
+  width: 150px;
+  height: 200px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border: 2px dashed rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+
+
+@media (max-width: 768px) {
+  .characters-container {
+    gap: 40px;
+  }
+
+  .character-image,
+  .robot-conversation-image {
+    max-width: 120px;
+    max-height: 150px;
+  }
+
+  .character-placeholder-img {
+    width: 100px;
+    height: 130px;
+  }
+}

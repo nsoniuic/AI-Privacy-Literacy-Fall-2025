@@ -1,15 +1,15 @@
 import PuzzleGrid from './PuzzleGrid';
 import { PUZZLE_1_CONFIG, getCellColor, createInitialGrid } from '../utils/puzzleConfig';
-import '../styles/UserPuzzleDisplay.css';
+import '../styles/PuzzleInteractiveExplain.css';
 
-export default function UserPuzzleDisplay({ showResult = false, puzzleConfig = PUZZLE_1_CONFIG, puzzleNumber = 1 }) {
+export default function PuzzleInteractiveExplain({ showResult = false, puzzleConfig = PUZZLE_1_CONFIG, puzzleNumber = 1 }) {
   const { greenCells, gridSize, resultGrid } = puzzleConfig;
 
   // Create start grid (same as PuzzleInteractive)
   const startGrid = createInitialGrid(greenCells, gridSize);
 
   return (
-    <div className="user-puzzle-container">
+    <div>
       <h2 className="user-puzzle-title">Puzzle {puzzleNumber}</h2>
       
       <div className="user-puzzle-grids">

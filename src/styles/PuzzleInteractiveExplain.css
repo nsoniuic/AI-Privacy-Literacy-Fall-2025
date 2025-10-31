@@ -1,8 +1,6 @@
 .user-puzzle-container {
   width: 100%;
   max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
 }
@@ -38,7 +36,7 @@
 
 .user-grid-container {
   background-color: rgba(0, 0, 0, 0.2);
-  padding: 15px;
+  padding: 10px;
   border-radius: 8px;
 }
 
@@ -58,8 +56,8 @@
 }
 
 .user-grid-container .grid-cell {
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
   border: 1px solid #444;
   border-radius: 2px;
 }

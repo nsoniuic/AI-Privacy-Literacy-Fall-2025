@@ -5,7 +5,7 @@
   width: 100%;
   max-width: 1200px;
   gap: 40px;
-  margin-top: 20px;
+  margin-top: 5px;
   flex-wrap: wrap;
 }
 
@@ -21,7 +21,7 @@
   color: white;
   font-size: 32px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin: 5px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -58,15 +58,10 @@
 }
 
 .puzzle-image-container {
-  background-color: #f0f0f0;
-  padding: 5px;
-  border-radius: 4px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  width: 160px;
-  height: 160px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 8px;
+  max-width: 200px;
 }
 
 .puzzle-image {

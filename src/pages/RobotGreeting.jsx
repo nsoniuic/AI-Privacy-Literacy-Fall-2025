@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import robotImage from '../assets/robot.png';
+import '../styles/RobotGreeting.css';
 import '../App.css';
 
 export default function RobotGreeting() {
@@ -33,16 +34,12 @@ export default function RobotGreeting() {
     }
   }, [displayedText, isTyping, currentDialogueIndex, userName, dialogues]);
 
-  const handleScreenClick = () => {
-    if (showInput) return;
-    if (isTyping) return;
-    
+  const handleContinue = () => {
     if (currentDialogueIndex < dialogues.length - 1) {
       setCurrentDialogueIndex(currentDialogueIndex + 1);
       setDisplayedText('');
       setIsTyping(true);
     } else {
-      // Navigate to puzzle page with userName as state
       navigate('/puzzle', { state: { userName } });
     }
   };
@@ -67,102 +64,50 @@ export default function RobotGreeting() {
   };
 
   return (
-    <div className="page-container" onClick={handleScreenClick} style={{ cursor: !showInput && !isTyping ? 'pointer' : 'default' }}>
-      <div style={styles.mainContent}>
+    <div className="page-container" style={{ cursor: !showInput && !isTyping ? 'pointer' : 'default' }}>
+      <div className="robot-greeting-content">
         <div className="dialog-box">
           <p className="dialog-text">{displayedText}</p>
         </div>
 
-        <div style={styles.robotContainer}>
+        <div className="robot-greeting-robot-container">
           <img 
             src={robotImage} 
             alt="Robot" 
-            style={styles.robotImage}
+            className="robot-greeting-robot-image"
           />
         </div>
 
         {showInput && (
           <div 
-            style={styles.formContainer}
+            className="robot-greeting-form-container"
             onClick={(e) => e.stopPropagation()}
           >
-            <p style={styles.promptText}>My name is...</p>
+            <p className="robot-greeting-prompt-text">My name is...</p>
             <input
               type="text"
               value={userName}
               onChange={handleInputChange}
               onKeyPress={handleKeyPress}
               placeholder="Enter your name"
-              style={styles.input}
+              className="robot-greeting-input"
               autoFocus
             />
           </div>
         )}
 
         {!showInput && !isTyping && currentDialogueIndex < dialogues.length && (
-          <p style={styles.clickHint}>Click to continue...</p>
+          <button 
+            className="continue-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleContinue();
+            }}
+          >
+            Continue
+          </button>
         )}
       </div>
     </div>
   );
 }
-
-const styles = {
-  mainContent: {
-    width: '100%',
-    maxWidth: '600px',
-    margin: '0 auto',
-    borderRadius: '8px',
-    padding: '40px 20px',
-    textAlign: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '30px',
-  },
-  robotContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    height: '250px',
-    width: '100%',
-  },
-  robotImage: {
-    maxWidth: '100%',
-    maxHeight: '300px',
-    objectFit: 'contain',
-  },
-  formContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '100%',
-  },
-  promptText: {
-    fontSize: '18px',
-    color: 'white',
-    fontWeight: 'bold',
-    margin: '10px 0',
-  },
-  input: {
-    width: '90%',
-    maxWidth: '350px',
-    padding: '12px 16px',
-    borderRadius: '25px',
-    border: 'none',
-    fontSize: '16px',
-    outline: 'none',
-    backgroundColor: 'white',
-    color: '#333',
-  },
-  clickHint: {
-    fontSize: '16px',
-    color: '#ffffff',
-    fontWeight: 'bold',
-    fontStyle: 'italic',
-    margin: '20px 0',
-    textShadow: '0 0 10px rgba(255, 255, 255, 0.8)',
-    animation: 'pulse 2s infinite',
-  },
-};

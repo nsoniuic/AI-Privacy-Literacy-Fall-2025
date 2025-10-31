@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import robotImage from '../assets/robot.png';
 import PuzzleInteractive from '../components/PuzzleInteractive';
-import UserPuzzleDisplay from '../components/UserPuzzleDisplay';
+import PuzzleInteractiveExplain from '../components/PuzzleInteractiveExplain';
 import { PUZZLE_2_CONFIG } from '../utils/puzzleConfig';
 import '../styles/Puzzles.css';
 import '../App.css';
@@ -60,6 +60,7 @@ export default function SecondPuzzle() {
       text: "I leave open fences (with gaps) alone, because paint would “spill out.” so no fill there.",
       showExplanation: true,
       showResult: true,
+      navigateTo: '/first_scenario',
     },
   ];
 
@@ -95,8 +96,37 @@ export default function SecondPuzzle() {
     setIsTyping(true);
   };
 
-  const handleScreenClick = () => {
-    if (!isTyping && puzzleResult && currentDialogueIndex < dialogues.length - 1) {
+  const handleBack = () => {
+    // Don't allow back on first dialogue after result
+    if (puzzleResult && (currentDialogueIndex === 1 || currentDialogueIndex === 2)) {
+      return;
+    }
+
+    if (currentDialogueIndex > 0) {
+      let prevIndex = currentDialogueIndex - 1;
+      // Skip backwards over any dialogues with unsatisfied conditions
+      while (prevIndex >= 0) {
+        const prevDialogue = dialogues[prevIndex];
+        if (!prevDialogue.condition || prevDialogue.condition()) {
+          setCurrentDialogueIndex(prevIndex);
+          setDisplayedText('');
+          setIsTyping(true);
+          break;
+        }
+        prevIndex--;
+      }
+    }
+  };
+
+  const handleContinueExplanation = () => {
+    // Check if current dialogue has navigation
+    if (currentDialogue?.navigateTo) {
+      navigate(currentDialogue.navigateTo, { state: { userName } });
+      return;
+    }
+
+    // Move to next valid dialogue
+    if (currentDialogueIndex < dialogues.length - 1) {
       let nextIndex = currentDialogueIndex + 1;
       while (nextIndex < dialogues.length) {
         const nextDialogue = dialogues[nextIndex];
@@ -112,7 +142,18 @@ export default function SecondPuzzle() {
   };
 
   return (
-    <div className="page-container second-puzzle-page" onClick={handleScreenClick}>
+    <div className="page-container second-puzzle-page">
+      <button 
+        className="back-button"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleBack();
+        }}
+        disabled={currentDialogueIndex === 0 || (puzzleResult && (currentDialogueIndex === 1 || currentDialogueIndex === 2))}
+      >
+        ← Back
+      </button>
+
       <div className="dialog-box instruction-dialog">
         <p className="dialog-text">{displayedText}</p>
       </div>
@@ -125,10 +166,6 @@ export default function SecondPuzzle() {
         />
       </div>
 
-      {!isTyping && puzzleResult && currentDialogueIndex < dialogues.length - 1 && (
-        <p className="click-hint">Click to continue...</p>
-      )}
-
       {currentDialogue?.showPuzzle && showPuzzle && (
         <PuzzleInteractive 
           onSubmitResult={handleSubmitResult} 
@@ -138,11 +175,24 @@ export default function SecondPuzzle() {
       )}
 
       {currentDialogue?.showExplanation && (
-        <UserPuzzleDisplay 
+        <PuzzleInteractiveExplain 
           showResult={currentDialogue?.showResult || false}
           puzzleConfig={PUZZLE_2_CONFIG}
           puzzleNumber={2}
         />
+      )}
+
+      {puzzleResult && (
+        <button 
+          className="continue-button"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleContinueExplanation();
+          }}
+          disabled={isTyping || currentDialogueIndex >= dialogues.length - 1}
+        >
+          Continue
+        </button>
       )}
 
       

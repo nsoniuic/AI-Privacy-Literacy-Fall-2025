@@ -2,9 +2,9 @@ import p1input from '../assets/p1input.png';
 import p1output from '../assets/p1output.png';
 import p2input from '../assets/p2input.png';
 import p2output from '../assets/p2output.png';
-import '../styles/SamplePuzzle.css';
+import '../styles/PuzzleExamplesExplain.css';
 
-export default function SamplePuzzle({ puzzleNumber }) {
+export default function PuzzleExamplesExplain({ puzzleNumber }) {
   // Select the appropriate images based on puzzle number
   const getImages = () => {
     if (puzzleNumber === 1) {
@@ -18,7 +18,7 @@ export default function SamplePuzzle({ puzzleNumber }) {
   const { input, output } = getImages();
 
   return (
-    <div className="sample-puzzle-container">
+    <div>
       <h2 className="sample-puzzle-title">Sample Puzzle {puzzleNumber}</h2>
       
       <div className="sample-puzzle-grids">

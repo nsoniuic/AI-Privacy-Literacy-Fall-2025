@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 40px;
+  gap: 80px;
   margin-bottom: 20px;
 }
 
@@ -132,13 +132,8 @@
 }
 
 .puzzle-outside-container {
-  background-color: #f0f0f0;
-  padding: 5px;
-  border-radius: 4px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  width: 145px;
-  height: 145px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 8px;
+  max-width: 400px;
 }

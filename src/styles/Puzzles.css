@@ -4,6 +4,36 @@
   padding: 24px 32px;
 }
 
+.back-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 12px 24px;
+  border-radius: 25px;
+  border: 2px solid white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.back-button:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(-3px);
+}
+
+.back-button:active:not(:disabled) {
+  transform: translateX(0);
+}
+
+.back-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 .robot-container {
   display: flex;
   justify-content: center;
@@ -31,13 +61,18 @@
   transition: all 0.3s ease;
 }
 
-.continue-button:hover {
+.continue-button:hover:not(:disabled) {
   background-color: #55bb55;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
-.continue-button:active {
+.continue-button:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.continue-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

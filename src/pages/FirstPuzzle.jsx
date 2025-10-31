@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import robotImage from '../assets/robot.png';
 import PuzzleExamples from '../components/PuzzleExamples';
 import PuzzleInteractive from '../components/PuzzleInteractive';
-import SamplePuzzle from '../components/SamplePuzzle';
-import UserPuzzleDisplay from '../components/UserPuzzleDisplay';
+import PuzzleExamplesExplain from '../components/PuzzleExamplesExplain';
+import PuzzleInteractiveExplain from '../components/PuzzleInteractiveExplain';
 import '../styles/Puzzles.css';
 import '../App.css';
 
@@ -115,20 +115,40 @@ export default function FirstPuzzle() {
     setIsTyping(true);
   };
 
-  const handleScreenClick = () => {
+  const handleBack = () => {
+    // Don't allow back on first dialogue after result
+    if (puzzleResult && (currentDialogueIndex === 2 || currentDialogueIndex === 3)) {
+      return;
+    }
+
+    if (currentDialogueIndex > 0) {
+      let prevIndex = currentDialogueIndex - 1;
+      // Skip backwards over any dialogues with unsatisfied conditions
+      while (prevIndex >= 0) {
+        const prevDialogue = dialogues[prevIndex];
+        if (!prevDialogue.condition || prevDialogue.condition()) {
+          setCurrentDialogueIndex(prevIndex);
+          setDisplayedText('');
+          setIsTyping(true);
+          break;
+        }
+        prevIndex--;
+      }
+    }
+  };
+
+  const handleContinueExplanation = () => {
     // Check if current dialogue has navigation
-    if (!isTyping && puzzleResult && currentDialogue?.navigateTo) {
+    if (currentDialogue?.navigateTo) {
       navigate(currentDialogue.navigateTo, { state: { userName } });
       return;
     }
 
-    // Only allow clicking when typing is finished and there's a puzzle result
-    if (!isTyping && puzzleResult && currentDialogueIndex < dialogues.length - 1) {
-      // Skip to next valid dialogue
+    // Move to next valid dialogue
+    if (currentDialogueIndex < dialogues.length - 1) {
       let nextIndex = currentDialogueIndex + 1;
       while (nextIndex < dialogues.length) {
         const nextDialogue = dialogues[nextIndex];
-        // If no condition or condition is met, use this dialogue
         if (!nextDialogue.condition || nextDialogue.condition()) {
           setCurrentDialogueIndex(nextIndex);
           setDisplayedText('');
@@ -141,7 +161,18 @@ export default function FirstPuzzle() {
   };
 
   return (
-    <div className="page-container first-puzzle-page" onClick={handleScreenClick}>
+    <div className="page-container first-puzzle-page">
+      <button 
+        className="back-button"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleBack();
+        }}
+        disabled={currentDialogueIndex === 0 || puzzleResult && (currentDialogueIndex === 2 || currentDialogueIndex === 3)}
+      >
+        ← Back
+      </button>
+
       <div className="dialog-box instruction-dialog">
         <p className="dialog-text">{displayedText}</p>
       </div>
@@ -173,15 +204,24 @@ export default function FirstPuzzle() {
       )}
 
       {currentDialogue?.showSamplePuzzle && (
-        <SamplePuzzle puzzleNumber={currentDialogue.showSamplePuzzle} />
+        <PuzzleExamplesExplain puzzleNumber={currentDialogue.showSamplePuzzle} />
       )}
 
       {currentDialogue?.showUserPuzzle && (
-        <UserPuzzleDisplay showResult={currentDialogue?.showResult || false} />
+        <PuzzleInteractiveExplain showResult={currentDialogue?.showResult || false} />
       )}
 
-      {!isTyping && puzzleResult && currentDialogueIndex < dialogues.length - 1 && (
-        <p className="click-hint">Click to continue...</p>
+      {puzzleResult && (
+        <button 
+          className="continue-button"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleContinueExplanation();
+          }}
+          disabled={isTyping}
+        >
+          Continue
+        </button>
       )}
     </div>
   );
