@@ -22,13 +22,13 @@ export default function FirstPuzzle() {
   const dialogues = [
     {
       id: 'examples',
-      text: "Here are two examples that show how the pattern works.\nThe first image in each puzzle is the input, and the second one is the output.\nWatch for what changes: the color, shape, or position.\nTry to guess the rule that transforms the input into the output.\nWhen you think you've got it, press Continue to try one yourself!",
+      text: "Here are two examples that show how the pattern works. The first image in each puzzle is the input, and the second one is the output.\nWatch for what changes: the color, shape, or position. Try to guess the rule that transforms the input into the output. When you think you've got it, press Continue to try one yourself!",
       showExamples: true,
       showContinueButton: true,
     },
     {
       id: 'interactive',
-      text: "Now that you've seen the examples, it's your turn to give it a try!\nUse what you learned from the Start and Finish patterns to solve this puzzle.\nCan you figure out what rule connects them?",
+      text: "Now that you've seen the examples, it's your turn to give it a try! Use what you learned from the Start and Finish patterns to solve this puzzle.\nCan you figure out what rule connects them?",
       showPuzzle: true,
     },
     {
@@ -47,21 +47,21 @@ export default function FirstPuzzle() {
     },
     {
       id: 'explanation2',
-      text: "If a fence makes a complete loop, I say, \"Nice—this fence can hold paint,\" and I fill everything inside with yellow.",
+      text: "If an area is completely surrounded by the fences, I say, \"Nice; this area can hold paint,\" and I fill everything inside with yellow.",
     },
     {
       id: 'sample-puzzle-1',
-      text: "For puzzle 1, I see one neat green loop, so I paint its inside yellow.",
+      text: "For puzzle 1, I see one neat area completely surrounded by fences, so I paint its inside yellow.",
       showSamplePuzzle: 1,
     },
     {
       id: 'sample-puzzle-2',
-      text: "For puzzle 2, some green bits are broken (no paint), but the true loops get their insides painted yellow.",
+      text: "For puzzle 2, some areas have incomplete fences around it, so no paint. The ones that is completely surrounded get their insides painted yellow.",
       showSamplePuzzle: 2,
     },
     {
       id: 'user-puzzle-explanation',
-      text: "For the puzzle, only the tiny loops is complete...",
+      text: "For the puzzle, only the tiny areas in the middle are complete...",
       showUserPuzzle: true,
     },
     {
@@ -161,7 +161,7 @@ export default function FirstPuzzle() {
   };
 
   return (
-    <div className="page-container first-puzzle-page">
+    <div className="page-container first-puzzle-page" >
       <button 
         className="back-button"
         onClick={(e) => {

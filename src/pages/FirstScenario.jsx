@@ -25,7 +25,7 @@ export default function FirstScenario() {
   const conversation = [
     {
       speaker: 'robot',
-      text: "Hey Nate, I missed chatting with you! How's school going lately?"
+      text: "Hey, I missed chatting with you! How's school going lately?"
     },
     {
       speaker: 'character',

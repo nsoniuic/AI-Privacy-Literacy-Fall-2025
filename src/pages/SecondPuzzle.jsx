@@ -20,7 +20,7 @@ export default function SecondPuzzle() {
   const dialogues = [
     {
       id: 'puzzle-2-intro',
-      text: "Let's see if you can spot the pattern again.\nHere's another puzzle, remember to look closely at the inputs and outputs.\nWhat changes this time?",
+      text: "Let's see if you can spot the pattern again. Here's another puzzle, remember to look closely at the inputs and outputs.\nWhat changes this time?",
       showPuzzle: true,
     },
     {
@@ -40,12 +40,12 @@ export default function SecondPuzzle() {
     },
     {
       id: 'puzzle-2-explanation-2',
-      text: "Next, I ask: “does this fence make a complete loop?”",
+      text: "Next, I ask: “does this fence completely surround the area inside it?”",
       showExplanation: true,
     },
     {
       id: 'puzzle-2-explanation-3',
-      text: "When I find a closed fence, I pretend to pour yellow paint inside it.",
+      text: "When I find a closed area, I pour yellow paint inside it.",
       showExplanation: true,
       showResult: true,
     },
@@ -189,7 +189,7 @@ export default function SecondPuzzle() {
             e.stopPropagation();
             handleContinueExplanation();
           }}
-          disabled={isTyping || currentDialogueIndex >= dialogues.length - 1}
+          disabled={isTyping}
         >
           Continue
         </button>

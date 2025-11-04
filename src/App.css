@@ -19,7 +19,7 @@
   min-width: 900px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   position: relative;
 }
 
@@ -44,6 +44,7 @@
   word-wrap: break-word;
   line-height: 1.8;
   white-space: pre-line;
+  text-align: left;
 }
 
 .click-hint {

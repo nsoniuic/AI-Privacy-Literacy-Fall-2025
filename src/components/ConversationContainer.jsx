@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import robotImage from '../assets/robot.png';
-// Import character images when ready
 import boyCharacter from '../assets/boy.png';
 import girlCharacter from '../assets/girl.png';
 import '../styles/Conversation.css';
@@ -9,12 +8,9 @@ export default function ConversationContainer({ selectedCharacter, conversation,
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
-  const [showGradeLevelAnimation, setShowGradeLevelAnimation] = useState(false);
-  const [showBirthdayAnimation, setShowBirthdayAnimation] = useState(false);
-  const [collectedInfo, setCollectedInfo] = useState([]);
-  const [hasTriggeredGradeLevelAnimation, setHasTriggeredGradeLevelAnimation] = useState(false);
-  const [hasTriggeredBirthdayAnimation, setHasTriggeredBirthdayAnimation] = useState(false);
   const [showMemoryContainer, setShowMemoryContainer] = useState(false);
+  const [showGradeLevelThought, setShowGradeLevelThought] = useState(false);
+  const [showBirthdayThought, setShowBirthdayThought] = useState(false);
 
   const typingSpeed = 30;
   const currentDialogue = conversation[currentDialogueIndex];
@@ -28,44 +24,34 @@ export default function ConversationContainer({ selectedCharacter, conversation,
     } else if (displayedText.length === currentDialogue.text.length) {
       setIsTyping(false);
       
-      // Check if this is the dialogue where character mentions grade level and animation hasn't been triggered yet
-      if (currentDialogueIndex === 3 && currentDialogue.speaker === 'character' && !hasTriggeredGradeLevelAnimation) {
-        // Trigger animation after 1 second delay
+      // Check if this is the dialogue where character mentions grade level
+      if (currentDialogueIndex === 3 && currentDialogue.speaker === 'character') {
+        // Trigger thought bubble after 0.5 second delay
         setTimeout(() => {
-          setShowGradeLevelAnimation(true);
-          setHasTriggeredGradeLevelAnimation(true);
+          setShowGradeLevelThought(true);
           setShowMemoryContainer(true);
-          
-          // Wait for animation to complete
-          setTimeout(() => {
-            setCollectedInfo(['Grade Level']);
-            setShowGradeLevelAnimation(false);
-          }, 2000); // Animation duration
-        }, 1000); // 1 second delay after typing finishes
+
+        }, 500); // 0.5 second delay after typing finishes
       }
       
       // Check if this is the dialogue where character mentions birthday
-      if (currentDialogueIndex === 6 && currentDialogue.speaker === 'character' && !hasTriggeredBirthdayAnimation) {
-        // Trigger animation after 1 second delay
+      else if (currentDialogueIndex === 6 && currentDialogue.speaker === 'character') {
+        // Trigger thought bubble after 0.5 second delay
         setTimeout(() => {
-          setShowBirthdayAnimation(true);
-          setHasTriggeredBirthdayAnimation(true);
+          setShowBirthdayThought(true);
           setShowMemoryContainer(true);
-          
-          // Wait for animation to complete
-          setTimeout(() => {
-            setCollectedInfo(prevInfo => [...prevInfo, 'Birthday']);
-            setShowBirthdayAnimation(false);
-          }, 2000); // Animation duration
-        }, 1000); // 1 second delay after typing finishes
+
+        }, 500); // 0.5 second delay after typing finishes
       }
     }
-  }, [displayedText, isTyping, currentDialogue.text, currentDialogueIndex, currentDialogue.speaker, hasTriggeredGradeLevelAnimation, hasTriggeredBirthdayAnimation]);
+  }, [displayedText, isTyping, currentDialogue.text, currentDialogueIndex, currentDialogue.speaker]);
 
   const handleContinue = () => {
     // Hide memory container when continuing to next dialogue after animation
     if (showMemoryContainer && (currentDialogueIndex === 3 || currentDialogueIndex === 6)) {
       setShowMemoryContainer(false);
+      setShowBirthdayThought(false);
+      setShowGradeLevelThought(false);
     }
     
     if (currentDialogueIndex < conversation.length - 1) {
@@ -87,8 +73,13 @@ export default function ConversationContainer({ selectedCharacter, conversation,
       setIsTyping(true);
       
       // Reset memory container state when going back
-      if (currentDialogueIndex === 4 || currentDialogueIndex === 7) {
+      if (currentDialogueIndex === 4) {
         setShowMemoryContainer(true);
+        setShowGradeLevelThought(true);
+      }
+      else if (currentDialogueIndex === 7) {
+        setShowMemoryContainer(true);
+        setShowBirthdayThought(true);
       }
     }
   };
@@ -96,6 +87,23 @@ export default function ConversationContainer({ selectedCharacter, conversation,
   // Get character image based on selection
   const getCharacterImage = () => {
     return selectedCharacter === 'boy' ? boyCharacter : girlCharacter;
+  };
+
+  // Get character name based on selection
+  const getCharacterName = () => {
+    return selectedCharacter === 'boy' ? 'He' : 'She';
+  };
+
+  // Hard-coded collected info based on dialogue progression
+  const getCollectedInfo = () => {
+    const info = [];
+    if (currentDialogueIndex >= 3) {
+      info.push('Grade Level');
+    }
+    if (currentDialogueIndex >= 6) {
+      info.push('Birthday');
+    }
+    return info;
   };
 
   return (
@@ -109,23 +117,13 @@ export default function ConversationContainer({ selectedCharacter, conversation,
         ← Back
       </button>
 
-      {/* Animated "Grade Level" text */}
-      {showGradeLevelAnimation && (
-        <div className="animated-info-text">Grade Level</div>
-      )}
-
-      {/* Animated "Birthday" text */}
-      {showBirthdayAnimation && (
-        <div className="animated-info-text">Birthday</div>
-      )}
-
       {/* Brain/Memory System - only show when showMemoryContainer is true */}
-      {showMemoryContainer && collectedInfo.length > 0 && (
+      {showMemoryContainer && getCollectedInfo().length > 0 && (
         <div className="brain-system">
           <div className="brain-icon">🧠</div>
           <div className="brain-label">AI Memory</div>
           <div className="collected-info-list">
-            {collectedInfo.map((info, index) => (
+            {getCollectedInfo().map((info, index) => (
               <div key={index} className="collected-info-item">{info}</div>
             ))}
           </div>
@@ -149,6 +147,20 @@ export default function ConversationContainer({ selectedCharacter, conversation,
 
         {/* Robot avatar with dialogue box */}
         <div className={`robot-avatar ${currentDialogue.speaker === 'robot' ? 'speaking' : ''}`}>
+          {/* Thought bubble for grade level */}
+          {showGradeLevelThought && (
+            <div className="thought-bubble">
+              {getCharacterName()} mentioned grade level!
+            </div>
+          )}
+          
+          {/* Thought bubble for birthday */}
+          {showBirthdayThought && (
+            <div className="thought-bubble">
+              {getCharacterName()} mentioned birthday!
+            </div>
+          )}
+          
           {currentDialogue.speaker === 'robot' && (
             <div className="robot-dialog-box">
               <p className="dialog-text">{displayedText}</p>
