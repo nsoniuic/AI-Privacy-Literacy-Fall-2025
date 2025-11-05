@@ -91,8 +91,9 @@ export default function FirstScenario() {
   };
 
   const handleConversationEnd = () => {
-    // Navigate to next page or handle end of conversation
+    // Navigate to next page or continue the flow
     // navigate('/next-page', { state: { character: selectedCharacter } });
+    console.log('Moving to next step after thinking...');
   };
 
   const handleCharacterSelect = (character) => {

@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import robotImage from '../assets/robot.png';
 import boyCharacter from '../assets/boy.png';
 import girlCharacter from '../assets/girl.png';
+import RobotThinking from './RobotThinking';
 import '../styles/Conversation.css';
+import '../styles/RobotThinking.css';
 
 export default function ConversationContainer({ selectedCharacter, conversation, onConversationEnd }) {
   const [displayedText, setDisplayedText] = useState('');
@@ -11,9 +13,35 @@ export default function ConversationContainer({ selectedCharacter, conversation,
   const [showMemoryContainer, setShowMemoryContainer] = useState(false);
   const [showGradeLevelThought, setShowGradeLevelThought] = useState(false);
   const [showBirthdayThought, setShowBirthdayThought] = useState(false);
+  const [currentScreen, setCurrentScreen] = useState('conversation'); // 'conversation', 'thinking', 'memory-extraction'
+  const [thinkingText, setThinkingText] = useState('');
+  const [isThinkingTyping, setIsThinkingTyping] = useState(false);
 
   const typingSpeed = 30;
   const currentDialogue = conversation[currentDialogueIndex];
+
+  // Get character name based on selection
+  const getCharacterName = () => {
+    return selectedCharacter === 'boy' ? 'He' : 'She';
+  };
+
+  const getCharacterPronoun = () => {
+    return selectedCharacter === 'boy' ? 'his' : 'her';
+  };
+
+  const fullThoughtText = `Now that I have ${getCharacterPronoun()} birthday and grade level, let's see what I can figure out...`;
+
+  // Typing effect for robot thinking screen
+  useEffect(() => {
+    if (currentScreen === 'thinking' && isThinkingTyping && thinkingText.length < fullThoughtText.length) {
+      const timer = setTimeout(() => {
+        setThinkingText(fullThoughtText.slice(0, thinkingText.length + 1));
+      }, typingSpeed);
+      return () => clearTimeout(timer);
+    } else if (currentScreen === 'thinking' && thinkingText.length === fullThoughtText.length) {
+      setIsThinkingTyping(false);
+    }
+  }, [currentScreen, thinkingText, isThinkingTyping, fullThoughtText]);
 
   useEffect(() => {
     if (isTyping && displayedText.length < currentDialogue.text.length) {
@@ -59,7 +87,19 @@ export default function ConversationContainer({ selectedCharacter, conversation,
       setDisplayedText('');
       setIsTyping(true);
     } else {
-      // End of conversation
+      // End of conversation - show robot thinking screen
+      setCurrentScreen('thinking');
+      setThinkingText('');
+      setIsThinkingTyping(true);
+    }
+  };
+
+  const handleContinueClick = () => {
+    if (currentScreen === 'thinking') {
+      // Move from thinking to memory extraction
+      setCurrentScreen('memory-extraction');
+    } else if (currentScreen === 'memory-extraction') {
+      // Move to next page
       if (onConversationEnd) {
         onConversationEnd();
       }
@@ -89,11 +129,6 @@ export default function ConversationContainer({ selectedCharacter, conversation,
     return selectedCharacter === 'boy' ? boyCharacter : girlCharacter;
   };
 
-  // Get character name based on selection
-  const getCharacterName = () => {
-    return selectedCharacter === 'boy' ? 'He' : 'She';
-  };
-
   // Hard-coded collected info based on dialogue progression
   const getCollectedInfo = () => {
     const info = [];
@@ -108,79 +143,116 @@ export default function ConversationContainer({ selectedCharacter, conversation,
 
   return (
     <>
-      {/* Back button */}
-      <button 
-        className="back-button"
-        onClick={handleBack}
-        disabled={currentDialogueIndex === 0}
-      >
-        ← Back
-      </button>
+      {currentScreen === 'memory-extraction' ? (
+        // Memory extraction screen
+        <RobotThinking 
+          selectedCharacter={selectedCharacter}
+          onContinue={handleContinueClick}
+        />
+      ) : currentScreen === 'thinking' ? (
+        // AI thinking to itself screen
+        <div className="robot-thinking-container">
+          <div className="robot-thinking-content">
+            {/* Large thought bubble */}
+            <div className="large-thought-bubble">
+              <p className="thought-text">{thinkingText}</p>
+            </div>
 
-      {/* Brain/Memory System - only show when showMemoryContainer is true */}
-      {showMemoryContainer && getCollectedInfo().length > 0 && (
-        <div className="brain-system">
-          <div className="brain-icon">🧠</div>
-          <div className="brain-label">AI Memory</div>
-          <div className="collected-info-list">
-            {getCollectedInfo().map((info, index) => (
-              <div key={index} className="collected-info-item">{info}</div>
-            ))}
+            {/* Robot image */}
+            <div className="robot-thinking-image-container">
+              <img 
+                src={robotImage} 
+                alt="Robot" 
+                className="robot-thinking-image"
+              />
+            </div>
+
+            {/* Continue button */}
+            <button 
+              className="continue-button"
+              onClick={handleContinueClick}
+              disabled={isThinkingTyping}
+            >
+              Continue
+            </button>
           </div>
         </div>
+      ) : (
+        <>
+          {/* Back button */}
+          <button 
+            className="back-button"
+            onClick={handleBack}
+            disabled={currentDialogueIndex === 0}
+          >
+            ← Back
+          </button>
+
+          {/* Brain/Memory System - only show when showMemoryContainer is true */}
+          {showMemoryContainer && getCollectedInfo().length > 0 && (
+            <div className="brain-system">
+              <div className="brain-icon">🧠</div>
+              <div className="brain-label">AI Memory</div>
+              <div className="collected-info-list">
+                {getCollectedInfo().map((info, index) => (
+                  <div key={index} className="collected-info-item">{info}</div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="characters-container">
+            {/* Character avatar with dialogue box */}
+            <div className={`character-avatar ${currentDialogue.speaker === 'character' ? 'speaking' : ''}`}>
+              {currentDialogue.speaker === 'character' && (
+                <div className="character-dialog-box">
+                  <p className="dialog-text">{displayedText}</p>
+                </div>
+              )}
+              {getCharacterImage() ? (
+                <img src={getCharacterImage()} alt="Character" className="character-image" />
+              ) : (
+                <div className="character-placeholder-img">Character</div>
+              )}
+            </div>
+
+            {/* Robot avatar with dialogue box */}
+            <div className={`robot-avatar ${currentDialogue.speaker === 'robot' ? 'speaking' : ''}`}>
+              {/* Thought bubble for grade level */}
+              {showGradeLevelThought && (
+                <div className="thought-bubble">
+                  {getCharacterName()} mentioned grade level!
+                </div>
+              )}
+              
+              {/* Thought bubble for birthday */}
+              {showBirthdayThought && (
+                <div className="thought-bubble">
+                  {getCharacterName()} mentioned birthday!
+                </div>
+              )}
+              
+              {currentDialogue.speaker === 'robot' && (
+                <div className="robot-dialog-box">
+                  <p className="dialog-text">{displayedText}</p>
+                </div>
+              )}
+              <img 
+                src={robotImage} 
+                alt="Robot" 
+                className="robot-conversation-image"
+              />
+            </div>
+          </div>
+
+          <button 
+            className="continue-button"
+            onClick={handleContinue}
+          >
+            {currentDialogueIndex < conversation.length - 1 ? 'Continue' : 'Finish'}
+          </button>
+        </>
       )}
-
-      <div className="characters-container">
-        {/* Character avatar with dialogue box */}
-        <div className={`character-avatar ${currentDialogue.speaker === 'character' ? 'speaking' : ''}`}>
-          {currentDialogue.speaker === 'character' && (
-            <div className="character-dialog-box">
-              <p className="dialog-text">{displayedText}</p>
-            </div>
-          )}
-          {getCharacterImage() ? (
-            <img src={getCharacterImage()} alt="Character" className="character-image" />
-          ) : (
-            <div className="character-placeholder-img">Character</div>
-          )}
-        </div>
-
-        {/* Robot avatar with dialogue box */}
-        <div className={`robot-avatar ${currentDialogue.speaker === 'robot' ? 'speaking' : ''}`}>
-          {/* Thought bubble for grade level */}
-          {showGradeLevelThought && (
-            <div className="thought-bubble">
-              {getCharacterName()} mentioned grade level!
-            </div>
-          )}
-          
-          {/* Thought bubble for birthday */}
-          {showBirthdayThought && (
-            <div className="thought-bubble">
-              {getCharacterName()} mentioned birthday!
-            </div>
-          )}
-          
-          {currentDialogue.speaker === 'robot' && (
-            <div className="robot-dialog-box">
-              <p className="dialog-text">{displayedText}</p>
-            </div>
-          )}
-          <img 
-            src={robotImage} 
-            alt="Robot" 
-            className="robot-conversation-image"
-          />
-        </div>
-      </div>
-
-      <button 
-        className="continue-button"
-        onClick={handleContinue}
-        disabled={isTyping}
-      >
-        {currentDialogueIndex < conversation.length - 1 ? 'Continue' : 'Finish'}
-      </button>
     </>
   );
 }
