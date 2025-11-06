@@ -185,6 +185,7 @@ export default function RobotThinking({ selectedCharacter, onContinue, showThoug
           <button 
             className="back-button"
             onClick={handleBackClick}
+            disabled={currentScreen === 0}
           >
             Back
           </button>

@@ -217,15 +217,6 @@ export default function ConversationContainer({ selectedCharacter, conversation,
         </div>
       ) : (
         <>
-          {/* Back button */}
-          <button 
-            className="back-button"
-            onClick={handleBack}
-            disabled={currentDialogueIndex === 0}
-          >
-            ← Back
-          </button>
-
           {/* Brain/Memory System - always visible */}
           <div className="brain-system">
             <div className="brain-icon">🧠</div>
@@ -299,12 +290,22 @@ export default function ConversationContainer({ selectedCharacter, conversation,
             </div>
           </div>
 
-          <button 
-            className="continue-button"
-            onClick={handleContinue}
-          >
-            {currentDialogueIndex < conversation.length - 1 ? 'Continue' : 'Finish'}
-          </button>
+          <div className="navigation-buttons">
+            <button 
+              className="back-button"
+              onClick={handleBack}
+              disabled={currentDialogueIndex === 0}
+            >
+              Back
+            </button>
+            
+            <button 
+              className="continue-button"
+              onClick={handleContinue}
+            >
+              Continue
+            </button>
+          </div>
         </>
       )}
     </>

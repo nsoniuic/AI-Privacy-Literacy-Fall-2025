@@ -44,6 +44,23 @@ export default function RobotGreeting() {
     }
   };
 
+  const handleBack = () => {
+    if (currentDialogueIndex > 1) {
+      setCurrentDialogueIndex(currentDialogueIndex - 1);
+      setDisplayedText('');
+      setIsTyping(true);
+    } else if (currentDialogueIndex === 1) {
+      // Go back to name input
+      setCurrentDialogueIndex(0);
+      setShowInput(true);
+      setDisplayedText('');
+      setIsTyping(true);
+    } else {
+      // At the very first screen, navigate back to home/character selection
+      navigate('/');
+    }
+  };
+
   const handleSubmit = () => {
     if (userName.trim()) {
       setShowInput(false);
@@ -96,16 +113,27 @@ export default function RobotGreeting() {
           </div>
         )}
 
-        {!showInput && !isTyping && currentDialogueIndex < dialogues.length && (
-          <button 
-            className="continue-button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleContinue();
-            }}
-          >
-            Continue
-          </button>
+        {!showInput && (
+          <div className="navigation-buttons">
+            <button 
+              className="back-button"
+              onClick={handleBack}
+              disabled={isTyping}
+            >
+              Back
+            </button>
+
+            <button 
+              className="continue-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleContinue();
+              }}
+              disabled={isTyping}
+            >
+              Continue
+            </button>
+          </div>
         )}
       </div>
     </div>

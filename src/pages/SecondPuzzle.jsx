@@ -143,17 +143,6 @@ export default function SecondPuzzle() {
 
   return (
     <div className="page-container second-puzzle-page">
-      <button 
-        className="back-button"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleBack();
-        }}
-        disabled={currentDialogueIndex === 0 || (puzzleResult && (currentDialogueIndex === 1 || currentDialogueIndex === 2))}
-      >
-        ← Back
-      </button>
-
       <div className="dialog-box instruction-dialog">
         <p className="dialog-text">{displayedText}</p>
       </div>
@@ -168,7 +157,8 @@ export default function SecondPuzzle() {
 
       {currentDialogue?.showPuzzle && showPuzzle && (
         <PuzzleInteractive 
-          onSubmitResult={handleSubmitResult} 
+          onSubmitResult={handleSubmitResult}
+          onBack={handleBack}
           puzzleConfig={PUZZLE_2_CONFIG}
           puzzleNumber={2}
         />
@@ -182,19 +172,33 @@ export default function SecondPuzzle() {
         />
       )}
 
-      {puzzleResult && (
-        <button 
-          className="continue-button"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleContinueExplanation();
-          }}
-          disabled={isTyping}
-        >
-          Continue
-        </button>
-      )}
+      {!currentDialogue?.showPuzzle && (
+        <div className="navigation-buttons">
+          <button 
+            className="back-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleBack();
+            }}
+            disabled={currentDialogueIndex === 0 || (puzzleResult && (currentDialogueIndex === 1 || currentDialogueIndex === 2))}
+          >
+            Back
+          </button>
 
+          {puzzleResult && (
+            <button 
+              className="continue-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleContinueExplanation();
+              }}
+              disabled={isTyping}
+            >
+              Continue
+            </button>
+          )}
+        </div>
+      )}
       
     </div>
   );

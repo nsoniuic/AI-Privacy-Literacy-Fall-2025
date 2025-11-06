@@ -162,17 +162,6 @@ export default function FirstPuzzle() {
 
   return (
     <div className="page-container first-puzzle-page" >
-      <button 
-        className="back-button"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleBack();
-        }}
-        disabled={currentDialogueIndex === 0 || puzzleResult && (currentDialogueIndex === 2 || currentDialogueIndex === 3)}
-      >
-        ← Back
-      </button>
-
       <div className="dialog-box instruction-dialog">
         <p className="dialog-text">{displayedText}</p>
       </div>
@@ -188,19 +177,11 @@ export default function FirstPuzzle() {
       {currentDialogue?.showExamples && (
         <>
           <PuzzleExamples />
-          {currentDialogue?.showContinueButton && (
-            <button 
-              className="continue-button"
-              onClick={handleContinue}
-            >
-              Continue
-            </button>
-          )}
         </>
       )}
 
       {currentDialogue?.showPuzzle && showPuzzle && (
-        <PuzzleInteractive onSubmitResult={handleSubmitResult} />
+        <PuzzleInteractive onSubmitResult={handleSubmitResult} onBack={handleBack} />
       )}
 
       {currentDialogue?.showSamplePuzzle && (
@@ -211,17 +192,36 @@ export default function FirstPuzzle() {
         <PuzzleInteractiveExplain showResult={currentDialogue?.showResult || false} />
       )}
 
-      {puzzleResult && (
-        <button 
-          className="continue-button"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleContinueExplanation();
-          }}
-          disabled={isTyping}
-        >
-          Continue
-        </button>
+      {!currentDialogue?.showPuzzle && (
+        <div className="navigation-buttons">
+          <button 
+            className="back-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleBack();
+            }}
+            disabled={currentDialogueIndex === 0 || puzzleResult && (currentDialogueIndex === 2 || currentDialogueIndex === 3)}
+          >
+            Back
+          </button>
+
+          {(currentDialogue?.showContinueButton || puzzleResult) && (
+            <button 
+              className="continue-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (puzzleResult) {
+                  handleContinueExplanation();
+                } else {
+                  handleContinue();
+                }
+              }}
+              disabled={isTyping}
+            >
+              Continue
+            </button>
+          )}
+        </div>
       )}
     </div>
   );

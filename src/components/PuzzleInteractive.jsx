@@ -3,7 +3,7 @@ import PuzzleGrid from './PuzzleGrid';
 import { PUZZLE_1_CONFIG, getCellColor, createInitialGrid } from '../utils/puzzleConfig';
 import '../styles/PuzzleInteractive.css';
 
-export default function PuzzleInteractive({ onSubmitResult, puzzleConfig = PUZZLE_1_CONFIG, puzzleNumber = 1 }) {
+export default function PuzzleInteractive({ onSubmitResult, onBack, puzzleConfig = PUZZLE_1_CONFIG, puzzleNumber = 1 }) {
   const { greenCells, gridSize, resultGrid } = puzzleConfig;
 
   // 6x6 grid state: 0 = empty, 1 = green (prefilled), 2 = yellow (user added)
@@ -79,9 +79,12 @@ export default function PuzzleInteractive({ onSubmitResult, puzzleConfig = PUZZL
       </div>
 
       {showButtons && (
-        <div className="button-container">
+        <div className="navigation-buttons">
+          <button className="back-button" onClick={onBack}>
+            Back
+          </button>
           <button className="reset-button" onClick={handleReset}>Reset</button>
-          <button className="submit-button" onClick={handleSubmit}>Submit</button>
+          <button className="continue-button" onClick={handleSubmit}>Submit</button>
         </div>
       )}
     </>

@@ -4,6 +4,7 @@ import FirstPuzzle from './pages/FirstPuzzle'
 import SecondPuzzle from './pages/SecondPuzzle'
 import FirstScenario from './pages/FirstScenario'
 import MemoryExtraction from './pages/MemoryExtraction'
+import ResultPage from './pages/ResultPage'
 import './App.css'
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <Route path="/second_puzzle" element={<SecondPuzzle />} />
       <Route path="/first_scenario" element={<FirstScenario />} />
       <Route path="/memory_extraction" element={<MemoryExtraction />} />
+      <Route path="/result-page" element={<ResultPage />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

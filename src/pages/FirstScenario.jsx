@@ -90,6 +90,25 @@ export default function FirstScenario() {
     setShowConversation(true);
   };
 
+  const handleBack = () => {
+    if (currentDialogue === 2) {
+      // Go back to character selection
+      setShowCharacterSelection(true);
+      setCurrentDialogue(1);
+      setDisplayedText('');
+      setIsTyping(true);
+    } else if (currentDialogue === 1) {
+      // Go back to first dialogue
+      setShowCharacterSelection(false);
+      setCurrentDialogue(0);
+      setDisplayedText('');
+      setIsTyping(true);
+    } else {
+      // Navigate back to previous page (puzzle)
+      navigate('/second-puzzle');
+    }
+  };
+
   const handleConversationEnd = () => {
     // Navigate to memory extraction page
     navigate('/memory_extraction', { state: { character: selectedCharacter } });
@@ -123,35 +142,45 @@ export default function FirstScenario() {
               />
             )}
 
-            {currentDialogue === 0 && (
+            <div className="navigation-buttons">
               <button 
-                className="continue-button"
-                onClick={handleInitialContinue}
-                disabled={isTyping}
+                className="back-button"
+                onClick={handleBack}
+                disabled={currentDialogue === 0 || isTyping}
               >
-                Let's go!
+                Back
               </button>
-            )}
 
-            {currentDialogue === 1 && (
-              <button 
-                className="continue-button"
-                onClick={handleFinalContinue}
-                disabled={isTyping || !selectedCharacter}
-              >
-                Continue
-              </button>
-            )}
+              {currentDialogue === 0 && (
+                <button 
+                  className="continue-button"
+                  onClick={handleInitialContinue}
+                  disabled={isTyping}
+                >
+                  Let's go!
+                </button>
+              )}
 
-            {currentDialogue === 2 && (
-              <button 
-                className="continue-button"
-                onClick={handleNextStep}
-                disabled={isTyping}
-              >
-                Continue
-              </button>
-            )}
+              {currentDialogue === 1 && (
+                <button 
+                  className="continue-button"
+                  onClick={handleFinalContinue}
+                  disabled={isTyping || !selectedCharacter}
+                >
+                  Continue
+                </button>
+              )}
+
+              {currentDialogue === 2 && (
+                <button 
+                  className="continue-button"
+                  onClick={handleNextStep}
+                  disabled={isTyping}
+                >
+                  Continue
+                </button>
+              )}
+            </div>
           </>
         ) : (
           <ConversationContainer 

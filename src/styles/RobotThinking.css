@@ -181,6 +181,30 @@
   justify-content: center;
 }
 
+.final-deduction-bubble.interactive {
+  padding: 40px 60px;
+  min-width: 320px;
+  max-width: 400px;
+}
+
+.deduction-input {
+  width: 100%;
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  background: transparent;
+  border: none;
+  outline: none;
+  text-align: center;
+  padding: 10px;
+  font-family: inherit;
+}
+
+.deduction-input::placeholder {
+  color: #999;
+  font-weight: 500;
+}
+
 /* Arrows container - diagonal arrows pointing UP from brain to clouds */
 .arrows-container {
   display: flex;
@@ -285,44 +309,6 @@
   50% {
     transform: translateY(-10px);
   }
-}
-
-/* Navigation buttons container */
-.navigation-buttons {
-  position: fixed;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  z-index: 100;
-}
-
-.robot-thinking-content .navigation-buttons .back-button,
-.robot-thinking-content .navigation-buttons .continue-button {
-  position: static;
-  transform: none;
-  margin: 0;
-}
-
-.robot-thinking-content .navigation-buttons .back-button:hover,
-.robot-thinking-content .navigation-buttons .continue-button:hover:not(:disabled) {
-  transform: none;
-}
-
-/* Continue button positioning - keep this for backwards compatibility */
-.robot-thinking-content .continue-button {
-  position: fixed;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
-  transition: none;
-}
-
-.robot-thinking-content .continue-button:hover:not(:disabled) {
-  transform: translateX(-50%);
 }
 
 /* Responsive design */
