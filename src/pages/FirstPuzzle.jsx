@@ -71,7 +71,7 @@ export default function FirstPuzzle() {
       text: "...So only that inside becomes yellow!",
       showUserPuzzle: true,
       showResult: true,
-      navigateTo: '/second_puzzle',
+      navigateTo: '/puzzle/second',
     },
   ];
 

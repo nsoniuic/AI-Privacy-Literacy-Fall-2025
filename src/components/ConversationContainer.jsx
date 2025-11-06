@@ -25,7 +25,7 @@ export default function ConversationContainer({
   const [thinkingText, setThinkingText] = useState('');
   const [isThinkingTyping, setIsThinkingTyping] = useState(false);
 
-  const typingSpeed = 30;
+  const typingSpeed = 10;
   const currentDialogue = conversation[currentDialogueIndex];
 
   const fullThoughtText = `Now that I have ${characterPronoun} birthday and grade level, let's see what I can figure out...`;
@@ -300,6 +300,7 @@ export default function ConversationContainer({
             <button 
               className="continue-button"
               onClick={handleContinue}
+              disabled={isTyping}
             >
               Continue
             </button>

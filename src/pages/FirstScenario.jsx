@@ -53,7 +53,7 @@ export default function FirstScenario() {
     },
   ];
 
-  const typingSpeed = 30;
+  const typingSpeed = 10;
 
   useEffect(() => {
     const dialogueText = dialogues[currentDialogue];
@@ -103,15 +103,12 @@ export default function FirstScenario() {
       setCurrentDialogue(0);
       setDisplayedText('');
       setIsTyping(true);
-    } else {
-      // Navigate back to previous page (puzzle)
-      navigate('/second-puzzle');
     }
   };
 
   const handleConversationEnd = () => {
     // Navigate to memory extraction page
-    navigate('/memory_extraction', { state: { character: selectedCharacter } });
+    navigate('/first_scenario/memory', { state: { character: selectedCharacter } });
   };
 
   const handleCharacterSelect = (character) => {

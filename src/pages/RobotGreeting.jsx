@@ -40,7 +40,7 @@ export default function RobotGreeting() {
       setDisplayedText('');
       setIsTyping(true);
     } else {
-      navigate('/puzzle', { state: { userName } });
+      navigate('/puzzle/first', { state: { userName } });
     }
   };
 

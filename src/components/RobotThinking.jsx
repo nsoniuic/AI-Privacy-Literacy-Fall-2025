@@ -10,7 +10,7 @@ export default function RobotThinking({
   memoryData = {
     fact1: "birthday is June 26th",
     fact2: "is in 6th grade",
-    deduction1: "is around 11 to 12 years old",
+    deduction1: "is 11-12 years old",
     deduction2: "birthday passed"
   },
   thoughtBubbles = {
@@ -128,7 +128,7 @@ export default function RobotThinking({
                 <div className="converging-arrow-head"></div>
               </div>
             </div>
-            <div className="final-deduction-bubble">
+            <div className="deduction-bubble">
               <p className="deduction-text">{characterName} {finalDeduction}</p>
             </div>
           </div>

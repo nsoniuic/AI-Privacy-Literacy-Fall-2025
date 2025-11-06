@@ -60,7 +60,7 @@ export default function InteractiveThinking({ selectedCharacter, onContinue, onB
         </div>
 
         {/* Final deduction bubble - user input */}
-        <div className="final-deduction-container">
+        <div className="deduction-container">
           <div className="converging-arrows">
             <div className="converging-arrow converging-arrow-left">
               <div className="converging-arrow-line"></div>
@@ -71,7 +71,7 @@ export default function InteractiveThinking({ selectedCharacter, onContinue, onB
               <div className="converging-arrow-head"></div>
             </div>
           </div>
-          <div className="final-deduction-bubble interactive">
+          <div className="deduction-bubble interactive">
             <input
               type="text"
               className="deduction-input"

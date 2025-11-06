@@ -11,11 +11,11 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<RobotGreeting />} />
-      <Route path="/puzzle" element={<FirstPuzzle />} />
-      <Route path="/second_puzzle" element={<SecondPuzzle />} />
-      <Route path="/first_scenario" element={<FirstScenario />} />
-      <Route path="/memory_extraction" element={<MemoryExtraction />} />
-      <Route path="/result-page" element={<ResultPage />} />
+      <Route path="/puzzle/first" element={<FirstPuzzle />} />
+      <Route path="/puzzle/second" element={<SecondPuzzle />} />
+      <Route path="/first_scenario/talk" element={<FirstScenario />} />
+      <Route path="/first_scenario/memory" element={<MemoryExtraction />} />
+      <Route path="/first_scenario/result" element={<ResultPage />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

@@ -60,7 +60,7 @@ export default function SecondPuzzle() {
       text: "I leave open fences (with gaps) alone, because paint would “spill out.” so no fill there.",
       showExplanation: true,
       showResult: true,
-      navigateTo: '/first_scenario',
+      navigateTo: '/first_scenario/talk',
     },
   ];
 
