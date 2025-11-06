@@ -3,6 +3,7 @@ import RobotGreeting from './pages/RobotGreeting'
 import FirstPuzzle from './pages/FirstPuzzle'
 import SecondPuzzle from './pages/SecondPuzzle'
 import FirstScenario from './pages/FirstScenario'
+import MemoryExtraction from './pages/MemoryExtraction'
 import './App.css'
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
       <Route path="/puzzle" element={<FirstPuzzle />} />
       <Route path="/second_puzzle" element={<SecondPuzzle />} />
       <Route path="/first_scenario" element={<FirstScenario />} />
+      <Route path="/memory_extraction" element={<MemoryExtraction />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

@@ -91,9 +91,8 @@ export default function FirstScenario() {
   };
 
   const handleConversationEnd = () => {
-    // Navigate to next page or continue the flow
-    // navigate('/next-page', { state: { character: selectedCharacter } });
-    console.log('Moving to next step after thinking...');
+    // Navigate to memory extraction page
+    navigate('/memory_extraction', { state: { character: selectedCharacter } });
   };
 
   const handleCharacterSelect = (character) => {

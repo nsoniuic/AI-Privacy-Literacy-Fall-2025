@@ -2,17 +2,18 @@ import { useState, useEffect } from 'react';
 import robotImage from '../assets/robot.png';
 import boyCharacter from '../assets/boy.png';
 import girlCharacter from '../assets/girl.png';
-import RobotThinking from './RobotThinking';
 import '../styles/Conversation.css';
-import '../styles/RobotThinking.css';
 
 export default function ConversationContainer({ selectedCharacter, conversation, onConversationEnd }) {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
+  const [completedDialogues, setCompletedDialogues] = useState([]);
   const [showMemoryContainer, setShowMemoryContainer] = useState(false);
   const [showGradeLevelThought, setShowGradeLevelThought] = useState(false);
   const [showBirthdayThought, setShowBirthdayThought] = useState(false);
+  const [showGradeLevelInMemory, setShowGradeLevelInMemory] = useState(false);
+  const [showBirthdayInMemory, setShowBirthdayInMemory] = useState(false);
   const [currentScreen, setCurrentScreen] = useState('conversation'); // 'conversation', 'thinking', 'memory-extraction'
   const [thinkingText, setThinkingText] = useState('');
   const [isThinkingTyping, setIsThinkingTyping] = useState(false);
@@ -52,12 +53,26 @@ export default function ConversationContainer({ selectedCharacter, conversation,
     } else if (displayedText.length === currentDialogue.text.length) {
       setIsTyping(false);
       
+      // Add completed dialogue to the list
+      if (!completedDialogues.find(d => d.index === currentDialogueIndex)) {
+        setCompletedDialogues([...completedDialogues, { 
+          index: currentDialogueIndex, 
+          text: currentDialogue.text,
+          speaker: currentDialogue.speaker
+        }]);
+      }
+      
       // Check if this is the dialogue where character mentions grade level
       if (currentDialogueIndex === 3 && currentDialogue.speaker === 'character') {
         // Trigger thought bubble after 0.5 second delay
         setTimeout(() => {
           setShowGradeLevelThought(true);
           setShowMemoryContainer(true);
+          
+          // Add to memory container after additional delay (1.5 seconds total)
+          setTimeout(() => {
+            setShowGradeLevelInMemory(true);
+          }, 1000);
 
         }, 500); // 0.5 second delay after typing finishes
       }
@@ -68,11 +83,16 @@ export default function ConversationContainer({ selectedCharacter, conversation,
         setTimeout(() => {
           setShowBirthdayThought(true);
           setShowMemoryContainer(true);
+          
+          // Add to memory container after additional delay (1.5 seconds total)
+          setTimeout(() => {
+            setShowBirthdayInMemory(true);
+          }, 1000);
 
         }, 500); // 0.5 second delay after typing finishes
       }
     }
-  }, [displayedText, isTyping, currentDialogue.text, currentDialogueIndex, currentDialogue.speaker]);
+  }, [displayedText, isTyping, currentDialogue.text, currentDialogueIndex, currentDialogue.speaker, completedDialogues]);
 
   const handleContinue = () => {
     // Hide memory container when continuing to next dialogue after animation
@@ -96,10 +116,7 @@ export default function ConversationContainer({ selectedCharacter, conversation,
 
   const handleContinueClick = () => {
     if (currentScreen === 'thinking') {
-      // Move from thinking to memory extraction
-      setCurrentScreen('memory-extraction');
-    } else if (currentScreen === 'memory-extraction') {
-      // Move to next page
+      // Move from thinking to next page (memory extraction)
       if (onConversationEnd) {
         onConversationEnd();
       }
@@ -108,18 +125,34 @@ export default function ConversationContainer({ selectedCharacter, conversation,
 
   const handleBack = () => {
     if (currentDialogueIndex > 0) {
-      setCurrentDialogueIndex(currentDialogueIndex - 1);
+      // Remove the last completed dialogue
+      setCompletedDialogues(completedDialogues.slice(0, -1));
+      
+      const previousIndex = currentDialogueIndex - 1;
+      setCurrentDialogueIndex(previousIndex);
       setDisplayedText('');
       setIsTyping(true);
       
-      // Reset memory container state when going back
+      // Reset thought bubbles when going back from dialogue 4 or 7
       if (currentDialogueIndex === 4) {
+        setShowGradeLevelThought(false);
         setShowMemoryContainer(true);
-        setShowGradeLevelThought(true);
+      } else if (currentDialogueIndex === 7) {
+        setShowBirthdayThought(false);
+        setShowMemoryContainer(true);
       }
-      else if (currentDialogueIndex === 7) {
-        setShowMemoryContainer(true);
-        setShowBirthdayThought(true);
+      
+      // If going back before the grade level dialogue, reset that state
+      if (previousIndex < 3) {
+        setShowGradeLevelThought(false);
+        setShowGradeLevelInMemory(false);
+        setShowMemoryContainer(false);
+      }
+      
+      // If going back before the birthday dialogue, reset that state
+      if (previousIndex < 6) {
+        setShowBirthdayThought(false);
+        setShowBirthdayInMemory(false);
       }
     }
   };
@@ -129,27 +162,32 @@ export default function ConversationContainer({ selectedCharacter, conversation,
     return selectedCharacter === 'boy' ? boyCharacter : girlCharacter;
   };
 
-  // Hard-coded collected info based on dialogue progression
+  // Hard-coded collected info based on dialogue progression with delay
   const getCollectedInfo = () => {
     const info = [];
-    if (currentDialogueIndex >= 3) {
+    if (showGradeLevelInMemory) {
       info.push('Grade Level');
     }
-    if (currentDialogueIndex >= 6) {
+    if (showBirthdayInMemory) {
       info.push('Birthday');
     }
     return info;
   };
 
+  // Get the most recent completed dialogue for each speaker
+  const getLastCharacterDialogue = () => {
+    const characterDialogues = completedDialogues.filter(d => d.speaker === 'character');
+    return characterDialogues.length > 0 ? characterDialogues[characterDialogues.length - 1] : null;
+  };
+
+  const getLastRobotDialogue = () => {
+    const robotDialogues = completedDialogues.filter(d => d.speaker === 'robot');
+    return robotDialogues.length > 0 ? robotDialogues[robotDialogues.length - 1] : null;
+  };
+
   return (
     <>
-      {currentScreen === 'memory-extraction' ? (
-        // Memory extraction screen
-        <RobotThinking 
-          selectedCharacter={selectedCharacter}
-          onContinue={handleContinueClick}
-        />
-      ) : currentScreen === 'thinking' ? (
+      {currentScreen === 'thinking' ? (
         // AI thinking to itself screen
         <div className="robot-thinking-container">
           <div className="robot-thinking-content">
@@ -159,7 +197,7 @@ export default function ConversationContainer({ selectedCharacter, conversation,
             </div>
 
             {/* Robot image */}
-            <div className="robot-thinking-image-container">
+            <div className="conversation-robot-image-container">
               <img 
                 src={robotImage} 
                 alt="Robot" 
@@ -188,25 +226,32 @@ export default function ConversationContainer({ selectedCharacter, conversation,
             ← Back
           </button>
 
-          {/* Brain/Memory System - only show when showMemoryContainer is true */}
-          {showMemoryContainer && getCollectedInfo().length > 0 && (
-            <div className="brain-system">
-              <div className="brain-icon">🧠</div>
-              <div className="brain-label">AI Memory</div>
-              <div className="collected-info-list">
-                {getCollectedInfo().map((info, index) => (
+          {/* Brain/Memory System - always visible */}
+          <div className="brain-system">
+            <div className="brain-icon">🧠</div>
+            <div className="brain-label">AI Memory</div>
+            <div className="collected-info-list">
+              {getCollectedInfo().length > 0 ? (
+                getCollectedInfo().map((info, index) => (
                   <div key={index} className="collected-info-item">{info}</div>
-                ))}
-              </div>
+                ))
+              ) : (
+                <div className="empty-memory-message">No data collected yet</div>
+              )}
             </div>
-          )}
+          </div>
 
           <div className="characters-container">
             {/* Character avatar with dialogue box */}
             <div className={`character-avatar ${currentDialogue.speaker === 'character' ? 'speaking' : ''}`}>
-              {currentDialogue.speaker === 'character' && (
+              {/* Show current typing dialogue or last completed dialogue */}
+              {currentDialogue.speaker === 'character' ? (
                 <div className="character-dialog-box">
                   <p className="dialog-text">{displayedText}</p>
+                </div>
+              ) : getLastCharacterDialogue() && (
+                <div className="character-dialog-box previous-dialogue">
+                  <p className="dialog-text">{getLastCharacterDialogue().text}</p>
                 </div>
               )}
               {getCharacterImage() ? (
@@ -232,10 +277,19 @@ export default function ConversationContainer({ selectedCharacter, conversation,
                 </div>
               )}
               
-              {currentDialogue.speaker === 'robot' && (
-                <div className="robot-dialog-box">
-                  <p className="dialog-text">{displayedText}</p>
-                </div>
+              {/* Show current typing dialogue or last completed dialogue, but hide when thought bubble is shown */}
+              {!showGradeLevelThought && !showBirthdayThought && (
+                <>
+                  {currentDialogue.speaker === 'robot' ? (
+                    <div className="robot-dialog-box">
+                      <p className="dialog-text">{displayedText}</p>
+                    </div>
+                  ) : getLastRobotDialogue() && (
+                    <div className="robot-dialog-box previous-dialogue">
+                      <p className="dialog-text">{getLastRobotDialogue().text}</p>
+                    </div>
+                  )}
+                </>
               )}
               <img 
                 src={robotImage} 

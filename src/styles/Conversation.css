@@ -16,46 +16,53 @@
 
 /* Brain/Memory System */
 .brain-system {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 15px;
-  padding: 15px 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  min-width: 150px;
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 25px 30px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
+  min-width: 220px;
   text-align: center;
   z-index: 100;
 }
 
 .brain-icon {
-  font-size: 40px;
-  margin-bottom: 5px;
+  font-size: 60px;
+  margin-bottom: 8px;
 }
 
 .brain-label {
-  font-size: 14px;
+  font-size: 20px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .collected-info-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 10px;
+  gap: 12px;
+  margin-top: 15px;
 }
 
 .collected-info-item {
   background-color: rgba(100, 200, 255, 0.3);
   border: 2px solid rgba(100, 200, 255, 0.6);
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 12px;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 15px;
   color: #333;
   font-weight: 600;
   animation: fadeIn 0.5s ease-in;
+}
+
+.empty-memory-message {
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+  padding: 12px;
 }
 
 @keyframes fadeIn {
@@ -107,6 +114,12 @@
   max-width: 350px;
   min-width: 250px;
   z-index: 10;
+}
+
+/* Previous dialogue styling - slightly transparent */
+.previous-dialogue {
+  opacity: 0.7;
+  background-color: rgba(255, 255, 255, 0.85);
 }
 
 .character-dialog-box {
@@ -163,9 +176,37 @@
   font-weight: bold;
 }
 
+/* Robot image container for conversation thinking screen */
+.conversation-robot-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+
 
 
 @media (max-width: 768px) {
+  .brain-system {
+    top: 15px;
+    right: 15px;
+    padding: 20px 25px;
+    min-width: 180px;
+  }
+
+  .brain-icon {
+    font-size: 50px;
+  }
+
+  .brain-label {
+    font-size: 18px;
+  }
+
+  .collected-info-item {
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+
   .characters-container {
     gap: 40px;
   }
