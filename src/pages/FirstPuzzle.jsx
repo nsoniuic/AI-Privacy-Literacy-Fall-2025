@@ -44,10 +44,12 @@ export default function FirstPuzzle() {
     {
       id: 'explanation1',
       text: "First, I look at all the green lines. I pretend they're little fences. If a fence is broken, I do nothing. You can't keep paint inside a broken fence!",
+      showSamplePuzzle: 1,
     },
     {
       id: 'explanation2',
       text: "If an area is completely surrounded by the fences, I say, \"Nice; this area can hold paint,\" and I fill everything inside with yellow.",
+      showSamplePuzzle: 1,
     },
     {
       id: 'sample-puzzle-1',

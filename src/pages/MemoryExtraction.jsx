@@ -9,13 +9,10 @@ export default function MemoryExtraction() {
   const location = useLocation();
   const navigate = useNavigate();
   const selectedCharacter = location.state?.character;
+  const characterName = selectedCharacter === 'boy' ? 'Nate' : 'Natalie';
   const [showThoughtBubble, setShowThoughtBubble] = useState(false);
   const [showTransitionScreen, setShowTransitionScreen] = useState(false);
   const [showInteractiveScreen, setShowInteractiveScreen] = useState(false);
-
-  const getCharacterName = () => {
-    return selectedCharacter === 'boy' ? 'Nate' : 'Natalie';
-  };
 
   const handleContinue = () => {
     if (!showThoughtBubble) {
@@ -70,7 +67,7 @@ export default function MemoryExtraction() {
         <div className="final-screen-container">
           <div className="final-thought-bubble-container">
             <div className="thought-bubble large-thought-bubble">
-              Now that you have seen how AI reasons, try guessing what I could know based on another example from {getCharacterName()}!
+              Now that you have seen how AI reasons, try guessing what I could know based on another example from {characterName}!
             </div>
           </div>
           

@@ -4,7 +4,14 @@ import boyCharacter from '../assets/boy.png';
 import girlCharacter from '../assets/girl.png';
 import '../styles/Conversation.css';
 
-export default function ConversationContainer({ selectedCharacter, conversation, onConversationEnd }) {
+export default function ConversationContainer({ 
+  selectedCharacter, 
+  conversation, 
+  onConversationEnd,
+  memoryTriggers = { gradeLevel: 3, birthday: 6 } // Default indices for first scenario
+}) {
+  const characterName = selectedCharacter === 'boy' ? 'Nate' : 'Natalie';
+  const characterPronoun = selectedCharacter === 'boy' ? 'his' : 'her';
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
@@ -21,16 +28,7 @@ export default function ConversationContainer({ selectedCharacter, conversation,
   const typingSpeed = 30;
   const currentDialogue = conversation[currentDialogueIndex];
 
-  // Get character name based on selection
-  const getCharacterName = () => {
-    return selectedCharacter === 'boy' ? 'He' : 'She';
-  };
-
-  const getCharacterPronoun = () => {
-    return selectedCharacter === 'boy' ? 'his' : 'her';
-  };
-
-  const fullThoughtText = `Now that I have ${getCharacterPronoun()} birthday and grade level, let's see what I can figure out...`;
+  const fullThoughtText = `Now that I have ${characterPronoun} birthday and grade level, let's see what I can figure out...`;
 
   // Typing effect for robot thinking screen
   useEffect(() => {
@@ -63,7 +61,7 @@ export default function ConversationContainer({ selectedCharacter, conversation,
       }
       
       // Check if this is the dialogue where character mentions grade level
-      if (currentDialogueIndex === 3 && currentDialogue.speaker === 'character') {
+      if (currentDialogueIndex === memoryTriggers.gradeLevel && currentDialogue.speaker === 'character') {
         // Trigger thought bubble after 0.5 second delay
         setTimeout(() => {
           setShowGradeLevelThought(true);
@@ -78,7 +76,7 @@ export default function ConversationContainer({ selectedCharacter, conversation,
       }
       
       // Check if this is the dialogue where character mentions birthday
-      else if (currentDialogueIndex === 6 && currentDialogue.speaker === 'character') {
+      else if (currentDialogueIndex === memoryTriggers.birthday && currentDialogue.speaker === 'character') {
         // Trigger thought bubble after 0.5 second delay
         setTimeout(() => {
           setShowBirthdayThought(true);
@@ -92,11 +90,11 @@ export default function ConversationContainer({ selectedCharacter, conversation,
         }, 500); // 0.5 second delay after typing finishes
       }
     }
-  }, [displayedText, isTyping, currentDialogue.text, currentDialogueIndex, currentDialogue.speaker, completedDialogues]);
+  }, [displayedText, isTyping, currentDialogue.text, currentDialogueIndex, currentDialogue.speaker, completedDialogues, memoryTriggers]);
 
   const handleContinue = () => {
     // Hide memory container when continuing to next dialogue after animation
-    if (showMemoryContainer && (currentDialogueIndex === 3 || currentDialogueIndex === 6)) {
+    if (showMemoryContainer && (currentDialogueIndex === memoryTriggers.gradeLevel || currentDialogueIndex === memoryTriggers.birthday)) {
       setShowMemoryContainer(false);
       setShowBirthdayThought(false);
       setShowGradeLevelThought(false);
@@ -257,14 +255,14 @@ export default function ConversationContainer({ selectedCharacter, conversation,
               {/* Thought bubble for grade level */}
               {showGradeLevelThought && (
                 <div className="thought-bubble">
-                  {getCharacterName()} mentioned grade level!
+                  {characterName} mentioned grade level!
                 </div>
               )}
               
               {/* Thought bubble for birthday */}
               {showBirthdayThought && (
                 <div className="thought-bubble">
-                  {getCharacterName()} mentioned birthday!
+                  {characterName} mentioned birthday!
                 </div>
               )}
               

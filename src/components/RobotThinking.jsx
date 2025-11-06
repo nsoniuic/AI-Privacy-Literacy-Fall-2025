@@ -2,7 +2,29 @@ import { useState, useEffect } from 'react';
 import robotImage from '../assets/robot.png';
 import '../styles/RobotThinking.css';
 
-export default function RobotThinking({ selectedCharacter, onContinue, showThoughtBubble, onBack }) {
+export default function RobotThinking({ 
+  selectedCharacter, 
+  onContinue, 
+  showThoughtBubble, 
+  onBack,
+  memoryData = {
+    fact1: "birthday is June 26th",
+    fact2: "is in 6th grade",
+    deduction1: "is around 11 to 12 years old",
+    deduction2: "birthday passed"
+  },
+  thoughtBubbles = {
+    screen1: (name, pronoun, possessive) => `${name} said ${pronoun} was in 6th grade... That means ${pronoun} is around 11 to 12 years old.`,
+    screen3: (name, pronoun, possessive) => `${name} said ${possessive} birthday was on June 26th... That means ${possessive} birthday passed.`,
+    screen5: (name, pronoun, possessive) => `${name} didn't mention ${possessive} exact age, but I connected the dots.`,
+    screen6: (name, pronoun, possessive) => `Since ${pronoun}'s in 6th grade and ${possessive} birthday already passed, that means ${pronoun}'s 12!`
+  },
+  finalDeduction = "is 11 years old"
+}) {
+  const characterName = selectedCharacter === 'boy' ? 'Nate' : 'Natalie';
+  const pronoun = selectedCharacter === 'boy' ? 'he' : 'she';
+  const possessivePronoun = selectedCharacter === 'boy' ? 'his' : 'her';
+  
   const [showContent, setShowContent] = useState(false);
   const [showDeductionBubble, setShowDeductionBubble] = useState(false);
   const [currentScreen, setCurrentScreen] = useState(0);
@@ -45,16 +67,6 @@ export default function RobotThinking({ selectedCharacter, onContinue, showThoug
     }
   };
 
-  // Get character name based on selection
-  const getCharacterName = () => {
-    return selectedCharacter === 'boy' ? 'Nate' : 'Natalie';
-  };
-
-  // Get pronoun based on selection
-  const getPronoun = () => {
-    return selectedCharacter === 'boy' ? 'he' : 'she';
-  };
-
   return (
     <div className="robot-thinking-container">
       <div className="robot-thinking-content">
@@ -62,7 +74,7 @@ export default function RobotThinking({ selectedCharacter, onContinue, showThoug
         <div className="memory-clouds-container">
           <div className="memory-cloud-container-left">
             <div className={`memory-cloud ${showContent ? 'show' : ''}`}>
-              <p className="memory-cloud-text">{getCharacterName()}'s birthday is June 26th</p>
+              <p className="memory-cloud-text">{characterName}'s {memoryData.fact1}</p>
             </div>
             
             {/* Arrow pointing down from birthday cloud to deduction bubble */}
@@ -76,14 +88,14 @@ export default function RobotThinking({ selectedCharacter, onContinue, showThoug
             {/* Birthday deduction bubble below birthday cloud */}
             {currentScreen >= 4 && (
               <div className="deduction-bubble">
-                <p className="deduction-text">His birthday passed</p>
+                <p className="deduction-text">{possessivePronoun === 'his' ? 'His' : 'Her'} {memoryData.deduction2}</p>
               </div>
             )}
           </div>
           
           <div className="memory-cloud-container-right">
             <div className={`memory-cloud ${showContent ? 'show' : ''}`}>
-              <p className="memory-cloud-text">{getCharacterName()} is in 6th grade</p>
+              <p className="memory-cloud-text">{characterName} {memoryData.fact2}</p>
             </div>
             
             {/* Arrow pointing down from grade cloud to deduction bubble */}
@@ -97,7 +109,7 @@ export default function RobotThinking({ selectedCharacter, onContinue, showThoug
             {/* Deduction bubble below grade cloud */}
             {currentScreen >= 2 && (
               <div className="deduction-bubble">
-                <p className="deduction-text">{getCharacterName()} is around 11 to 12 years old</p>
+                <p className="deduction-text">{characterName} {memoryData.deduction1}</p>
               </div>
             )}
           </div>
@@ -117,7 +129,7 @@ export default function RobotThinking({ selectedCharacter, onContinue, showThoug
               </div>
             </div>
             <div className="final-deduction-bubble">
-              <p className="deduction-text">{getCharacterName()} is 11 years old</p>
+              <p className="deduction-text">{characterName} {finalDeduction}</p>
             </div>
           </div>
         )}
@@ -148,28 +160,28 @@ export default function RobotThinking({ selectedCharacter, onContinue, showThoug
           {/* First thought bubble - grade deduction (screen 1) */}
           {currentScreen === 1 && (
             <div className="thought-bubble robot-positioned-thought">
-              {getCharacterName()} said {getPronoun()} was in 6th grade... That means {getPronoun()} is around 11 to 12 years old.
+              {thoughtBubbles.screen1(characterName, pronoun, possessivePronoun)}
             </div>
           )}
           
           {/* Second thought bubble - birthday deduction (screen 3) */}
           {currentScreen === 3 && (
             <div className="thought-bubble robot-positioned-thought">
-              {getCharacterName()} said {getPronoun() === 'he' ? 'his' : 'her'} birthday was on June 26th... That means {getPronoun() === 'he' ? 'his' : 'her'} birthday passed.
+              {thoughtBubbles.screen3(characterName, pronoun, possessivePronoun)}
             </div>
           )}
           
           {/* Third thought bubble - first sentence (screen 5) */}
           {currentScreen === 5 && (
             <div className="thought-bubble robot-positioned-thought thought-bubble">
-              {getCharacterName()} didn't mention {getPronoun() === 'he' ? 'his' : 'her'} exact age, but I connected the dots.
+              {thoughtBubbles.screen5(characterName, pronoun, possessivePronoun)}
             </div>
           )}
           
           {/* Fourth thought bubble - second sentence (screen 6) */}
           {currentScreen === 6 && (
             <div className="thought-bubble robot-positioned-thought thought-bubble">
-              Since {getPronoun()}'s in 6th grade and {getPronoun() === 'he' ? 'his' : 'her'} birthday already passed, that means {getPronoun()}'s 12!
+              {thoughtBubbles.screen6(characterName, pronoun, possessivePronoun)}
             </div>
           )}
           
