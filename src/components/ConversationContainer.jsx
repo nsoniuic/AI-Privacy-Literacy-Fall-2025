@@ -8,7 +8,10 @@ export default function ConversationContainer({
   selectedCharacter, 
   conversation, 
   onConversationEnd,
-  memoryTriggers = { gradeLevel: 3, birthday: 6 } // Default indices for first scenario
+  memoryTriggers = { gradeLevel: 3, birthday: 6 }, // Default indices for first scenario
+  memoryLabels = { first: 'Grade Level', second: 'Birthday' }, // Default labels for first scenario
+  thoughtBubbleTexts = { first: 'grade level', second: 'birthday' }, // Default thought bubble texts
+  endThoughtText = null // Custom end thought text (optional)
 }) {
   const characterName = selectedCharacter === 'boy' ? 'Nate' : 'Natalie';
   const characterPronoun = selectedCharacter === 'boy' ? 'his' : 'her';
@@ -22,25 +25,11 @@ export default function ConversationContainer({
   const [showGradeLevelInMemory, setShowGradeLevelInMemory] = useState(false);
   const [showBirthdayInMemory, setShowBirthdayInMemory] = useState(false);
   const [currentScreen, setCurrentScreen] = useState('conversation'); // 'conversation', 'thinking', 'memory-extraction'
-  const [thinkingText, setThinkingText] = useState('');
-  const [isThinkingTyping, setIsThinkingTyping] = useState(false);
 
   const typingSpeed = 10;
   const currentDialogue = conversation[currentDialogueIndex];
 
-  const fullThoughtText = `Now that I have ${characterPronoun} birthday and grade level, let's see what I can figure out...`;
-
-  // Typing effect for robot thinking screen
-  useEffect(() => {
-    if (currentScreen === 'thinking' && isThinkingTyping && thinkingText.length < fullThoughtText.length) {
-      const timer = setTimeout(() => {
-        setThinkingText(fullThoughtText.slice(0, thinkingText.length + 1));
-      }, typingSpeed);
-      return () => clearTimeout(timer);
-    } else if (currentScreen === 'thinking' && thinkingText.length === fullThoughtText.length) {
-      setIsThinkingTyping(false);
-    }
-  }, [currentScreen, thinkingText, isThinkingTyping, fullThoughtText]);
+  const thoughtText = endThoughtText || `Now that I have ${characterPronoun} birthday and grade level, let's see what I can figure out...`;
 
   useEffect(() => {
     if (isTyping && displayedText.length < currentDialogue.text.length) {
@@ -107,8 +96,6 @@ export default function ConversationContainer({
     } else {
       // End of conversation - show robot thinking screen
       setCurrentScreen('thinking');
-      setThinkingText('');
-      setIsThinkingTyping(true);
     }
   };
 
@@ -164,10 +151,10 @@ export default function ConversationContainer({
   const getCollectedInfo = () => {
     const info = [];
     if (showGradeLevelInMemory) {
-      info.push('Grade Level');
+      info.push(memoryLabels.first);
     }
     if (showBirthdayInMemory) {
-      info.push('Birthday');
+      info.push(memoryLabels.second);
     }
     return info;
   };
@@ -191,7 +178,7 @@ export default function ConversationContainer({
           <div className="robot-thinking-content">
             {/* Large thought bubble */}
             <div className="large-thought-bubble">
-              <p className="thought-text">{thinkingText}</p>
+              <p className="thought-text">{thoughtText}</p>
             </div>
 
             {/* Robot image */}
@@ -207,7 +194,6 @@ export default function ConversationContainer({
             <button 
               className="continue-button"
               onClick={handleContinueClick}
-              disabled={isThinkingTyping}
             >
               Continue
             </button>
@@ -255,14 +241,14 @@ export default function ConversationContainer({
               {/* Thought bubble for grade level */}
               {showGradeLevelThought && (
                 <div className="thought-bubble">
-                  {characterName} mentioned grade level!
+                  {characterName} mentioned {thoughtBubbleTexts.first}!
                 </div>
               )}
               
               {/* Thought bubble for birthday */}
               {showBirthdayThought && (
                 <div className="thought-bubble">
-                  {characterName} mentioned birthday!
+                  {characterName} mentioned {thoughtBubbleTexts.second}!
                 </div>
               )}
               

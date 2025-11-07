@@ -372,3 +372,154 @@
   }
 }
 
+/* Cloud circle for numbered circles */
+.cloud-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid #666;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.arrow-number-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid #666;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.circle-number {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Arrow plus button */
+.arrow-plus-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid #66cc66;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.3s ease;
+}
+
+.arrow-plus-button:hover {
+  background-color: #66cc66;
+  transform: translateX(-50%) scale(1.1);
+  box-shadow: 0 4px 15px rgba(102, 204, 102, 0.4);
+}
+
+.arrow-plus-button .plus-icon {
+  font-size: 28px;
+  font-weight: bold;
+  color: #66cc66;
+  line-height: 1;
+  transition: color 0.3s ease;
+}
+
+.arrow-plus-button:hover .plus-icon {
+  color: white;
+}
+
+/* Cloud input field */
+.cloud-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  color: #333;
+  text-align: center;
+  font-family: inherit;
+  padding: 5px;
+}
+
+.cloud-input::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.memory-cloud-text.clickable {
+  cursor: pointer;
+  min-height: 20px;
+}
+
+.memory-cloud-text.clickable:hover {
+  opacity: 0.8;
+}
+
+/* Add cloud button */
+.add-cloud-button {
+  position: absolute;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #66cc66;
+  color: white;
+  font-size: 36px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding-bottom: 4px;
+}
+
+.add-cloud-button:hover {
+  background-color: #59b359;
+  transform: translateX(-50%) scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.add-cloud-button:active {
+  transform: translateX(-50%) scale(0.95);
+}
+
+/* Instruction box */
+.instruction-box {
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 15px 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  max-width: 300px;
+  text-align: center;
+}
+
+.instruction-text {
+  font-size: 15px;
+  color: #333;
+  margin: 0;
+  font-weight: 500;
+}

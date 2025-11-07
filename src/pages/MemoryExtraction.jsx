@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import RobotThinking from '../components/RobotThinking';
 import InteractiveThinking from '../components/InteractiveThinking';
 import robotImage from '../assets/robot.png';
-import '../App.css';
+// import '../App.css';
+import '../styles/Conversation.css';
 
 export default function MemoryExtraction() {
   const location = useLocation();
@@ -32,17 +33,17 @@ export default function MemoryExtraction() {
       // Go back to thinking screen
       setShowTransitionScreen(false);
     } else {
-      // Go back to the previous page (FirstScenario)
-      navigate('/first-scenario', { state: { character: selectedCharacter } });
+      navigate('/first-scenario/talk', { state: { character: selectedCharacter } });
     }
   };
 
   const handleTransitionContinue = () => {
     setShowInteractiveScreen(true);
+    console.log('Continuing to interactive thinking...');
   };
 
   const handleInteractiveContinue = () => {
-    navigate('/result-page', { state: { character: selectedCharacter } });
+    navigate('/first_scenario/result', { state: { character: selectedCharacter } });
   };
 
   const handleInteractiveBack = () => {
@@ -63,38 +64,42 @@ export default function MemoryExtraction() {
 
   if (showTransitionScreen) {
     return (
-      <div className="page-container">
-        <div className="final-screen-container">
-          <div className="final-thought-bubble-container">
-            <div className="thought-bubble large-thought-bubble">
-              Now that you have seen how AI reasons, try guessing what I could know based on another example from {characterName}!
-            </div>
-          </div>
-          
-          <div className="robot-image-container-center">
-            <img 
-              src={robotImage} 
-              alt="Robot" 
-              className="robot-image"
-            />
-          </div>
+        <div className="page-container">
+            <div className="robot-thinking-container">
+                <div className="robot-thinking-content">
+                    {/* Large thought bubble */}
+                    <div className="large-thought-bubble">
+                        <p className="thought-text">
+                            Now that you have seen how AI reasons, try guessing what I could know based on another example from {characterName}!
+                        </p>
+                    </div>
 
-          <div className="navigation-buttons">
-            <button 
-              className="back-button"
-              onClick={handleBack}
-            >
-              Back
-            </button>
-            <button 
-              className="continue-button"
-              onClick={handleTransitionContinue}
-            >
-              Continue
-            </button>
-          </div>
+                        {/* Robot image */}
+                        <div className="conversation-robot-image-container">
+                        <img 
+                            src={robotImage} 
+                            alt="Robot" 
+                            className="robot-thinking-image"
+                        />
+                        </div>
+
+                        <div className="navigation-buttons">
+                            <button 
+                                className="back-button"
+                                onClick={handleBack}
+                            >
+                                Back
+                            </button>
+                            <button 
+                                className="continue-button"
+                                onClick={handleTransitionContinue}
+                            >
+                                Continue
+                            </button>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     );
   }
 
