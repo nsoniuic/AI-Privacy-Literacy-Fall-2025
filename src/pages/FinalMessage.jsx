@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import robotImage from '../assets/robot.png';
 import '../styles/Conversation.css';
@@ -9,6 +9,37 @@ export default function FinalMessage() {
   const selectedCharacter = location.state?.selectedCharacter;
   const previousState = location.state?.previousState;
   const [showSecondMessage, setShowSecondMessage] = useState(false);
+  
+  // Typing animation states
+  const [displayedText, setDisplayedText] = useState('');
+  const [isTyping, setIsTyping] = useState(true);
+
+  const typingSpeed = 40;
+
+  const dialogues = {
+    first: "Thank you for joining me in solving the puzzles today!",
+    second: "I hope you have learned that an AI like me could remember what you told me to connect the dots and come up with details you didn't tell me!"
+  };
+
+  const currentDialogueText = showSecondMessage ? dialogues.second : dialogues.first;
+
+  // Typing animation effect
+  useEffect(() => {
+    if (isTyping && displayedText.length < currentDialogueText.length) {
+      const timer = setTimeout(() => {
+        setDisplayedText(currentDialogueText.slice(0, displayedText.length + 1));
+      }, typingSpeed);
+      return () => clearTimeout(timer);
+    } else if (displayedText.length === currentDialogueText.length) {
+      setIsTyping(false);
+    }
+  }, [displayedText, isTyping, currentDialogueText]);
+
+  // Reset typing when message changes
+  useEffect(() => {
+    setDisplayedText('');
+    setIsTyping(true);
+  }, [showSecondMessage]);
 
   const handleContinue = () => {
     if (!showSecondMessage) {
@@ -38,19 +69,11 @@ export default function FinalMessage() {
       <div className="characters-container" style={{ justifyContent: 'center' }}>
         {/* Robot avatar with dialogue box */}
         <div className="robot-avatar speaking">
-          {!showSecondMessage ? (
-            <div className="robot-dialog-box">
-              <p className="dialog-text">
-                Thank you for joining me in solving the puzzles today!
-              </p>
-            </div>
-          ) : (
-            <div className="robot-dialog-box">
-              <p className="dialog-text">
-                I hope you have learned that an AI like me could remember what you told me to connect the dots and come up with details you didn't tell me!
-              </p>
-            </div>
-          )}
+          <div className="robot-dialog-box">
+            <p className="dialog-text">
+              {displayedText}
+            </p>
+          </div>
           
           <img 
             src={robotImage} 
@@ -70,6 +93,7 @@ export default function FinalMessage() {
         <button 
           className="continue-button"
           onClick={handleContinue}
+          disabled={isTyping}
         >
           {showSecondMessage ? 'Finish' : 'Continue'}
         </button>

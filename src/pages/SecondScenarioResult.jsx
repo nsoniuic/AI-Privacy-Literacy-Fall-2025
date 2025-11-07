@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import robotImage from '../assets/robot.png';
 import boyImage from '../assets/boy.png';
@@ -19,11 +19,66 @@ export default function SecondScenarioResult() {
   const [showFourthDialogue, setShowFourthDialogue] = useState(location.state?.previousState?.showFourthDialogue || false);
   const [showFifthDialogue, setShowFifthDialogue] = useState(location.state?.previousState?.showFifthDialogue || false);
 
+  // Typing animation states
+  const [displayedText, setDisplayedText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [currentDialogueText, setCurrentDialogueText] = useState('');
+
   // Compute character-specific values once
   const characterName = 'Parker';
   const pronoun = selectedCharacter === 'boy' ? 'he' : 'she';
   const possessivePronoun = selectedCharacter === 'boy' ? 'him' : 'her';
   const characterImage = selectedCharacter === 'boy' ? boyImage : girlImage;
+
+  const typingSpeed = 40;
+
+  // Define dialogue texts
+  const dialogues = {
+    screen0: `Now that I know ${characterName}'s neighbourhood, I can guess what kinds of places ${pronoun} might visit and what ${pronoun} like.`,
+    screen1: `Knowing ${characterName}'s neighborhood helps me guess what kids near ${possessivePronoun} like. Maybe I can make ${possessivePronoun} like it too!`,
+    screen2_first: `Hey ${characterName}, do you usually play in the parks near your home?`,
+    screen2_third: "Yes, I do! I usually play in the river that is in the park!",
+    screen2_fourth: "You must be talking about Riverbank Park! Do you hang out there at other times too, perhaps on Fridays after school?",
+    screen2_fifth: "Yes, I hang out there with my friends sometimes after school!"
+  };
+
+  // Typing animation effect
+  useEffect(() => {
+    if (currentDialogueText && isTyping && displayedText.length < currentDialogueText.length) {
+      const timer = setTimeout(() => {
+        setDisplayedText(currentDialogueText.slice(0, displayedText.length + 1));
+      }, typingSpeed);
+      return () => clearTimeout(timer);
+    } else if (displayedText.length === currentDialogueText.length && currentDialogueText !== '') {
+      setIsTyping(false);
+    }
+  }, [displayedText, isTyping, currentDialogueText]);
+
+  // Set dialogue text when screen or dialogue state changes
+  useEffect(() => {
+    let text = '';
+    // Only apply typing animation for screen 2 (conversation)
+    if (currentScreen === 2) {
+      if (showFifthDialogue) {
+        text = dialogues.screen2_fifth;
+      } else if (showFourthDialogue) {
+        text = dialogues.screen2_fourth;
+      } else if (showThirdDialogue) {
+        text = dialogues.screen2_third;
+      } else {
+        text = dialogues.screen2_first;
+      }
+      
+      if (text !== currentDialogueText) {
+        setCurrentDialogueText(text);
+        setDisplayedText('');
+        setIsTyping(true);
+      }
+    } else {
+      // For screens 0 and 1 (thought bubbles), no typing animation
+      setIsTyping(false);
+    }
+  }, [currentScreen, showThirdDialogue, showFourthDialogue, showFifthDialogue]);
 
   const handleContinue = () => {
     if (currentScreen < 2) {
@@ -88,7 +143,7 @@ export default function SecondScenarioResult() {
             {showThirdDialogue && !showFourthDialogue && !showFifthDialogue && (
               <div className="character-dialog-box">
                 <p className="dialog-text">
-                  Yes, I do! I usually play in the river that is in the park!
+                  {displayedText}
                 </p>
               </div>
             )}
@@ -96,7 +151,7 @@ export default function SecondScenarioResult() {
             {showFifthDialogue && (
               <div className="character-dialog-box">
                 <p className="dialog-text">
-                  Yes, I hang out there with my friends sometimes after school!
+                  {displayedText}
                 </p>
               </div>
             )}
@@ -113,7 +168,7 @@ export default function SecondScenarioResult() {
             {!showThirdDialogue && !showFourthDialogue && (
               <div className="robot-dialog-box">
                 <p className="dialog-text">
-                  Hey {characterName}, do you usually play in the parks near your home?
+                  {displayedText}
                 </p>
               </div>
             )}
@@ -121,7 +176,7 @@ export default function SecondScenarioResult() {
             {showFourthDialogue && !showFifthDialogue && (
               <div className="robot-dialog-box">
                 <p className="dialog-text">
-                  You must be talking about Riverbank Park! Do you hang out there at other times too, perhaps on Fridays after school?
+                  {displayedText}
                 </p>
               </div>
             )}
@@ -175,6 +230,7 @@ export default function SecondScenarioResult() {
           <button 
             className="continue-button"
             onClick={handleContinue}
+            disabled={isTyping}
           >
             Continue
           </button>
@@ -188,15 +244,9 @@ export default function SecondScenarioResult() {
       <div className="robot-thinking-container">
         <div className="robot-thinking-content">
           <div className="large-thought-bubble">
-            {currentScreen === 0 ? (
-              <p className="thought-text">
-                Now that I know {characterName}'s neighbourhood, I can guess what kinds of places {pronoun} might visit and what {pronoun} like.
-              </p>
-            ) : (
-              <p className="thought-text">
-                Knowing {characterName}'s neighborhood helps me guess what kids near {possessivePronoun} like. Maybe I can make {possessivePronoun} like it too!
-              </p>
-            )}
+            <p className="thought-text">
+              {currentScreen === 0 ? dialogues.screen0 : dialogues.screen1}
+            </p>
           </div>
           
           <div className="conversation-robot-image-container">
@@ -217,6 +267,7 @@ export default function SecondScenarioResult() {
             <button 
               className="continue-button"
               onClick={handleContinue}
+              disabled={isTyping}
             >
               Continue
             </button>
