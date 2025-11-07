@@ -53,7 +53,7 @@ export default function FirstScenario() {
     },
   ];
 
-  const typingSpeed = 10;
+  const typingSpeed = 40;
 
   useEffect(() => {
     const dialogueText = dialogues[currentDialogue];

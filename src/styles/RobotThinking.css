@@ -15,7 +15,6 @@
   max-width: 800px;
   width: 100%;
   position: relative;
-  padding-bottom: 80px;
 }
 
 /* Memory clouds container at the top */
@@ -406,41 +405,6 @@
   color: #333;
 }
 
-/* Arrow plus button */
-.arrow-plus-button {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 3px solid #66cc66;
-  background-color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: absolute;
-  bottom: -25px;
-  left: 50%;
-  transform: translateX(-50%);
-  transition: all 0.3s ease;
-}
-
-.arrow-plus-button:hover {
-  background-color: #66cc66;
-  transform: translateX(-50%) scale(1.1);
-  box-shadow: 0 4px 15px rgba(102, 204, 102, 0.4);
-}
-
-.arrow-plus-button .plus-icon {
-  font-size: 28px;
-  font-weight: bold;
-  color: #66cc66;
-  line-height: 1;
-  transition: color 0.3s ease;
-}
-
-.arrow-plus-button:hover .plus-icon {
-  color: white;
-}
 
 /* Cloud input field */
 .cloud-input {
@@ -522,4 +486,194 @@
   color: #333;
   margin: 0;
   font-weight: 500;
+}
+
+/* Interactive arrows container - new structure */
+.interactive-arrows-container {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  width: 100%;
+  margin-top: 30px;
+  position: relative;
+}
+
+.arrow-with-cloud-left,
+.arrow-with-cloud-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 250px;
+}
+
+/* Arrow with plus button overlay */
+.arrow-with-plus {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.straight-down-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.straight-arrow-line {
+  width: 3px;
+  height: 150px;
+  background-color: #555;
+}
+
+.straight-arrow-head {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 15px solid #555;
+  margin-top: -1px;
+}
+
+/* Plus button overlaid on arrow */
+.arrow-plus-button-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid #66cc66;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.arrow-plus-button-overlay:hover {
+  background-color: #66cc66;
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 4px 15px rgba(102, 204, 102, 0.4);
+}
+
+.arrow-plus-button-overlay .plus-icon {
+  font-size: 28px;
+  font-weight: bold;
+  color: #66cc66;
+  line-height: 1;
+  transition: color 0.3s ease;
+}
+
+.arrow-plus-button-overlay:hover .plus-icon {
+  color: white;
+}
+
+/* Middle cloud container */
+.middle-cloud-container {
+  margin-bottom: 20px;
+  animation: fadeIn 0.5s ease-in;
+}
+
+/* Converging arrows */
+.converging-arrows {
+  display: flex;
+  justify-content: center;
+  gap: 250px;
+  position: relative;
+  height: 80px;
+  margin-top: 20px;
+}
+
+.converging-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.converging-arrow-left {
+  transform: rotate(-45deg);
+}
+
+.converging-arrow-right {
+  transform: rotate(45deg);
+}
+
+.converging-arrow-line {
+  width: 3px;
+  height: 60px;
+  background-color: #555;
+}
+
+.converging-arrow-head {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 15px solid #555;
+  margin-top: -1px;
+}
+
+.arrow-with-cloud-left .arrow-segment-bottom {
+  transform: rotate(-45deg);
+  transform-origin: top center;
+  position: absolute;
+  bottom: -120px;
+  left: 50%;
+  margin-left: -1.5px;
+}
+
+.arrow-with-cloud-right .arrow-segment-bottom {
+  transform: rotate(45deg);
+  transform-origin: top center;
+  position: absolute;
+  bottom: -120px;
+  left: 50%;
+  margin-left: -1.5px;
+}
+
+.arrow-segment-bottom .converging-arrow-line {
+  width: 3px;
+  height: 100px;
+  background-color: #555;
+}
+
+.arrow-segment-bottom .converging-arrow-head {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 15px solid #555;
+  margin-top: -1px;
+}
+
+/* Middle cloud container */
+.middle-cloud-container {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@media (max-width: 768px) {
+  .interactive-arrows-container {
+    gap: 100px;
+  }
+  
+  .arrow-with-cloud-left,
+  .arrow-with-cloud-right {
+    width: 200px;
+  }
+  
+  .arrow-segment-top {
+    height: 60px;
+  }
+  
+  .arrow-segment-bottom .converging-arrow-line {
+    height: 80px;
+  }
 }
