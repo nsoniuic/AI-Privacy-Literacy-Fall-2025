@@ -5,11 +5,7 @@ import '../styles/RobotThinking.css';
 export default function InteractiveThinking({ selectedCharacter, onContinue, onBack }) {
   const [userInput, setUserInput] = useState('');
   const [showEncouragement, setShowEncouragement] = useState(false);
-
-  // Get character name based on selection
-  const getCharacterName = () => {
-    return selectedCharacter === 'boy' ? 'Nate' : 'Natalie';
-  };
+  const characterName = 'Parker';
 
   const handleSubmit = () => {
     if (userInput.trim() && !showEncouragement) {
@@ -26,7 +22,7 @@ export default function InteractiveThinking({ selectedCharacter, onContinue, onB
         <div className="memory-clouds-container">
           <div className="memory-cloud-container-left">
             <div className="memory-cloud show">
-              <p className="memory-cloud-text">{getCharacterName()}'s birthday is July 12th</p>
+              <p className="memory-cloud-text">{characterName}'s birthday is July 12th</p>
             </div>
             
             {/* Arrow pointing down from birthday cloud to deduction bubble */}
@@ -37,13 +33,13 @@ export default function InteractiveThinking({ selectedCharacter, onContinue, onB
             
             {/* Birthday deduction bubble below birthday cloud */}
             <div className="deduction-bubble">
-              <p className="deduction-text">His birthday passed</p>
+              <p className="deduction-text">{characterName}'s birthday passed</p>
             </div>
           </div>
           
           <div className="memory-cloud-container-right">
             <div className="memory-cloud show">
-              <p className="memory-cloud-text">{getCharacterName()} is in 8th grade</p>
+              <p className="memory-cloud-text">{characterName} is in 8th grade</p>
             </div>
             
             {/* Arrow pointing down from grade cloud to deduction bubble */}
@@ -54,7 +50,7 @@ export default function InteractiveThinking({ selectedCharacter, onContinue, onB
             
             {/* Deduction bubble below grade cloud */}
             <div className="deduction-bubble">
-              <p className="deduction-text">{getCharacterName()} is around 13 to 14 years old</p>
+              <p className="deduction-text">{characterName} is around 13 to 14 years old</p>
             </div>
           </div>
         </div>

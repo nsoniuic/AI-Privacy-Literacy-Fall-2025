@@ -9,6 +9,7 @@ import SecondScenario from './pages/SecondScenario'
 import SecondScenarioPuzzle from './pages/SecondScenarioPuzzle'
 import SecondScenarioMemory from './pages/SecondScenarioMemory'
 import SecondScenarioResult from './pages/SecondScenarioResult'
+import FinalMessage from './pages/FinalMessage'
 import './App.css'
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
       <Route path="/second_scenario/puzzle" element={<SecondScenarioPuzzle />} />
       <Route path="/second_scenario/memory" element={<SecondScenarioMemory />} />
       <Route path="/second_scenario/result" element={<SecondScenarioResult />} />
+      <Route path="/final_screen" element={<FinalMessage />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

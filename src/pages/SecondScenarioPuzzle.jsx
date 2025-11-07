@@ -36,7 +36,7 @@ export default function SecondScenarioPuzzle() {
         <div className="robot-greeting-content">
           <div className="dialog-box">
             <p className="dialog-text">
-              Great work! Now I will show you how I reason with Alice's information 
+              Great work! Now I will show you how I reason with Parker's information 
               to get to her neighborhood location, which she didn't tell me.
             </p>
           </div>

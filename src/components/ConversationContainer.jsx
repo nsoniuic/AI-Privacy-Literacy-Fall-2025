@@ -13,8 +13,9 @@ export default function ConversationContainer({
   thoughtBubbleTexts = { first: 'grade level', second: 'birthday' }, // Default thought bubble texts
   endThoughtText = null // Custom end thought text (optional)
 }) {
-  const characterName = selectedCharacter === 'boy' ? 'Nate' : 'Natalie';
+  const characterName = 'Parker';
   const characterPronoun = selectedCharacter === 'boy' ? 'his' : 'her';
+  const characterPossessive = selectedCharacter === 'boy' ? 'He' : 'She';
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
@@ -26,7 +27,7 @@ export default function ConversationContainer({
   const [showBirthdayInMemory, setShowBirthdayInMemory] = useState(false);
   const [currentScreen, setCurrentScreen] = useState('conversation'); // 'conversation', 'thinking', 'memory-extraction'
 
-  const typingSpeed = 10;
+  const typingSpeed = 40;
   const currentDialogue = conversation[currentDialogueIndex];
 
   const thoughtText = endThoughtText || `Now that I have ${characterPronoun} birthday and grade level, let's see what I can figure out...`;
@@ -38,7 +39,6 @@ export default function ConversationContainer({
       }, typingSpeed);
       return () => clearTimeout(timer);
     } else if (displayedText.length === currentDialogue.text.length) {
-      setIsTyping(false);
       
       // Add completed dialogue to the list
       if (!completedDialogues.find(d => d.index === currentDialogueIndex)) {
@@ -59,6 +59,7 @@ export default function ConversationContainer({
           // Add to memory container after additional delay (1.5 seconds total)
           setTimeout(() => {
             setShowGradeLevelInMemory(true);
+            setIsTyping(false);
           }, 1000);
 
         }, 500); // 0.5 second delay after typing finishes
@@ -74,10 +75,16 @@ export default function ConversationContainer({
           // Add to memory container after additional delay (1.5 seconds total)
           setTimeout(() => {
             setShowBirthdayInMemory(true);
+            setIsTyping(false);
           }, 1000);
 
         }, 500); // 0.5 second delay after typing finishes
       }
+      else {
+        setIsTyping(false);
+      }
+
+      
     }
   }, [displayedText, isTyping, currentDialogue.text, currentDialogueIndex, currentDialogue.speaker, completedDialogues, memoryTriggers]);
 
@@ -241,14 +248,14 @@ export default function ConversationContainer({
               {/* Thought bubble for grade level */}
               {showGradeLevelThought && (
                 <div className="thought-bubble">
-                  {characterName} mentioned {thoughtBubbleTexts.first}!
+                  {characterPossessive} mentioned {thoughtBubbleTexts.first}!
                 </div>
               )}
               
               {/* Thought bubble for birthday */}
               {showBirthdayThought && (
                 <div className="thought-bubble">
-                  {characterName} mentioned {thoughtBubbleTexts.second}!
+                  {characterPossessive} mentioned {thoughtBubbleTexts.second}!
                 </div>
               )}
               

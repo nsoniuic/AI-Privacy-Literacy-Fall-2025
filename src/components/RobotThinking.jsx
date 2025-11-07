@@ -21,20 +21,35 @@ export default function RobotThinking({
   },
   finalDeduction = "is 11 years old"
 }) {
-  const characterName = selectedCharacter === 'boy' ? 'Nate' : 'Natalie';
+  const characterName = 'Parker';
   const pronoun = selectedCharacter === 'boy' ? 'he' : 'she';
   const possessivePronoun = selectedCharacter === 'boy' ? 'his' : 'her';
   
-  const [showContent, setShowContent] = useState(false);
+  const [showBrain, setShowBrain] = useState(false);
+  const [showArrows, setShowArrows] = useState(false);
+  const [showClouds, setShowClouds] = useState(false);
   const [showDeductionBubble, setShowDeductionBubble] = useState(false);
   const [currentScreen, setCurrentScreen] = useState(0);
 
   useEffect(() => {
-    // Delay showing content for animation effect
-    const timer = setTimeout(() => {
-      setShowContent(true);
-    }, 300);
-    return () => clearTimeout(timer);
+    // Sequence: brain -> arrows -> clouds
+    const brainTimer = setTimeout(() => {
+      setShowBrain(true);
+    }, 100);
+    
+    const arrowsTimer = setTimeout(() => {
+      setShowArrows(true);
+    }, 1000);
+    
+    const cloudsTimer = setTimeout(() => {
+      setShowClouds(true);
+    }, 2000);
+    
+    return () => {
+      clearTimeout(brainTimer);
+      clearTimeout(arrowsTimer);
+      clearTimeout(cloudsTimer);
+    };
   }, []);
 
   // Show deduction bubble when thought bubble appears
@@ -73,7 +88,7 @@ export default function RobotThinking({
         {/* Two cloud boxes at the top */}
         <div className="memory-clouds-container">
           <div className="memory-cloud-container-left">
-            <div className={`memory-cloud ${showContent ? 'show' : ''}`}>
+            <div className={`memory-cloud ${showClouds ? 'show' : ''}`}>
               <p className="memory-cloud-text">{characterName}'s {memoryData.fact1}</p>
             </div>
             
@@ -94,7 +109,7 @@ export default function RobotThinking({
           </div>
           
           <div className="memory-cloud-container-right">
-            <div className={`memory-cloud ${showContent ? 'show' : ''}`}>
+            <div className={`memory-cloud ${showClouds ? 'show' : ''}`}>
               <p className="memory-cloud-text">{characterName} {memoryData.fact2}</p>
             </div>
             
@@ -137,11 +152,11 @@ export default function RobotThinking({
         {/* Arrows pointing diagonally from brain to clouds */}
         {!showThoughtBubble && currentScreen === 0 && (
           <div className="arrows-container">
-            <div className={`arrow arrow-left ${showContent ? 'show' : ''}`}>
+            <div className={`arrow arrow-left ${showArrows ? 'show' : ''}`}>
               <div className="arrow-head"></div>
               <div className="arrow-line"></div>
             </div>
-            <div className={`arrow arrow-right ${showContent ? 'show' : ''}`}>
+            <div className={`arrow arrow-right ${showArrows ? 'show' : ''}`}>
               <div className="arrow-head"></div>
               <div className="arrow-line"></div>
             </div>
@@ -150,7 +165,7 @@ export default function RobotThinking({
 
         {/* Brain icon in the middle */}
         {!showThoughtBubble && currentScreen === 0 && (
-          <div className={`brain-display ${showContent ? 'show' : ''}`}>
+          <div className={`brain-display ${showBrain ? 'show' : ''}`}>
             <div className="brain-icon-large">🧠</div>
           </div>
         )}

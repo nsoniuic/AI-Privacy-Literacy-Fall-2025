@@ -10,7 +10,7 @@ export default function MemoryExtraction() {
   const location = useLocation();
   const navigate = useNavigate();
   const selectedCharacter = location.state?.character;
-  const characterName = selectedCharacter === 'boy' ? 'Nate' : 'Natalie';
+  const characterName = 'Parker';
   const [showThoughtBubble, setShowThoughtBubble] = useState(false);
   const [showTransitionScreen, setShowTransitionScreen] = useState(false);
   const [showInteractiveScreen, setShowInteractiveScreen] = useState(false);

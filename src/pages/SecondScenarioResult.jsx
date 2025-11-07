@@ -3,23 +3,24 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import robotImage from '../assets/robot.png';
 import boyImage from '../assets/boy.png';
 import girlImage from '../assets/girl.png';
+import locationImage from '../assets/location.png';
 import '../styles/Conversation.css';
 
 export default function SecondScenarioResult() {
   const location = useLocation();
   const navigate = useNavigate();
   const selectedCharacter = location.state?.selectedCharacter;
-  const [currentScreen, setCurrentScreen] = useState(0);
-  const [showSecondDialogue, setShowSecondDialogue] = useState(false);
-  const [showThirdDialogue, setShowThirdDialogue] = useState(false);
-  const [showMap, setShowMap] = useState(false);
-  const [showFourthDialogue, setShowFourthDialogue] = useState(false);
-  const [showFifthDialogue, setShowFifthDialogue] = useState(false);
-  const [showFinalScreen, setShowFinalScreen] = useState(false);
-  const [showSecondFinalDialogue, setShowSecondFinalDialogue] = useState(false);
+  
+  // Initialize state from location.state if coming back from final page
+  const [currentScreen, setCurrentScreen] = useState(location.state?.previousState?.currentScreen || 0);
+  const [showSecondDialogue, setShowSecondDialogue] = useState(location.state?.previousState?.showSecondDialogue || false);
+  const [showThirdDialogue, setShowThirdDialogue] = useState(location.state?.previousState?.showThirdDialogue || false);
+  const [showMap, setShowMap] = useState(location.state?.previousState?.showMap || false);
+  const [showFourthDialogue, setShowFourthDialogue] = useState(location.state?.previousState?.showFourthDialogue || false);
+  const [showFifthDialogue, setShowFifthDialogue] = useState(location.state?.previousState?.showFifthDialogue || false);
 
   // Compute character-specific values once
-  const characterName = selectedCharacter === 'boy' ? 'Nate' : selectedCharacter === 'girl' ? 'Natalie' : 'Alice';
+  const characterName = 'Parker';
   const pronoun = selectedCharacter === 'boy' ? 'he' : 'she';
   const possessivePronoun = selectedCharacter === 'boy' ? 'him' : 'her';
   const characterImage = selectedCharacter === 'boy' ? boyImage : girlImage;
@@ -38,24 +39,26 @@ export default function SecondScenarioResult() {
       // Third click: hide map and show fifth dialogue
       setShowMap(false);
       setShowFifthDialogue(true);
-    } else if (currentScreen === 2 && showFifthDialogue && !showFinalScreen) {
-      // Fourth click: show final screen with first message
-      setShowFinalScreen(true);
-    } else if (currentScreen === 2 && showFinalScreen && !showSecondFinalDialogue) {
-      // Fifth click: show second final message
-      setShowSecondFinalDialogue(true);
-    } else {
-      // Navigate to home
-      navigate('/', { state: { selectedCharacter } });
+    } else if (currentScreen === 2 && showFifthDialogue) {
+      // Fourth click: navigate to final message page with current state
+      navigate('/final_screen', { 
+        state: { 
+          selectedCharacter,
+          previousState: {
+            currentScreen,
+            showSecondDialogue,
+            showThirdDialogue,
+            showMap,
+            showFourthDialogue,
+            showFifthDialogue
+          }
+        } 
+      });
     }
   };
 
   const handleBack = () => {
-    if (currentScreen === 2 && showSecondFinalDialogue) {
-      setShowSecondFinalDialogue(false);
-    } else if (currentScreen === 2 && showFinalScreen) {
-      setShowFinalScreen(false);
-    } else if (currentScreen === 2 && showFifthDialogue) {
+    if (currentScreen === 2 && showFifthDialogue) {
       setShowFifthDialogue(false);
       setShowMap(true);
     } else if (currentScreen === 2 && showFourthDialogue) {
@@ -70,8 +73,6 @@ export default function SecondScenarioResult() {
       setShowMap(false);
       setShowFourthDialogue(false);
       setShowFifthDialogue(false);
-      setShowFinalScreen(false);
-      setShowSecondFinalDialogue(false);
     } else {
       navigate('/second_scenario/memory', { state: { selectedCharacter } });
     }
@@ -79,53 +80,6 @@ export default function SecondScenarioResult() {
 
   // Screen 3: Conversation between child and AI
   if (currentScreen === 2) {
-    // Final screen - only robot with closing message
-    if (showFinalScreen) {
-      return (
-        <div className="page-container">
-          <div className="characters-container">
-            {/* Robot avatar with dialogue box */}
-            <div className="robot-avatar speaking">
-              {!showSecondFinalDialogue ? (
-                <div className="robot-dialog-box">
-                  <p className="dialog-text">
-                    Thank you for joining me in solving puzzles today!
-                  </p>
-                </div>
-              ) : (
-                <div className="robot-dialog-box">
-                  <p className="dialog-text">
-                    I hope you have learned that an AI like me could remember what you told me to connect the dots and come up with details you didn't tell me!
-                  </p>
-                </div>
-              )}
-              
-              <img 
-                src={robotImage} 
-                alt="Robot" 
-                className="robot-conversation-image"
-              />
-            </div>
-          </div>
-
-          <div className="navigation-buttons">
-            <button 
-              className="back-button"
-              onClick={handleBack}
-            >
-              Back
-            </button>
-            <button 
-              className="continue-button"
-              onClick={handleContinue}
-            >
-              {showSecondFinalDialogue ? 'Finish' : 'Continue'}
-            </button>
-          </div>
-        </div>
-      );
-    }
-
     return (
       <div className="page-container">
         <div className="characters-container">
@@ -194,7 +148,7 @@ export default function SecondScenarioResult() {
             {/* Placeholder for map image - replace with actual map image */}
             <div style={{
               width: '100%',
-              height: '300px',
+              height: '250px',
               backgroundColor: '#e0e0e0',
               borderRadius: '10px',
               display: 'flex',
@@ -202,7 +156,7 @@ export default function SecondScenarioResult() {
               justifyContent: 'center',
               fontSize: '18px',
               color: '#666',
-              backgroundImage: '../assets/location.png',
+              backgroundImage: `url(${locationImage})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center'
             }}>

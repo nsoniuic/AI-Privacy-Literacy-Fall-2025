@@ -17,7 +17,7 @@ export default function ResultPage() {
   const [showThirdDialogue, setShowThirdDialogue] = useState(false);
 
   // Compute character-specific values once
-  const characterName = selectedCharacter === 'boy' ? 'Nate' : 'Natalie';
+  const characterName = 'Parker';
   const pronoun = selectedCharacter === 'boy' ? 'he' : 'she';
   const characterImage = selectedCharacter === 'boy' ? boyImage : girlImage;
 

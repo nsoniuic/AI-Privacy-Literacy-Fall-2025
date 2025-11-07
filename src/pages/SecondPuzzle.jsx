@@ -22,7 +22,7 @@ export default function SecondPuzzle() {
   const dialogues = [
     {
       id: 'puzzle-2-intro',
-      text: "Let's see if you can spot the pattern again. Here's another puzzle, remember to look closely at the inputs and outputs.\nWhat changes this time?",
+      text: "Let's see if you can apply the same pattern you spotted. Here's another puzzle, remember to look closely at the inputs and outputs.\nWhat changes this time?",
       showPuzzle: true,
     },
     {

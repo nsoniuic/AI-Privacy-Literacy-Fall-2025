@@ -7,8 +7,8 @@ import '../styles/Conversation.css';
 export default function SecondScenarioMemory() {
   const location = useLocation();
   const navigate = useNavigate();
-  const selectedCharacter = location.state?.selectedCharacter;
-  const characterName = selectedCharacter === 'boy' ? 'Nate' : selectedCharacter === 'girl' ? 'Natalie' : 'Alice';
+  const selectedCharacter = location.state?.character;
+  const characterName = 'Parker';
   const [showThoughtBubble, setShowThoughtBubble] = useState(false);
 
   const handleContinue = () => {

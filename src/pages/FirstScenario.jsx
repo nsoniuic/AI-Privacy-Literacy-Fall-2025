@@ -15,6 +15,9 @@ export default function FirstScenario() {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [currentDialogue, setCurrentDialogue] = useState(0);
 
+  // Get character name based on selection
+  const characterName = 'Parker';
+
   const dialogues = [
     "Awesome job with the puzzles! Ready to see how I can connect the dots from what you've shared and figure out things you never told me?",
     "Before we continue, which character would you like to see moving forward?",
@@ -25,7 +28,7 @@ export default function FirstScenario() {
   const conversation = [
     {
       speaker: 'robot',
-      text: "Hey, I missed chatting with you! How's school going lately?"
+      text: `Hey ${characterName}, I missed chatting with you! How's school going lately?`
     },
     {
       speaker: 'character',

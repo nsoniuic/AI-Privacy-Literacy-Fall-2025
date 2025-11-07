@@ -19,7 +19,7 @@ export default function SecondScenario() {
   const conversation = [
     {
       speaker: 'robot',
-      text: "Hey, good to see you again! Did you just got back from school?"
+      text: "Hey Parker, good to see you again! Did you just got back from school?"
     },
     {
       speaker: 'character',
@@ -109,7 +109,7 @@ export default function SecondScenario() {
             memoryTriggers={{ gradeLevel: 3, birthday: 7 }}
             memoryLabels={{ first: 'Travel Time', second: 'School Name' }}
             thoughtBubbleTexts={{ first: 'travel time', second: 'school name' }}
-            endThoughtText="Now that you have seen how AI reasons, try guessing what I could know based on what Alice have mentioned!"
+            endThoughtText="Now that you have seen how AI reasons, try guessing what I could know based on what Parker have mentioned!"
           />
         )}
       </div>

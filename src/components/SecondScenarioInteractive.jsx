@@ -41,13 +41,13 @@ export default function SecondScenarioInteractive({ selectedCharacter, onContinu
         <div className="memory-clouds-container">
           <div className="memory-cloud-container-left">
             <div className="memory-cloud show">
-              <p className="memory-cloud-text">Alice mentioned her school name</p>
+              <p className="memory-cloud-text">Parker mentioned her school name</p>
             </div>
           </div>
           
           <div className="memory-cloud-container-right">
             <div className="memory-cloud show">
-              <p className="memory-cloud-text">Alice takes 5 minutes to travel from home to school</p>
+              <p className="memory-cloud-text">Parker takes 5 minutes to travel from home to school</p>
             </div>
           </div>
         </div>
@@ -172,17 +172,15 @@ export default function SecondScenarioInteractive({ selectedCharacter, onContinu
         {/* Final deduction bubble - always visible at bottom */}
         <div className="final-deduction-container">
           <div className="deduction-bubble show">
-            <p className="deduction-text">Alice's neighborhood location is known</p>
+            <p className="deduction-text">Parker's neighborhood location is known</p>
           </div>
         </div>
 
         {/* Instruction box and Robot at the bottom */}
         <div className="robot-thinking-image-container">
-          {(!leftCloudAdded || !rightCloudAdded) && (
-            <div className="instruction-box">
-              <p className="instruction-text">Click on the + button to add a thinking cloud!</p>
-            </div>
-          )}
+          <div className="instruction-box">
+            <p className="instruction-text">Click on the + button to add a thinking cloud!</p>
+          </div>
           
           <img 
             src={robotImage} 
