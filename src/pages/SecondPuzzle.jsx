@@ -16,12 +16,20 @@ export default function SecondPuzzle() {
   const [puzzleResult, setPuzzleResult] = useState(null);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
   const [showPuzzle, setShowPuzzle] = useState(true);
+  const [attemptCount, setAttemptCount] = useState(0);
+  const [puzzleKey, setPuzzleKey] = useState(0); // Used to force puzzle reset
 
   const dialogues = [
     {
       id: 'puzzle-2-intro',
       text: "Let's see if you can spot the pattern again. Here's another puzzle, remember to look closely at the inputs and outputs.\nWhat changes this time?",
       showPuzzle: true,
+    },
+    {
+      id: 'puzzle-2-retry',
+      text: "Not quite. Let's try again! Make sure to think about the pattern of the yellow boxes.",
+      showPuzzle: true,
+      condition: () => attemptCount === 1,
     },
     {
       id: 'result-correct',
@@ -88,12 +96,29 @@ export default function SecondPuzzle() {
   }, [displayedText, isTyping, currentText]);
 
   const handleSubmitResult = (isCorrect) => {
-    setPuzzleResult(isCorrect ? 'correct' : 'incorrect');
-    setShowPuzzle(false);
-    // Move to result dialogue (index 1 for correct, 2 for incorrect)
-    setCurrentDialogueIndex(isCorrect ? 1 : 2);
-    setDisplayedText('');
-    setIsTyping(true);
+    setAttemptCount(prev => prev + 1);
+    
+    if (isCorrect) {
+      // Correct answer - proceed to explanation
+      setPuzzleResult('correct');
+      setShowPuzzle(false);
+      setCurrentDialogueIndex(2); // Move to result-correct dialogue
+      setDisplayedText('');
+      setIsTyping(true);
+    } else if (attemptCount === 0) {
+      // First incorrect attempt - show retry message and reset puzzle
+      setCurrentDialogueIndex(1); // Move to retry dialogue
+      setPuzzleKey(prev => prev + 1); // Force puzzle to reset
+      setDisplayedText('');
+      setIsTyping(true);
+    } else {
+      // Second incorrect attempt - proceed to explanation
+      setPuzzleResult('incorrect');
+      setShowPuzzle(false);
+      setCurrentDialogueIndex(3); // Move to result-incorrect dialogue
+      setDisplayedText('');
+      setIsTyping(true);
+    }
   };
 
   const handleBack = () => {
@@ -157,6 +182,7 @@ export default function SecondPuzzle() {
 
       {currentDialogue?.showPuzzle && showPuzzle && (
         <PuzzleInteractive 
+          key={puzzleKey}
           onSubmitResult={handleSubmitResult}
           onBack={handleBack}
           puzzleConfig={PUZZLE_2_CONFIG}
@@ -180,7 +206,7 @@ export default function SecondPuzzle() {
               e.stopPropagation();
               handleBack();
             }}
-            disabled={currentDialogueIndex === 0 || (puzzleResult && (currentDialogueIndex === 1 || currentDialogueIndex === 2))}
+            disabled={currentDialogueIndex === 0 || (puzzleResult && (currentDialogueIndex === 2 || currentDialogueIndex === 3))}
           >
             Back
           </button>
