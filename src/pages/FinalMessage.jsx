@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import robotImage from '../assets/robot.png';
+import AppTitle from '../components/AppTitle';
 import '../styles/Conversation.css';
 
 export default function FinalMessage() {
@@ -66,6 +67,7 @@ export default function FinalMessage() {
 
   return (
     <div className="page-container">
+      <AppTitle />
       <div className="characters-container" style={{ justifyContent: 'center' }}>
         {/* Robot avatar with dialogue box */}
         <div className="robot-avatar speaking">

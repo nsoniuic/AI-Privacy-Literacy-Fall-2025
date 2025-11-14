@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import robotImage from '../assets/robot.png';
 import CharacterSelection from '../components/CharacterSelection';
 import ConversationContainer from '../components/ConversationContainer';
-import '../styles/RobotGreeting.css';
+import '../styles/InitialGreeting.css';
 import '../App.css';
 
 export default function FirstScenario() {
@@ -120,6 +120,7 @@ export default function FirstScenario() {
 
   return (
     <div className="page-container">
+      <AppTitle />
       <div className="robot-greeting-content">
         {!showConversation ? (
           <>

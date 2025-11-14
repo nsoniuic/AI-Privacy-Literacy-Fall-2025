@@ -4,6 +4,7 @@ import robotImage from '../assets/robot.png';
 import PuzzleInteractive from '../components/PuzzleInteractive';
 import PuzzleInteractiveExplain from '../components/PuzzleInteractiveExplain';
 import { PUZZLE_2_CONFIG } from '../utils/puzzleConfig';
+import AppTitle from '../components/AppTitle';
 import '../styles/Puzzles.css';
 import '../App.css';
 
@@ -168,6 +169,7 @@ export default function SecondPuzzle() {
 
   return (
     <div className="page-container second-puzzle-page">
+      <AppTitle />
       <div className="dialog-box instruction-dialog">
         <p className="dialog-text">{displayedText}</p>
       </div>

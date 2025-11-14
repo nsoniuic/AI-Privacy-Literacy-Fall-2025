@@ -48,7 +48,7 @@
   position: fixed;
   top: 30px;
   right: 30px;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: rgba(255, 250, 205, 0.95);
   border-radius: 20px;
   padding: 25px 30px;
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
@@ -63,7 +63,7 @@
 }
 
 .brain-label {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
   color: #333;
   margin-bottom: 15px;
@@ -81,14 +81,14 @@
   border: 2px solid rgba(100, 200, 255, 0.6);
   border-radius: 10px;
   padding: 12px 16px;
-  font-size: 15px;
+  font-size: 18px;
   color: #333;
   font-weight: 600;
   animation: fadeIn 0.5s ease-in;
 }
 
 .empty-memory-message {
-  font-size: 14px;
+  font-size: 17px;
   color: #666;
   font-style: italic;
   padding: 12px;
@@ -136,7 +136,7 @@
   position: absolute;
   bottom: 100%;
   margin-bottom: 10px;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: rgba(255, 250, 205, 0.95);
   border-radius: 15px;
   padding: 20px 25px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
@@ -148,7 +148,7 @@
 /* Previous dialogue styling - slightly transparent */
 .previous-dialogue {
   opacity: 0.7;
-  background-color: rgba(255, 255, 255, 0.85);
+  background-color: rgba(255, 250, 205, 0.85);
 }
 
 .character-dialog-box {
@@ -162,7 +162,7 @@
 } 
 
 .dialog-text {
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.6;
   color: #333;
   margin: 0;
@@ -181,7 +181,7 @@
   height: 0;
   border-left: 15px solid transparent;
   border-right: 15px solid transparent;
-  border-top: 15px solid rgba(255, 255, 255, 0.95);
+  border-top: 15px solid rgba(255, 250, 205, 0.95);
 }
 
 .character-image,

@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import robotImage from '../assets/robot.png';
 import ConversationContainer from '../components/ConversationContainer';
-import '../styles/RobotGreeting.css';
+import AppTitle from '../components/AppTitle';
+import '../styles/InitialGreeting.css';
 import '../App.css';
 
 export default function SecondScenario() {

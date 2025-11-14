@@ -4,6 +4,7 @@ import robotImage from '../assets/robot.png';
 import boyImage from '../assets/boy.png';
 import girlImage from '../assets/girl.png';
 import locationImage from '../assets/location.png';
+import AppTitle from '../components/AppTitle';
 import '../styles/Conversation.css';
 
 export default function SecondScenarioResult() {
@@ -137,6 +138,7 @@ export default function SecondScenarioResult() {
   if (currentScreen === 2) {
     return (
       <div className="page-container">
+        <AppTitle />
         <div className="characters-container">
           {/* Character avatar */}
           <div className={`character-avatar ${(showThirdDialogue && !showFourthDialogue) || showFifthDialogue ? 'speaking' : ''}`}>
@@ -241,6 +243,7 @@ export default function SecondScenarioResult() {
 
   return (
     <div className="page-container">
+      <AppTitle />
       <div className="robot-thinking-container">
         <div className="robot-thinking-content">
           <div className="large-thought-bubble">

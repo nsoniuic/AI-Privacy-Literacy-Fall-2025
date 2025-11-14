@@ -44,6 +44,7 @@ export default function SecondScenarioMemory() {
 
   return (
     <div className="page-container">
+      <AppTitle />
       <RobotThinking 
         selectedCharacter={selectedCharacter}
         onContinue={handleContinue}

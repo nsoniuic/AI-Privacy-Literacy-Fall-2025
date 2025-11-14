@@ -4,6 +4,7 @@ import robotImage from '../assets/robot.png';
 import boyImage from '../assets/boy.png';
 import girlImage from '../assets/girl.png';
 import adVideo from '../assets/ad.mp4';
+import AppTitle from '../components/AppTitle';
 // import '../App.css';
 import '../styles/Conversation.css';
 
@@ -62,6 +63,7 @@ export default function ResultPage() {
   if (currentScreen === 2) {
     return (
       <div className="page-container">
+        <AppTitle />
         <>
           {/* Video ad in center - shows after first continue */}
           {showVideo && (
@@ -156,6 +158,7 @@ export default function ResultPage() {
 
   return (
     <div className="page-container">
+      <AppTitle />
       <div className="robot-thinking-container">
         <div className="robot-thinking-content">
             <div className="large-thought-bubble">

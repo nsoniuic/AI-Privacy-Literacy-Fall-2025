@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-import RobotGreeting from './pages/RobotGreeting'
+import InitialGreeting from './pages/InitialGreeting'
 import FirstPuzzle from './pages/FirstPuzzle'
 import SecondPuzzle from './pages/SecondPuzzle'
 import FirstScenario from './pages/FirstScenario'
@@ -15,7 +15,7 @@ import './App.css'
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<RobotGreeting />} />
+      <Route path="/" element={<InitialGreeting />} />
       <Route path="/puzzle/first" element={<FirstPuzzle />} />
       <Route path="/puzzle/second" element={<SecondPuzzle />} />
       <Route path="/first_scenario/talk" element={<FirstScenario />} />

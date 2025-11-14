@@ -1,11 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import robotImage from '../assets/robot.png';
+// Import different robot emotion images here as they become available
+import robotHappyImage from '../assets/robot-happy.png';
+import robotWaveImage from '../assets/robot-wave.png';
+import robotThumbsUpImage from '../assets/robot-thumbs-up.png';
+import robotThinkImage from '../assets/robot-think.png';
 import useSpeech, { getChildFriendlyVoice } from '../utils/useSpeech';
-import '../styles/RobotGreeting.css';
+import AppTitle from '../components/AppTitle';
+import '../styles/InitialGreeting.css';
 import '../App.css';
 
-export default function RobotGreeting() {
+export default function InitialGreeting() {
   const navigate = useNavigate();
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
@@ -16,11 +22,29 @@ export default function RobotGreeting() {
   const [shouldSpeak, setShouldSpeak] = useState(false);
   const [friendlyVoice, setFriendlyVoice] = useState(null);
 
-  const dialogues = [
-    "Hello there! My name is Robo! What's your name?",
-    "It's great to meet you, {name}!",
-    "In today's exercise, you'll try solving some puzzles on your own… ",
-    "Then I'll show you how I can solve them, and maybe I'll do them even faster! Think you can beat me?",
+  // Dialogue configuration with emotion/image syncing
+  // Each dialogue has text and corresponding robot emotion image
+  const dialogueConfig = [
+    {
+      text: "Hi there! I’m Robo, your AI buddy. Together, we’ll explore how AI thinks and what happens when we share information with it. What’s your name?",
+      emotion: 'happy',
+      image: robotWaveImage, // Replace with robotHappyImage when available
+    },
+    {
+      text: "It's great to meet you, {name}!",
+      emotion: 'excited',
+      image: robotWaveImage, // Replace with robotExcitedImage when available
+    },
+    {
+      text: "In today's exercise, you'll try solving some puzzles on your own… ",
+      emotion: 'neutral',
+      image: robotHappyImage, // Current default robot image
+    },
+    {
+      text: "Then I'll show you how I can solve them, and maybe I'll do them even faster! Think you can beat me?",
+      emotion: 'playful',
+      image: robotHappyImage, // Replace with robotPlayfulImage when available
+    },
   ];
 
   const typingSpeed = 55;
@@ -32,8 +56,10 @@ export default function RobotGreeting() {
     });
   }, []);
 
-  // Get current dialogue text
-  const currentDialogue = dialogues[currentDialogueIndex].replace('{name}', userName);
+  // Get current dialogue configuration
+  const currentDialogueConfig = dialogueConfig[currentDialogueIndex];
+  const currentDialogue = currentDialogueConfig.text.replace('{name}', userName);
+  const currentRobotImage = currentDialogueConfig.image;
   
   // Use speech hook - speak when typing is complete
   const speechControl = useSpeech(
@@ -48,29 +74,29 @@ export default function RobotGreeting() {
   );
 
   useEffect(() => {
-    const currentDialogue = dialogues[currentDialogueIndex].replace('{name}', userName);
+    const dialogueText = dialogueConfig[currentDialogueIndex].text.replace('{name}', userName);
     
     // Start speech immediately when new dialogue starts
     if (displayedText === '') {
       setShouldSpeak(true);
     }
     
-    if (isTyping && displayedText.length < currentDialogue.length) {
+    if (isTyping && displayedText.length < dialogueText.length) {
       const timer = setTimeout(() => {
-        setDisplayedText(currentDialogue.slice(0, displayedText.length + 1));
+        setDisplayedText(dialogueText.slice(0, displayedText.length + 1));
       }, typingSpeed);
       return () => clearTimeout(timer);
-    } else if (displayedText.length === currentDialogue.length) {
+    } else if (displayedText.length === dialogueText.length) {
       setIsTyping(false);
     }
-  }, [displayedText, isTyping, currentDialogueIndex, userName, dialogues]);
+  }, [displayedText, isTyping, currentDialogueIndex, userName]);
 
   const handleContinue = () => {
     // Stop any ongoing speech
     speechControl.stop();
     setShouldSpeak(false);
     
-    if (currentDialogueIndex < dialogues.length - 1) {
+    if (currentDialogueIndex < dialogueConfig.length - 1) {
       setCurrentDialogueIndex(currentDialogueIndex + 1);
       setDisplayedText('');
       setIsTyping(true);
@@ -121,32 +147,35 @@ export default function RobotGreeting() {
 
   return (
     <div className="page-container" style={{ cursor: !showInput && !isTyping ? 'pointer' : 'default' }}>
-      <div className="robot-greeting-content">
-        <div className="dialog-box" style={{ width: '300px'}}>
+      <AppTitle />
+
+      <div className="initial-greeting-content">
+        {/* Dialog box positioned at top */}
+        <div className="dialog-box-top">
           <p className="dialog-text">{displayedText}</p>
         </div>
 
-        <div className="robot-greeting-robot-container">
+        {/* Robot image on the right side */}
+        <div className="initial-greeting-robot-container-right">
           <img 
-            src={robotImage} 
-            alt="Robot" 
-            className="robot-greeting-robot-image"
+            src={currentRobotImage} 
+            alt={`Robot ${currentDialogueConfig.emotion}`} 
+            className="initial-greeting-robot-image"
+            key={currentDialogueIndex} // Force re-render on dialogue change for smooth transitions
           />
         </div>
 
+        {/* Name prompt and input below robot */}
         {showInput && (
-          <div 
-            className="robot-greeting-form-container"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <p className="robot-greeting-prompt-text">My name is...</p>
+          <div className="initial-greeting-input-section">
+            <p className="initial-greeting-prompt-text">What's your name?</p>
             <input
               type="text"
               value={userName}
               onChange={handleInputChange}
               onKeyPress={handleKeyPress}
               placeholder="Enter your name"
-              className="robot-greeting-input"
+              className="initial-greeting-input"
               autoFocus
             />
           </div>

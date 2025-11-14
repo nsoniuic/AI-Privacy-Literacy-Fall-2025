@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import RobotThinking from '../components/RobotThinking';
 import InteractiveThinking from '../components/InteractiveThinking';
 import robotImage from '../assets/robot.png';
+import AppTitle from '../components/AppTitle';
 // import '../App.css';
 import '../styles/Conversation.css';
 
@@ -53,6 +54,7 @@ export default function MemoryExtraction() {
   if (showInteractiveScreen) {
     return (
       <div className="page-container">
+        <AppTitle />
         <InteractiveThinking 
           selectedCharacter={selectedCharacter}
           onContinue={handleInteractiveContinue}
@@ -65,6 +67,7 @@ export default function MemoryExtraction() {
   if (showTransitionScreen) {
     return (
         <div className="page-container">
+            <AppTitle />
             <div className="robot-thinking-container">
                 <div className="robot-thinking-content">
                     {/* Large thought bubble */}
@@ -105,6 +108,7 @@ export default function MemoryExtraction() {
 
   return (
     <div className="page-container">
+      <AppTitle />
       <RobotThinking 
         selectedCharacter={selectedCharacter}
         onContinue={handleContinue}

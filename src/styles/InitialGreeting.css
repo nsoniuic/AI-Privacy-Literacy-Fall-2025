@@ -1,0 +1,265 @@
+/* Voice Toggle Button */
+.voice-toggle-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+.voice-toggle-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.voice-toggle-button:active {
+  transform: scale(0.95);
+}
+
+.initial-greeting-content {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  position: relative;
+  min-height: 60vh;
+}
+
+/* Dialog box at top left */
+.dialog-box-top {
+  position: absolute;
+  top: 35%;
+  transform: translateY(-50%);
+  left: 5%;
+  background-color: #FFFACD;
+  border-radius: 48px;
+  padding: 20px 40px;
+  width: 400px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2), 
+              0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  text-align: left;
+}
+
+.dialog-box-top::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  right: 30px;
+  width: 0;
+  height: 0;
+  border-top: 40px solid #FFFACD;
+  border-left: 60px solid transparent;
+  border-right: 1px solid transparent;
+}
+
+/* Robot container on the right side */
+.initial-greeting-robot-container-right {
+  position: absolute;
+  right: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.initial-greeting-robot-image {
+  max-width: 500px;
+  max-height: 600px;
+  object-fit: contain;
+  /* animation: robotFloat 3s ease-in-out infinite; */
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.1));
+}
+
+/* @keyframes robotFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+} */
+
+/* Input section below and to the left */
+.initial-greeting-input-section {
+  position: absolute;
+  bottom: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.initial-greeting-prompt-text {
+  font-size: 36px;
+  color: white;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.initial-greeting-input {
+  width: 100%;
+  max-width: 800px;
+  padding: 24px 36px;
+  border-radius: 60px;
+  border: none;
+  font-size: 30px;
+  outline: none;
+  background-color: #FFFACD;
+  color: #333;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.initial-greeting-input::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.initial-greeting-input:focus {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* Responsive design */
+@media (max-width: 1400px) {
+  .dialog-box-top {
+    max-width: 600px;
+    padding: 30px 45px;
+    left: 10%;
+  }
+
+  .initial-greeting-robot-image {
+    max-width: 450px;
+    max-height: 525px;
+  }
+
+  .initial-greeting-prompt-text {
+    font-size: 36px;
+  }
+
+  .initial-greeting-input {
+    max-width: 600px;
+    font-size: 30px;
+    padding: 24px 36px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .dialog-box-top {
+    max-width: 500px;
+    padding: 25px 35px;
+    border-radius: 36px;
+  }
+
+  .dialog-box-top::after {
+    bottom: -20px;
+    right: 100px;
+    border-top: 30px solid #FFFACD;
+    border-left: 45px solid transparent;
+  }
+
+  .initial-greeting-robot-image {
+    max-width: 350px;
+    max-height: 400px;
+  }
+
+  .initial-greeting-prompt-text {
+    font-size: 28px;
+  }
+
+  .initial-greeting-input {
+    max-width: 500px;
+    font-size: 24px;
+    padding: 20px 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dialog-box-top {
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: none;
+    max-width: 90%;
+    margin: 20px auto;
+    padding: 20px 30px;
+    border-radius: 24px;
+  }
+
+  .dialog-box-top::after {
+    left: 50%;
+    right: auto;
+    bottom: -15px;
+    transform: translateX(-50%);
+    border-top: 20px solid #FFFACD;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+  }
+
+  .initial-greeting-robot-container-right {
+    position: relative;
+    right: 0;
+    top: 0;
+    transform: none;
+    margin: 20px 0;
+  }
+
+  .initial-greeting-robot-image {
+    max-width: 250px;
+    max-height: 300px;
+  }
+
+  /* @keyframes robotFloat {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-15px);
+    }
+  } */
+
+  .initial-greeting-input-section {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    transform: none;
+    margin-top: 20px;
+    margin-bottom: 100px;
+    max-width: 90%;
+  }
+
+  .initial-greeting-prompt-text {
+    font-size: 24px;
+  }
+
+  .initial-greeting-input {
+    font-size: 20px;
+    padding: 16px 24px;
+    max-width: 100%;
+    border-radius: 30px;
+  }
+}

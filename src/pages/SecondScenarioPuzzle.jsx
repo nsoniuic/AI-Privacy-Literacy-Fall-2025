@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import SecondScenarioInteractive from '../components/SecondScenarioInteractive';
 import robotImage from '../assets/robot.png';
-import '../styles/RobotGreeting.css';
+import AppTitle from '../components/AppTitle';
+import '../styles/InitialGreeting.css';
 
 export default function SecondScenarioPuzzle() {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ export default function SecondScenarioPuzzle() {
 
   return (
     <div className='page-container'>
+      <AppTitle />
       {showPuzzle ? (
         <SecondScenarioInteractive 
           selectedCharacter={selectedCharacter}

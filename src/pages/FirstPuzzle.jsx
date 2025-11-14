@@ -5,6 +5,7 @@ import PuzzleExamples from '../components/PuzzleExamples';
 import PuzzleInteractive from '../components/PuzzleInteractive';
 import PuzzleExamplesExplain from '../components/PuzzleExamplesExplain';
 import PuzzleInteractiveExplain from '../components/PuzzleInteractiveExplain';
+import AppTitle from '../components/AppTitle';
 import '../styles/Puzzles.css';
 import '../App.css';
 
@@ -189,6 +190,7 @@ export default function FirstPuzzle() {
 
   return (
     <div className="page-container first-puzzle-page" >
+      <AppTitle />
       <div className="dialog-box instruction-dialog">
         <p className="dialog-text">{displayedText}</p>
       </div>
