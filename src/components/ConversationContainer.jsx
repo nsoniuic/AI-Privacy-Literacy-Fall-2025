@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import robotImage from '../assets/robot.png';
 import boyCharacter from '../assets/boy.png';
 import girlCharacter from '../assets/girl.png';
+import useSpeech, { getChildFriendlyVoice } from '../utils/useSpeech';
 import '../styles/Conversation.css';
 
 export default function ConversationContainer({ 
@@ -26,11 +27,40 @@ export default function ConversationContainer({
   const [showGradeLevelInMemory, setShowGradeLevelInMemory] = useState(false);
   const [showBirthdayInMemory, setShowBirthdayInMemory] = useState(false);
   const [currentScreen, setCurrentScreen] = useState('conversation'); // 'conversation', 'thinking', 'memory-extraction'
+  const [voiceEnabled, setVoiceEnabled] = useState(true); // Toggle for voice
+  const [shouldSpeak, setShouldSpeak] = useState(false);
+  const [friendlyVoice, setFriendlyVoice] = useState(null);
 
   const typingSpeed = 40;
   const currentDialogue = conversation[currentDialogueIndex];
 
   const thoughtText = endThoughtText || `Now that I have ${characterPronoun} birthday and grade level, let's see what I can figure out...`;
+
+  // Load child-friendly voice on component mount
+  useEffect(() => {
+    getChildFriendlyVoice().then(voice => {
+      setFriendlyVoice(voice);
+    });
+  }, []);
+
+  // Start speech when robot starts speaking (synchronize with typing)
+  useEffect(() => {
+    if (currentDialogue.speaker === 'robot' && displayedText === '') {
+      setShouldSpeak(true);
+    }
+  }, [currentDialogueIndex, currentDialogue.speaker, displayedText]);
+
+  // Use speech hook - only speak when it's the robot speaking
+  const speechControl = useSpeech(
+    currentDialogue.speaker === 'robot' ? currentDialogue.text : '',
+    voiceEnabled && shouldSpeak && currentDialogue.speaker === 'robot',
+    {
+      rate: 0.9,      // Slightly slower for friendly, clear speech
+      pitch: 1.0,     // Normal pitch for natural, warm voice
+      volume: 1.0,
+      voiceName: friendlyVoice?.name // Use child-friendly voice if available
+    }
+  );
 
   useEffect(() => {
     if (isTyping && displayedText.length < currentDialogue.text.length) {
@@ -89,6 +119,10 @@ export default function ConversationContainer({
   }, [displayedText, isTyping, currentDialogue.text, currentDialogueIndex, currentDialogue.speaker, completedDialogues, memoryTriggers]);
 
   const handleContinue = () => {
+    // Stop any ongoing speech
+    speechControl.stop();
+    setShouldSpeak(false);
+    
     // Hide memory container when continuing to next dialogue after animation
     if (showMemoryContainer && (currentDialogueIndex === memoryTriggers.gradeLevel || currentDialogueIndex === memoryTriggers.birthday)) {
       setShowMemoryContainer(false);
@@ -116,6 +150,10 @@ export default function ConversationContainer({
   };
 
   const handleBack = () => {
+    // Stop any ongoing speech
+    speechControl.stop();
+    setShouldSpeak(false);
+    
     if (currentDialogueIndex > 0) {
       // Remove the last completed dialogue
       setCompletedDialogues(completedDialogues.slice(0, -1));
@@ -179,6 +217,20 @@ export default function ConversationContainer({
 
   return (
     <>
+      {/* Voice Toggle Button */}
+      <button 
+        className="voice-toggle-button"
+        onClick={() => {
+          setVoiceEnabled(!voiceEnabled);
+          if (voiceEnabled) {
+            speechControl.stop();
+          }
+        }}
+        title={voiceEnabled ? "Mute voice" : "Enable voice"}
+      >
+        {voiceEnabled ? "🔊" : "🔇"}
+      </button>
+
       {currentScreen === 'thinking' ? (
         // AI thinking to itself screen
         <div className="robot-thinking-container">
