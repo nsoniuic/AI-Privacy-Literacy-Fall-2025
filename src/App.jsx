@@ -10,11 +10,14 @@ import SecondScenarioPuzzle from './pages/SecondScenarioPuzzle'
 import SecondScenarioMemory from './pages/SecondScenarioMemory'
 import SecondScenarioResult from './pages/SecondScenarioResult'
 import FinalMessage from './pages/FinalMessage'
+import ProgressIndicator from './components/ProgressIndicator'
 import './App.css'
 
 function App() {
   return (
-    <Routes>
+    <>
+      <ProgressIndicator />
+      <Routes>
       <Route path="/" element={<InitialGreeting />} />
       <Route path="/puzzle/first" element={<FirstPuzzle />} />
       <Route path="/puzzle/second" element={<SecondPuzzle />} />
@@ -29,6 +32,7 @@ function App() {
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </>
   )
 }
 
