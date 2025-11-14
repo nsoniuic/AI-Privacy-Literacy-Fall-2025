@@ -1,4 +1,4 @@
-import '../styles/AppTitle.css';
+import '../../styles/common/AppTitle.css';
 
 export default function AppTitle() {
   return (

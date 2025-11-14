@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import robotImage from '../assets/robot.png';
-import CharacterSelection from '../components/CharacterSelection';
-import ConversationContainer from '../components/ConversationContainer';
-import '../styles/InitialGreeting.css';
-import '../App.css';
+import robotImage from '../../../assets/robot.png';
+import CharacterSelection from '../../../components/interactive/CharacterSelection';
+import ConversationContainer from '../../../components/conversation/ConversationContainer';
+import '../../../styles/pages/InitialGreeting.css';
+import '../../../App.css';
 
 export default function FirstScenario() {
   const navigate = useNavigate();

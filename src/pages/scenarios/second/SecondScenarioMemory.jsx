@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import RobotThinking from '../components/RobotThinking';
-import robotImage from '../assets/robot.png';
-import '../styles/Conversation.css';
+import RobotThinking from '../../../components/conversation/RobotThinking';
+import robotImage from '../../../assets/robot.png';
+import '../../../styles/pages/Conversation.css';
 
 export default function SecondScenarioMemory() {
   const location = useLocation();

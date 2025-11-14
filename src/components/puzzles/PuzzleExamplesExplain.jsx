@@ -1,8 +1,8 @@
-import p1input from '../assets/p1input.png';
-import p1output from '../assets/p1output.png';
-import p2input from '../assets/p2input.png';
-import p2output from '../assets/p2output.png';
-import '../styles/PuzzleExamplesExplain.css';
+import p1input from '../../assets/p1input.png';
+import p1output from '../../assets/p1output.png';
+import p2input from '../../assets/p2input.png';
+import p2output from '../../assets/p2output.png';
+import '../../styles/puzzles/PuzzleExamplesExplain.css';
 
 export default function PuzzleExamplesExplain({ puzzleNumber }) {
   // Select the appropriate images based on puzzle number

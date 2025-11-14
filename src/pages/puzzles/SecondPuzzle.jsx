@@ -1,19 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import robotImage from '../assets/robot.png';
-import PuzzleInteractive from '../components/PuzzleInteractive';
-import PuzzleInteractiveExplain from '../components/PuzzleInteractiveExplain';
-import { PUZZLE_2_CONFIG } from '../utils/puzzleConfig';
-import AppTitle from '../components/AppTitle';
-import '../styles/Puzzles.css';
-import '../App.css';
+import robotImage from '../../assets/robot.png';
+import PuzzleInteractive from '../../components/puzzles/PuzzleInteractive';
+import PuzzleInteractiveExplain from '../../components/puzzles/PuzzleInteractiveExplain';
+import { PUZZLE_2_CONFIG } from '../../utils/puzzleConfig';
+import AppTitle from '../../components/common/AppTitle';
+import useSpeech from '../../utils/useSpeech';
+import { useVoice } from '../../contexts/VoiceContext';
+import '../../styles/puzzles/Puzzles.css';
+import '../../App.css';
 
 export default function SecondPuzzle() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { voiceEnabled, friendlyVoice } = useVoice();
   const userName = location.state?.userName || 'Friend';
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
+  const [shouldSpeak, setShouldSpeak] = useState(false);
   const [puzzleResult, setPuzzleResult] = useState(null);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
   const [showPuzzle, setShowPuzzle] = useState(true);
@@ -85,7 +89,24 @@ export default function SecondPuzzle() {
   const currentText = currentDialogue?.text || '';
   const typingSpeed = 30;
 
+  // Speech control
+  const speechControl = useSpeech(
+    currentText,
+    voiceEnabled && shouldSpeak,
+    {
+      rate: 0.9,
+      pitch: 1.0,
+      volume: 1.0,
+      voiceName: friendlyVoice?.name
+    }
+  );
+
   useEffect(() => {
+    // Start speech when new dialogue starts
+    if (displayedText === '') {
+      setShouldSpeak(true);
+    }
+    
     if (isTyping && displayedText.length < currentText.length) {
       const timer = setTimeout(() => {
         setDisplayedText(currentText.slice(0, displayedText.length + 1));
@@ -97,6 +118,8 @@ export default function SecondPuzzle() {
   }, [displayedText, isTyping, currentText]);
 
   const handleSubmitResult = (isCorrect) => {
+    speechControl.stop();
+    setShouldSpeak(false);
     setAttemptCount(prev => prev + 1);
     
     if (isCorrect) {
@@ -123,6 +146,8 @@ export default function SecondPuzzle() {
   };
 
   const handleBack = () => {
+    speechControl.stop();
+    setShouldSpeak(false);
     // Don't allow back on first dialogue after result
     if (puzzleResult && (currentDialogueIndex === 1 || currentDialogueIndex === 2)) {
       return;
@@ -145,6 +170,8 @@ export default function SecondPuzzle() {
   };
 
   const handleContinueExplanation = () => {
+    speechControl.stop();
+    setShouldSpeak(false);
     // Check if current dialogue has navigation
     if (currentDialogue?.navigateTo) {
       navigate(currentDialogue.navigateTo, { state: { userName } });
@@ -170,16 +197,21 @@ export default function SecondPuzzle() {
   return (
     <div className="page-container second-puzzle-page">
       <AppTitle />
-      <div className="dialog-box instruction-dialog">
-        <p className="dialog-text">{displayedText}</p>
-      </div>
+      
+      <div className="puzzle-content">
+        {/* Dialog box positioned at top left */}
+        <div className="dialog-box-top">
+          <p className="dialog-text">{displayedText}</p>
+        </div>
 
-      <div className="robot-container">
-        <img 
-          src={robotImage} 
-          alt="Robot" 
-          className="robot-image"
-        />
+        {/* Robot image on the right side */}
+        <div className="puzzle-robot-container-right">
+          <img 
+            src={robotImage} 
+            alt="Robot" 
+            className="puzzle-robot-image"
+          />
+        </div>
       </div>
 
       {currentDialogue?.showPuzzle && showPuzzle && (

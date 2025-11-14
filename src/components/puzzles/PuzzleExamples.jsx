@@ -1,8 +1,8 @@
-import p1input from '../assets/p1input.png';
-import p1output from '../assets/p1output.png';
-import p2input from '../assets/p2input.png';
-import p2output from '../assets/p2output.png';
-import '../styles/PuzzleExamples.css';
+import p1input from '../../assets/p1input.png';
+import p1output from '../../assets/p1output.png';
+import p2input from '../../assets/p2input.png';
+import p2output from '../../assets/p2output.png';
+import '../../styles/puzzles/PuzzleExamples.css';
 
 export default function PuzzleExamples() {
   return (

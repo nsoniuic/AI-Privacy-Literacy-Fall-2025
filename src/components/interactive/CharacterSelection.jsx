@@ -1,6 +1,6 @@
-import '../styles/CharacterSelection.css';
-import boyCharacter from '../assets/boy.png';
-import girlCharacter from '../assets/girl.png';
+import '../../styles/pages/CharacterSelection.css';
+import boyCharacter from '../../assets/boy.png';
+import girlCharacter from '../../assets/girl.png';
 
 export default function CharacterSelection({ selectedCharacter, onCharacterSelect }) {
   return (

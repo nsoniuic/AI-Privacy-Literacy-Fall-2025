@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import SecondScenarioInteractive from '../components/SecondScenarioInteractive';
-import robotImage from '../assets/robot.png';
-import AppTitle from '../components/AppTitle';
-import '../styles/InitialGreeting.css';
+import SecondScenarioInteractive from '../../../components/interactive/SecondScenarioInteractive';
+import robotImage from '../../../assets/robot.png';
+import AppTitle from '../../../components/common/AppTitle';
+import '../../../styles/pages/InitialGreeting.css';
 
 export default function SecondScenarioPuzzle() {
   const navigate = useNavigate();

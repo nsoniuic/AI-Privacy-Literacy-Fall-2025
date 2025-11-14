@@ -1,6 +1,6 @@
 import PuzzleGrid from './PuzzleGrid';
-import { PUZZLE_1_CONFIG, getCellColor, createInitialGrid } from '../utils/puzzleConfig';
-import '../styles/PuzzleInteractiveExplain.css';
+import { PUZZLE_1_CONFIG, getCellColor, createInitialGrid } from '../../utils/puzzleConfig';
+import '../../styles/puzzles/PuzzleInteractiveExplain.css';
 
 export default function PuzzleInteractiveExplain({ showResult = false, puzzleConfig = PUZZLE_1_CONFIG, puzzleNumber = 1 }) {
   const { greenCells, gridSize, resultGrid } = puzzleConfig;

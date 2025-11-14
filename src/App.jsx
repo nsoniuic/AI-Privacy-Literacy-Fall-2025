@@ -1,22 +1,25 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-import InitialGreeting from './pages/InitialGreeting'
-import FirstPuzzle from './pages/FirstPuzzle'
-import SecondPuzzle from './pages/SecondPuzzle'
-import FirstScenario from './pages/FirstScenario'
-import MemoryExtraction from './pages/MemoryExtraction'
-import ResultPage from './pages/ResultPage'
-import SecondScenario from './pages/SecondScenario'
-import SecondScenarioPuzzle from './pages/SecondScenarioPuzzle'
-import SecondScenarioMemory from './pages/SecondScenarioMemory'
-import SecondScenarioResult from './pages/SecondScenarioResult'
+import InitialGreeting from './pages/greeting/InitialGreeting'
+import FirstPuzzle from './pages/puzzles/FirstPuzzle'
+import SecondPuzzle from './pages/puzzles/SecondPuzzle'
+import FirstScenario from './pages/scenarios/first/FirstScenario'
+import MemoryExtraction from './pages/scenarios/first/MemoryExtraction'
+import ResultPage from './pages/scenarios/first/ResultPage'
+import SecondScenario from './pages/scenarios/second/SecondScenario'
+import SecondScenarioPuzzle from './pages/scenarios/second/SecondScenarioPuzzle'
+import SecondScenarioMemory from './pages/scenarios/second/SecondScenarioMemory'
+import SecondScenarioResult from './pages/scenarios/second/SecondScenarioResult'
 import FinalMessage from './pages/FinalMessage'
-import ProgressIndicator from './components/ProgressIndicator'
+import ProgressIndicator from './components/common/ProgressIndicator'
+import VoiceToggle from './components/common/VoiceToggle'
 import './App.css'
+import './styles/common/VoiceToggle.css'
 
 function App() {
   return (
     <>
       <ProgressIndicator />
+      <VoiceToggle />
       <Routes>
       <Route path="/" element={<InitialGreeting />} />
       <Route path="/puzzle/first" element={<FirstPuzzle />} />

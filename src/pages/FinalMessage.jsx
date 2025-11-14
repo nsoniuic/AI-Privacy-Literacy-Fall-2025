@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import robotImage from '../assets/robot.png';
-import AppTitle from '../components/AppTitle';
-import '../styles/Conversation.css';
+import AppTitle from '../components/common/AppTitle';
+import '../styles/pages/Conversation.css';
 
 export default function FinalMessage() {
   const location = useLocation();

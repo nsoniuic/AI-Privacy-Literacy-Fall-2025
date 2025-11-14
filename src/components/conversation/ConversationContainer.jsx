@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import robotImage from '../assets/robot.png';
-import boyCharacter from '../assets/boy.png';
-import girlCharacter from '../assets/girl.png';
-import useSpeech, { getChildFriendlyVoice } from '../utils/useSpeech';
-import '../styles/Conversation.css';
+import robotImage from '../../assets/robot.png';
+import boyCharacter from '../../assets/boy.png';
+import girlCharacter from '../../assets/girl.png';
+import useSpeech, { getChildFriendlyVoice } from '../../utils/useSpeech';
+import '../../styles/pages/Conversation.css';
 
 export default function ConversationContainer({ 
   selectedCharacter, 

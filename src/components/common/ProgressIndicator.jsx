@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
-import '../styles/ProgressIndicator.css'
+import '../../styles/common/ProgressIndicator.css'
 
 const ProgressIndicator = () => {
   const location = useLocation()

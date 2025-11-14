@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import robotImage from '../assets/robot.png';
-import boyImage from '../assets/boy.png';
-import girlImage from '../assets/girl.png';
-import adVideo from '../assets/ad.mp4';
-import AppTitle from '../components/AppTitle';
+import robotImage from '../../../assets/robot.png';
+import boyImage from '../../../assets/boy.png';
+import girlImage from '../../../assets/girl.png';
+import adVideo from '../../../assets/ad.mp4';
+import AppTitle from '../../../components/common/AppTitle';
 // import '../App.css';
-import '../styles/Conversation.css';
+import '../../../styles/pages/Conversation.css';
 
 export default function ResultPage() {
   const location = useLocation();

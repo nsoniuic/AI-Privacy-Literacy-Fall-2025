@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import robotImage from '../assets/robot.png';
-import '../styles/RobotThinking.css';
+import robotImage from '../../assets/robot.png';
+import '../../styles/pages/RobotThinking.css';
 
 export default function SecondScenarioInteractive({ selectedCharacter, onContinue, onBack }) {
   const [leftCloudAdded, setLeftCloudAdded] = useState(false);

@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import RobotThinking from '../components/RobotThinking';
-import InteractiveThinking from '../components/InteractiveThinking';
-import robotImage from '../assets/robot.png';
-import AppTitle from '../components/AppTitle';
+import RobotThinking from '../../../components/conversation/RobotThinking';
+import InteractiveThinking from '../../../components/interactive/InteractiveThinking';
+import robotImage from '../../../assets/robot.png';
+import AppTitle from '../../../components/common/AppTitle';
 // import '../App.css';
-import '../styles/Conversation.css';
+import '../../../styles/pages/Conversation.css';
 
 export default function MemoryExtraction() {
   const location = useLocation();

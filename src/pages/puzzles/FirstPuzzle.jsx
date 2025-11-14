@@ -1,20 +1,24 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import robotImage from '../assets/robot.png';
-import PuzzleExamples from '../components/PuzzleExamples';
-import PuzzleInteractive from '../components/PuzzleInteractive';
-import PuzzleExamplesExplain from '../components/PuzzleExamplesExplain';
-import PuzzleInteractiveExplain from '../components/PuzzleInteractiveExplain';
-import AppTitle from '../components/AppTitle';
-import '../styles/Puzzles.css';
-import '../App.css';
+import robotImage from '../../assets/robot.png';
+import PuzzleExamples from '../../components/puzzles/PuzzleExamples';
+import PuzzleInteractive from '../../components/puzzles/PuzzleInteractive';
+import PuzzleExamplesExplain from '../../components/puzzles/PuzzleExamplesExplain';
+import PuzzleInteractiveExplain from '../../components/puzzles/PuzzleInteractiveExplain';
+import AppTitle from '../../components/common/AppTitle';
+import useSpeech from '../../utils/useSpeech';
+import { useVoice } from '../../contexts/VoiceContext';
+import '../../styles/puzzles/Puzzles.css';
+import '../../App.css';
 
 export default function FirstPuzzle() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { voiceEnabled, friendlyVoice } = useVoice();
   const userName = location.state?.userName || 'Friend';
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
+  const [shouldSpeak, setShouldSpeak] = useState(false);
   const [showInteractive, setShowInteractive] = useState(false);
   const [puzzleResult, setPuzzleResult] = useState(null);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
@@ -25,7 +29,7 @@ export default function FirstPuzzle() {
   const dialogues = [
     {
       id: 'examples',
-      text: "Here are two examples that show how the pattern works. The first image in each puzzle is the input, and the second one is the output.\nWatch for what changes: the color, shape, or position. Try to guess the rule that transforms the input into the output. When you think you've got it, press Continue to try one yourself!",
+      text: "Let’s look at two examples to see how AI thinks! AI figures things out by finding rules! What rule do you think it’s using to change the Start picture into the Finish picture? Look closely, do the colors, shapes, or positions change?",
       showExamples: true,
       showContinueButton: true,
     },
@@ -98,7 +102,24 @@ export default function FirstPuzzle() {
   const currentText = currentDialogue?.text || '';
   const typingSpeed = 30;
 
+  // Speech control
+  const speechControl = useSpeech(
+    currentText,
+    voiceEnabled && shouldSpeak,
+    {
+      rate: 0.9,
+      pitch: 1.0,
+      volume: 1.0,
+      voiceName: friendlyVoice?.name
+    }
+  );
+
   useEffect(() => {
+    // Start speech when new dialogue starts
+    if (displayedText === '') {
+      setShouldSpeak(true);
+    }
+    
     if (isTyping && displayedText.length < currentText.length) {
       const timer = setTimeout(() => {
         setDisplayedText(currentText.slice(0, displayedText.length + 1));
@@ -110,6 +131,8 @@ export default function FirstPuzzle() {
   }, [displayedText, isTyping, currentText]);
 
   const handleContinue = () => {
+    speechControl.stop();
+    setShouldSpeak(false);
     // Move to interactive dialogue
     setCurrentDialogueIndex(1);
     setShowInteractive(true);
@@ -118,6 +141,8 @@ export default function FirstPuzzle() {
   };
 
   const handleSubmitResult = (isCorrect) => {
+    speechControl.stop();
+    setShouldSpeak(false);
     setAttemptCount(prev => prev + 1);
     
     if (isCorrect) {
@@ -144,6 +169,8 @@ export default function FirstPuzzle() {
   };
 
   const handleBack = () => {
+    speechControl.stop();
+    setShouldSpeak(false);
     // Don't allow back on first dialogue after result
     if (puzzleResult && (currentDialogueIndex === 2 || currentDialogueIndex === 3)) {
       return;
@@ -166,6 +193,8 @@ export default function FirstPuzzle() {
   };
 
   const handleContinueExplanation = () => {
+    speechControl.stop();
+    setShouldSpeak(false);
     // Check if current dialogue has navigation
     if (currentDialogue?.navigateTo) {
       navigate(currentDialogue.navigateTo, { state: { userName } });
@@ -191,16 +220,21 @@ export default function FirstPuzzle() {
   return (
     <div className="page-container first-puzzle-page" >
       <AppTitle />
-      <div className="dialog-box instruction-dialog">
-        <p className="dialog-text">{displayedText}</p>
-      </div>
+      
+      <div className="puzzle-content">
+        {/* Dialog box positioned at top left */}
+        <div className="dialog-box-top">
+          <p className="dialog-text">{displayedText}</p>
+        </div>
 
-      <div className="robot-container">
-        <img 
-          src={robotImage} 
-          alt="Robot" 
-          className="robot-image"
-        />
+        {/* Robot image on the right side */}
+        <div className="puzzle-robot-container-right">
+          <img 
+            src={robotImage} 
+            alt="Robot" 
+            className="puzzle-robot-image"
+          />
+        </div>
       </div>
 
       {currentDialogue?.showExamples && (

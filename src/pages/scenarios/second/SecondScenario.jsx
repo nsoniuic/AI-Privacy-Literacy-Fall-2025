@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import robotImage from '../assets/robot.png';
-import ConversationContainer from '../components/ConversationContainer';
-import AppTitle from '../components/AppTitle';
-import '../styles/InitialGreeting.css';
-import '../App.css';
+import robotImage from '../../../assets/robot.png';
+import ConversationContainer from '../../../components/conversation/ConversationContainer';
+import AppTitle from '../../../components/common/AppTitle';
+import '../../../styles/pages/InitialGreeting.css';
+import '../../../App.css';
 
 export default function SecondScenario() {
   const navigate = useNavigate();

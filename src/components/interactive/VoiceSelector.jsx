@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAvailableVoices } from '../utils/useSpeech';
+import { getAvailableVoices } from '../../utils/useSpeech';
 
 /**
  * Voice Selector Component - For testing and selecting voices

@@ -1,60 +1,49 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import robotImage from '../assets/robot.png';
 // Import different robot emotion images here as they become available
-import robotHappyImage from '../assets/robot-happy.png';
-import robotWaveImage from '../assets/robot-wave.png';
-import robotThumbsUpImage from '../assets/robot-thumbs-up.png';
-import robotThinkImage from '../assets/robot-think.png';
-import useSpeech, { getChildFriendlyVoice } from '../utils/useSpeech';
-import AppTitle from '../components/AppTitle';
-import '../styles/InitialGreeting.css';
-import '../App.css';
+import robotHappyImage from '../../assets/robot-happy.png';
+import robotWaveImage from '../../assets/robot-wave.png';
+import robotThinkImage from '../../assets/robot-think.png';
+import useSpeech from '../../utils/useSpeech';
+import { useVoice } from '../../contexts/VoiceContext';
+import AppTitle from '../../components/common/AppTitle';
+import '../../styles/pages/InitialGreeting.css';
+import '../../App.css';
 
 export default function InitialGreeting() {
   const navigate = useNavigate();
+  const { voiceEnabled, friendlyVoice } = useVoice();
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
   const [userName, setUserName] = useState('');
   const [showInput, setShowInput] = useState(true);
   const [isTyping, setIsTyping] = useState(true);
-  const [voiceEnabled, setVoiceEnabled] = useState(true); // Toggle for voice
+  const [shouldBounce, setShouldBounce] = useState(false);
+  const [shouldVibrate, setShouldVibrate] = useState(false);
+  const [isWaitingForNext, setIsWaitingForNext] = useState(false);
   const [shouldSpeak, setShouldSpeak] = useState(false);
-  const [friendlyVoice, setFriendlyVoice] = useState(null);
 
   // Dialogue configuration with emotion/image syncing
   // Each dialogue has text and corresponding robot emotion image
   const dialogueConfig = [
     {
-      text: "Hi there! I’m Robo, your AI buddy. Together, we’ll explore how AI thinks and what happens when we share information with it. What’s your name?",
+      text: "Hi there! I'm Robo, your A.I buddy. Together, we'll explore how AI thinks and what happens when we share information with it. What's your name?",
       emotion: 'happy',
-      image: robotWaveImage, // Replace with robotHappyImage when available
+      image: robotWaveImage,
     },
     {
-      text: "It's great to meet you, {name}!",
+      text: "Great to meet you, {name}! Ever wondered how A.I figures things out? Let's solve a puzzle to see how it reasons when it looks for patterns.",
       emotion: 'excited',
-      image: robotWaveImage, // Replace with robotExcitedImage when available
+      image: robotHappyImage,
     },
     {
-      text: "In today's exercise, you'll try solving some puzzles on your own… ",
-      emotion: 'neutral',
-      image: robotHappyImage, // Current default robot image
-    },
-    {
-      text: "Then I'll show you how I can solve them, and maybe I'll do them even faster! Think you can beat me?",
-      emotion: 'playful',
-      image: robotHappyImage, // Replace with robotPlayfulImage when available
+      text: "First, you'll solve a puzzle, and then I will so you can compare how your reasoning is similar or different from mine. This will help you understand how I think before we explore how I can use information you share with me to figure out things you never said.",
+      emotion: 'explaining',
+      image: robotThinkImage,
     },
   ];
 
-  const typingSpeed = 55;
-
-  // Load child-friendly voice on component mount
-  useEffect(() => {
-    getChildFriendlyVoice().then(voice => {
-      setFriendlyVoice(voice);
-    });
-  }, []);
+  const typingSpeed = 50;
 
   // Get current dialogue configuration
   const currentDialogueConfig = dialogueConfig[currentDialogueIndex];
@@ -88,6 +77,25 @@ export default function InitialGreeting() {
       return () => clearTimeout(timer);
     } else if (displayedText.length === dialogueText.length) {
       setIsTyping(false);
+      
+      // Auto-advance to third dialogue after 2.5 seconds if on second dialogue
+      if (currentDialogueIndex === 1) {
+        setIsWaitingForNext(true);
+        const autoAdvanceTimer = setTimeout(() => {
+          // Trigger vibration
+          setShouldVibrate(true);
+          setTimeout(() => setShouldVibrate(false), 500);
+          
+          // Advance to next dialogue
+          speechControl.stop();
+          setShouldSpeak(false);
+          setCurrentDialogueIndex(2);
+          setDisplayedText('');
+          setIsTyping(true);
+          setIsWaitingForNext(false);
+        }, 2500);
+        return () => clearTimeout(autoAdvanceTimer);
+      }
     }
   }, [displayedText, isTyping, currentDialogueIndex, userName]);
 
@@ -128,10 +136,14 @@ export default function InitialGreeting() {
 
   const handleSubmit = () => {
     if (userName.trim()) {
-      setShowInput(false);
-      setCurrentDialogueIndex(1);
-      setDisplayedText('');
-      setIsTyping(true);
+      setShouldBounce(true);
+      setTimeout(() => {
+        setShouldBounce(false);
+        setShowInput(false);
+        setCurrentDialogueIndex(1);
+        setDisplayedText('');
+        setIsTyping(true);
+      }, 600); // Duration of bounce animation
     }
   };
 
@@ -151,7 +163,7 @@ export default function InitialGreeting() {
 
       <div className="initial-greeting-content">
         {/* Dialog box positioned at top */}
-        <div className="dialog-box-top">
+        <div className={`dialog-box-top ${shouldVibrate ? 'vibrate-animation' : ''}`}>
           <p className="dialog-text">{displayedText}</p>
         </div>
 
@@ -160,7 +172,7 @@ export default function InitialGreeting() {
           <img 
             src={currentRobotImage} 
             alt={`Robot ${currentDialogueConfig.emotion}`} 
-            className="initial-greeting-robot-image"
+            className={`initial-greeting-robot-image ${shouldBounce ? 'bounce-animation' : ''}`}
             key={currentDialogueIndex} // Force re-render on dialogue change for smooth transitions
           />
         </div>
@@ -197,9 +209,9 @@ export default function InitialGreeting() {
                 e.stopPropagation();
                 handleContinue();
               }}
-              disabled={isTyping}
+              disabled={isTyping || isWaitingForNext}
             >
-              Continue
+              {currentDialogueIndex === dialogueConfig.length - 1 ? 'Start Puzzle' : 'Continue'}
             </button>
           </div>
         )}
