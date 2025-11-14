@@ -57,13 +57,6 @@
   justify-content: center;
 }
 
-.puzzle-image-container {
-  background-color: rgba(0, 0, 0, 0.2);
-  padding: 15px;
-  border-radius: 8px;
-  max-width: 200px;
-}
-
 .puzzle-image {
   max-width: 100%;
   max-height: 100%;
