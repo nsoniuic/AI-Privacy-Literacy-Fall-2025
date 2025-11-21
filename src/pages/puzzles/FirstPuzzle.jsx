@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import robotImage from '../../assets/robot-point.png';
+import robotThumbsUp from '../../assets/robot-thumbs-up.png';
 import p1input from '../../assets/p1input.png';
 import p1output from '../../assets/p1output.png';
 import p2input from '../../assets/p2input.png';
@@ -21,7 +22,7 @@ export default function FirstPuzzle() {
   const userName = location.state?.userName || 'Friend';
   
   // New state management for the updated flow
-  const [currentView, setCurrentView] = useState('overview'); // overview, puzzle1Focus, puzzle2Focus, puzzleSolve, explanation
+  const [currentView, setCurrentView] = useState('overview'); // overview, puzzle1Focus, puzzle2Focus, puzzleSolve, transition, explanation
   const [puzzle1Viewed, setPuzzle1Viewed] = useState(false);
   const [puzzle2Viewed, setPuzzle2Viewed] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
@@ -46,14 +47,17 @@ export default function FirstPuzzle() {
 
       case 'puzzleSolve':
         if (attemptCount === 1) {
-          return "Not quite. Let's try again! Make sure to think about the pattern of the yellow boxes.";
+          return "Not quite. Let's try again! Make sure to think about the pattern that you have seen on the previous two puzzles."
         }
-        return "Now it’s your turn! Use the rules you noticed in the earlier examples to solve this new puzzle. Click the blocks that should turn yellow to complete the Finish picture.";
+        return "Now it's your turn! Use the rules you noticed in the earlier examples to solve this new puzzle. Click the blocks that should turn yellow to complete the Finish picture.";
+      
+      case 'transition':
+        return "Great job! You figured out the rules from Puzzles 1 and 2 and used them to crack Puzzle 3. Now it's my turn, let's see if I think the same way you do!";
       
       case 'explanation':
         const explanations = [
-          "First, I look at all the green lines. I pretend they're little fences. If a fence is broken, I do nothing. You can't keep paint inside a broken fence!",
-          "If an area is completely surrounded by the fences, I say, \"Nice; this area can hold paint,\" and I fill everything inside with yellow.",
+          "Let's see, if an area is completely surrounded by the green lines in the Start picture, like a tiny fence...",
+          "...the Finish picture fills that space with yellow!",
           "For puzzle 1, I see one neat area completely surrounded by fences, so I paint its inside yellow.",
           "For puzzle 2, some areas have incomplete fences around it, so no paint. The ones that are completely surrounded get their insides painted yellow."
         ];
@@ -145,10 +149,9 @@ export default function FirstPuzzle() {
     setAttemptCount(prev => prev + 1);
     
     if (isCorrect) {
-      // Correct answer - proceed to explanation
+      // Correct answer - proceed to transition screen
       resetDialogue();
-      setCurrentExplanationIndex(0);
-      setCurrentView('explanation');
+      setCurrentView('transition');
     } else if (attemptCount === 0) {
       // First incorrect attempt - reset puzzle
       setPuzzleKey(prev => prev + 1);
@@ -159,6 +162,12 @@ export default function FirstPuzzle() {
       setCurrentExplanationIndex(0);
       setCurrentView('explanation');
     }
+  };
+
+  const handleTransitionContinue = () => {
+    resetDialogue();
+    setCurrentExplanationIndex(0);
+    setCurrentView('explanation');
   };
 
   const handleNextExplanation = () => {
@@ -182,18 +191,26 @@ export default function FirstPuzzle() {
       
       <div className="puzzle-content">
         {/* Dialog box positioned at top left */}
-        <div className="dialog-box-top">
+        <div className={`dialog-box-top ${currentView === 'transition' || currentView === 'explanation' ? 'thinking-bubble' : ''}`}>
           <p className="dialog-text" dangerouslySetInnerHTML={{
             __html: displayedText
               .replace(/Start/g, '<span style="color: #b50a0a; font-weight: bold;">Start</span>')
               .replace(/Finish/g, '<span style="color: #FFC107; font-weight: bold;">Finish</span>')
           }} />
+          {/* Thinking bubble circles for transition and explanation views */}
+          {(currentView === 'transition' || currentView === 'explanation') && (
+            <div className="thinking-circles">
+              <div className="circle circle-large"></div>
+              <div className="circle circle-medium"></div>
+              <div className="circle circle-small"></div>
+            </div>
+          )}
         </div>
 
         {/* Robot image on the right side */}
         <div className="puzzle-robot-container-right">
           <img 
-            src={robotImage} 
+            src={currentView === 'transition' ? robotThumbsUp : robotImage}
             alt="Robot" 
             className="puzzle-robot-image"
           />
@@ -315,17 +332,32 @@ export default function FirstPuzzle() {
         </div>
       )}
 
+      {/* Transition screen after solving puzzle */}
+      {currentView === 'transition' && (
+        <div className="transition-view">
+          <div className="navigation-buttons">
+            <button 
+              className="continue-button"
+              onClick={handleTransitionContinue}
+              disabled={isTyping}
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Explanation phase */}
       {currentView === 'explanation' && (
         <div className="explanation-view">
           {currentExplanationIndex <= 1 && (
-            <PuzzleExamplesExplain puzzleNumber={1} />
+            <PuzzleExamplesExplain puzzleNumber={1} explanationIndex={currentExplanationIndex} />
           )}
           {currentExplanationIndex >= 2 && currentExplanationIndex <= 2 && (
-            <PuzzleExamplesExplain puzzleNumber={1} />
+            <PuzzleExamplesExplain puzzleNumber={1} explanationIndex={currentExplanationIndex} />
           )}
           {currentExplanationIndex === 3 && (
-            <PuzzleExamplesExplain puzzleNumber={2} />
+            <PuzzleExamplesExplain puzzleNumber={2} explanationIndex={currentExplanationIndex} />
           )}
           
           <div className="navigation-buttons">

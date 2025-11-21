@@ -1,40 +1,57 @@
-import p1input from '../../assets/p1input.png';
-import p1output from '../../assets/p1output.png';
-import p2input from '../../assets/p2input.png';
-import p2output from '../../assets/p2output.png';
+import { PUZZLE_1_CONFIG, PUZZLE_2_CONFIG, getCellColor, createInitialGrid } from '../../utils/puzzleConfig';
+import PuzzleGrid from './PuzzleGrid';
 import '../../styles/puzzles/PuzzleExamplesExplain.css';
 
-export default function PuzzleExamplesExplain({ puzzleNumber }) {
-  // Select the appropriate images based on puzzle number
-  const getImages = () => {
+export default function PuzzleExamplesExplain({ puzzleNumber, explanationIndex }) {
+  // Select the appropriate configuration based on puzzle number
+  const getConfig = () => {
     if (puzzleNumber === 1) {
-      return { input: p1input, output: p1output };
+      return PUZZLE_1_CONFIG;
     } else if (puzzleNumber === 2) {
-      return { input: p2input, output: p2output };
+      return PUZZLE_2_CONFIG;
     }
-    return { input: p1input, output: p1output };
+    return PUZZLE_1_CONFIG;
   };
 
-  const { input, output } = getImages();
+  const config = getConfig();
+  const startGrid = createInitialGrid(config.greenCells, config.gridSize);
+  const finishGrid = config.resultGrid;
+
+  // Add glow effect to green cells on first explanation screen
+  const shouldGlowGreen = explanationIndex === 0;
+  // Add glow effect to yellow cells and arrow on second explanation screen
+  const shouldGlowYellow = explanationIndex === 1;
+  const shouldGlowArrow = explanationIndex === 1;
 
   return (
     <div>
-      <h2 className="sample-puzzle-title">Sample Puzzle {puzzleNumber}</h2>
+      <h2 className="sample-puzzle-title">Puzzle {puzzleNumber}</h2>
       
       <div className="sample-puzzle-grids">
         <div className="sample-puzzle-side">
-          <p className="sample-label">Start</p>
+          <p className="sample-label sample-label-start">Start</p>
           <div className="sample-grid-container">
-            <img src={input} alt={`Puzzle ${puzzleNumber} Input`} className="sample-puzzle-image" />
+            <PuzzleGrid 
+              grid={startGrid} 
+              getCellColor={getCellColor}
+              interactive={false}
+              glowGreen={shouldGlowGreen}
+            />
           </div>
         </div>
 
-        <div className="sample-arrow-large">→</div>
+        <div className={`sample-arrow-large ${shouldGlowArrow ? 'glow-arrow' : ''}`}>→</div>
 
         <div className="sample-puzzle-side">
-          <p className="sample-label">Finish</p>
+          <p className="sample-label sample-label-finish">Finish</p>
           <div className="sample-grid-container">
-            <img src={output} alt={`Puzzle ${puzzleNumber} Output`} className="sample-puzzle-image" />
+            <PuzzleGrid 
+              grid={finishGrid} 
+              getCellColor={getCellColor}
+              interactive={false}
+              glowGreen={false}
+              glowYellow={shouldGlowYellow}
+            />
           </div>
         </div>
       </div>

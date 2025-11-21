@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import PuzzleGrid from './PuzzleGrid';
-import { PUZZLE_1_CONFIG, getCellColor, createInitialGrid } from '../../utils/puzzleConfig';
+import { PUZZLE_3_CONFIG, getCellColor, createInitialGrid } from '../../utils/puzzleConfig';
 import '../../styles/puzzles/PuzzleInteractive.css';
 
-export default function PuzzleInteractive({ onSubmitResult, onBack, puzzleConfig = PUZZLE_1_CONFIG, puzzleNumber = 1 }) {
+export default function PuzzleInteractive({ onSubmitResult, onBack, puzzleConfig = PUZZLE_3_CONFIG, puzzleNumber = 3 }) {
   const { greenCells, gridSize, resultGrid } = puzzleConfig;
 
   // 6x6 grid state: 0 = empty, 1 = green (prefilled), 2 = yellow (user added)
