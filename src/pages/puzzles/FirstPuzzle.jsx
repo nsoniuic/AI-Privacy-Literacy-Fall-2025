@@ -48,7 +48,7 @@ export default function FirstPuzzle() {
         if (attemptCount === 1) {
           return "Not quite. Let's try again! Make sure to think about the pattern of the yellow boxes.";
         }
-        return "Now that you've seen the examples, it's your turn to give it a try! Use what you learned from the Start and Finish patterns to solve this puzzle.\nCan you figure out what rule connects them?";
+        return "Now it’s your turn! Use the rules you noticed in the earlier examples to solve this new puzzle. Click the blocks that should turn yellow to complete the Finish picture.";
       
       case 'explanation':
         const explanations = [
@@ -183,7 +183,11 @@ export default function FirstPuzzle() {
       <div className="puzzle-content">
         {/* Dialog box positioned at top left */}
         <div className="dialog-box-top">
-          <p className="dialog-text">{displayedText}</p>
+          <p className="dialog-text" dangerouslySetInnerHTML={{
+            __html: displayedText
+              .replace(/Start/g, '<span style="color: #b50a0a; font-weight: bold;">Start</span>')
+              .replace(/Finish/g, '<span style="color: #FFC107; font-weight: bold;">Finish</span>')
+          }} />
         </div>
 
         {/* Robot image on the right side */}

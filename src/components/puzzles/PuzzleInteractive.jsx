@@ -58,10 +58,11 @@ export default function PuzzleInteractive({ onSubmitResult, onBack, puzzleConfig
     <>
       <div className="puzzle-interactive-container">
         <h2 className="puzzle-title">Puzzle {puzzleNumber}</h2>
+        <p className="puzzle-subtitle">Can you spot what changed? 🔍</p>
         
         <div className="puzzle-grid-row">
           <div className="puzzle-side">
-            <p className="label">Start</p>
+            <p className="label label-start">Start</p>
             <div className="puzzle-outside-container">
               <PuzzleGrid grid={staticGrid} getCellColor={getCellColor} interactive={false} />
             </div>
@@ -70,10 +71,13 @@ export default function PuzzleInteractive({ onSubmitResult, onBack, puzzleConfig
           <div className="arrow-large">→</div>
 
           <div className="puzzle-side">
-            <p className="label">Finish</p>
+            <p className="label label-finish">Finish</p>
             <div className="puzzle-outside-container">
               <PuzzleGrid grid={grid} getCellColor={getCellColor} onCellClick={handleCellClick} interactive={true} />
             </div>
+            {showButtons && (
+              <button className="reset-button" onClick={handleReset}>↺ Reset</button>
+            )}
           </div>
         </div>
       </div>
@@ -83,7 +87,6 @@ export default function PuzzleInteractive({ onSubmitResult, onBack, puzzleConfig
           <button className="back-button" onClick={onBack}>
             Back
           </button>
-          <button className="reset-button" onClick={handleReset}>Reset</button>
           <button className="continue-button" onClick={handleSubmit}>Submit</button>
         </div>
       )}
