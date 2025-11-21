@@ -71,6 +71,43 @@
   cursor: default;
 }
 
+.sample-puzzle-image {
+  display: block;
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  border-radius: 4px;
+}
+
+.puzzle-image-wrapper {
+  position: relative;
+}
+
+.broken-fence-marker {
+  position: absolute;
+  color: #ff4444;
+  font-size: 20px;
+  font-weight: bold;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.9),
+               0 0 8px rgba(255, 68, 68, 0.8),
+               0 0 12px rgba(255, 68, 68, 0.6);
+  pointer-events: none;
+  z-index: 10;
+  transform: translate(-50%, -50%);
+  animation: pulseBrokenFence 2s ease-in-out infinite;
+}
+
+@keyframes pulseBrokenFence {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+}
+
 .sample-grid-container .grid-cell.glow-green {
   box-shadow: 0 0 15px rgba(3, 183, 3, 1),
               0 0 30px rgba(3, 183, 3, 0.8),

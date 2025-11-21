@@ -58,8 +58,8 @@ export default function FirstPuzzle() {
         const explanations = [
           "Let's see, if an area is completely surrounded by the green lines in the Start picture, like a tiny fence...",
           "...the Finish picture fills that space with yellow!",
-          "For puzzle 1, I see one neat area completely surrounded by fences, so I paint its inside yellow.",
-          "For puzzle 2, some areas have incomplete fences around it, so no paint. The ones that are completely surrounded get their insides painted yellow."
+          "In Puzzle 2, some fences are broken, so that they are not filled with yellow. Only the areas fully surrounded by fences get colored inside. Okay, noted!",
+          "So only the space inside the fence becomes yellow, that’s the rule I follow to solve new puzzles."
         ];
         return explanations[currentExplanationIndex] || "";
       
@@ -353,10 +353,7 @@ export default function FirstPuzzle() {
           {currentExplanationIndex <= 1 && (
             <PuzzleExamplesExplain puzzleNumber={1} explanationIndex={currentExplanationIndex} />
           )}
-          {currentExplanationIndex >= 2 && currentExplanationIndex <= 2 && (
-            <PuzzleExamplesExplain puzzleNumber={1} explanationIndex={currentExplanationIndex} />
-          )}
-          {currentExplanationIndex === 3 && (
+          {currentExplanationIndex >= 2 && (
             <PuzzleExamplesExplain puzzleNumber={2} explanationIndex={currentExplanationIndex} />
           )}
           
