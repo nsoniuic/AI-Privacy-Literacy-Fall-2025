@@ -1,14 +1,20 @@
-import { useState } from 'react';
-import robotImage from '../../assets/robot.png';
-import '../../styles/pages/RobotThinking.css';
+import { useState } from "react";
+import { useNodeInputLogger } from "../../hooks/useNodeInputLogger";
+import robotImage from "../../assets/robot.png";
+import "../../styles/pages/RobotThinking.css";
 
-export default function SecondScenarioInteractive({ selectedCharacter, onContinue, onBack }) {
+export default function SecondScenarioInteractive({
+  selectedCharacter,
+  onContinue,
+  onBack,
+}) {
   const [leftCloudAdded, setLeftCloudAdded] = useState(false);
   const [rightCloudAdded, setRightCloudAdded] = useState(false);
-  const [leftCloudText, setLeftCloudText] = useState('');
-  const [rightCloudText, setRightCloudText] = useState('');
+  const [leftCloudText, setLeftCloudText] = useState("");
+  const [rightCloudText, setRightCloudText] = useState("");
   const [editingLeft, setEditingLeft] = useState(false);
   const [editingRight, setEditingRight] = useState(false);
+  const { logNodeChange } = useNodeInputLogger();
 
   const handleLeftPlusClick = () => {
     if (!leftCloudAdded) {
@@ -26,13 +32,23 @@ export default function SecondScenarioInteractive({ selectedCharacter, onContinu
 
   const handleLeftInputBlur = () => {
     setEditingLeft(false);
+    if (leftCloudText.trim()) {
+      logNodeChange({ nodeId: "left-cloud", value: leftCloudText });
+    }
   };
 
   const handleRightInputBlur = () => {
     setEditingRight(false);
+    if (rightCloudText.trim()) {
+      logNodeChange({ nodeId: "right-cloud", value: rightCloudText });
+    }
   };
 
-  const bothCloudsCompleted = leftCloudAdded && rightCloudAdded && leftCloudText.trim() && rightCloudText.trim();
+  const bothCloudsCompleted =
+    leftCloudAdded &&
+    rightCloudAdded &&
+    leftCloudText.trim() &&
+    rightCloudText.trim();
 
   return (
     <div className="robot-thinking-container">
@@ -41,13 +57,17 @@ export default function SecondScenarioInteractive({ selectedCharacter, onContinu
         <div className="memory-clouds-container">
           <div className="memory-cloud-container-left">
             <div className="memory-cloud show">
-              <p className="memory-cloud-text">Parker mentioned her school name</p>
+              <p className="memory-cloud-text">
+                Parker mentioned her school name
+              </p>
             </div>
           </div>
-          
+
           <div className="memory-cloud-container-right">
             <div className="memory-cloud show">
-              <p className="memory-cloud-text">Parker takes 5 minutes to travel from home to school</p>
+              <p className="memory-cloud-text">
+                Parker takes 5 minutes to travel from home to school
+              </p>
             </div>
           </div>
         </div>
@@ -62,15 +82,18 @@ export default function SecondScenarioInteractive({ selectedCharacter, onContinu
                 <div className="straight-arrow-line"></div>
                 <div className="straight-arrow-head"></div>
               </div>
-              
+
               {/* Plus button overlaid in middle of arrow */}
               {!leftCloudAdded && (
-                <button className="arrow-plus-button-overlay" onClick={handleLeftPlusClick}>
+                <button
+                  className="arrow-plus-button-overlay"
+                  onClick={handleLeftPlusClick}
+                >
                   <span className="plus-icon">+</span>
                 </button>
               )}
             </div>
-            
+
             {/* Added cloud appears when clicked */}
             {leftCloudAdded && (
               <div className="middle-cloud-container">
@@ -84,18 +107,18 @@ export default function SecondScenarioInteractive({ selectedCharacter, onContinu
                       onChange={(e) => setLeftCloudText(e.target.value)}
                       onBlur={handleLeftInputBlur}
                       onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
+                        if (e.key === "Enter") {
                           handleLeftInputBlur();
                         }
                       }}
                       autoFocus
                     />
                   ) : (
-                    <p 
-                      className="memory-cloud-text clickable" 
+                    <p
+                      className="memory-cloud-text clickable"
                       onClick={() => setEditingLeft(true)}
                     >
-                      {leftCloudText || 'Click to edit...'}
+                      {leftCloudText || "Click to edit..."}
                     </p>
                   )}
                 </div>
@@ -111,15 +134,18 @@ export default function SecondScenarioInteractive({ selectedCharacter, onContinu
                 <div className="straight-arrow-line"></div>
                 <div className="straight-arrow-head"></div>
               </div>
-              
+
               {/* Plus button overlaid in middle of arrow */}
               {!rightCloudAdded && (
-                <button className="arrow-plus-button-overlay" onClick={handleRightPlusClick}>
+                <button
+                  className="arrow-plus-button-overlay"
+                  onClick={handleRightPlusClick}
+                >
                   <span className="plus-icon">+</span>
                 </button>
               )}
             </div>
-            
+
             {/* Added cloud appears when clicked */}
             {rightCloudAdded && (
               <div className="middle-cloud-container">
@@ -133,18 +159,18 @@ export default function SecondScenarioInteractive({ selectedCharacter, onContinu
                       onChange={(e) => setRightCloudText(e.target.value)}
                       onBlur={handleRightInputBlur}
                       onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
+                        if (e.key === "Enter") {
                           handleRightInputBlur();
                         }
                       }}
                       autoFocus
                     />
                   ) : (
-                    <p 
-                      className="memory-cloud-text clickable" 
+                    <p
+                      className="memory-cloud-text clickable"
                       onClick={() => setEditingRight(true)}
                     >
-                      {rightCloudText || 'Click to edit...'}
+                      {rightCloudText || "Click to edit..."}
                     </p>
                   )}
                 </div>
@@ -172,32 +198,29 @@ export default function SecondScenarioInteractive({ selectedCharacter, onContinu
         {/* Final deduction bubble - always visible at bottom */}
         <div className="final-deduction-container">
           <div className="deduction-bubble show">
-            <p className="deduction-text">Parker's neighborhood location is known</p>
+            <p className="deduction-text">
+              Parker's neighborhood location is known
+            </p>
           </div>
         </div>
 
         {/* Instruction box and Robot at the bottom */}
         <div className="robot-thinking-image-container">
           <div className="instruction-box">
-            <p className="instruction-text">Click on the + button to add a thinking cloud!</p>
+            <p className="instruction-text">
+              Click on the + button to add a thinking cloud!
+            </p>
           </div>
-          
-          <img 
-            src={robotImage} 
-            alt="Robot" 
-            className="robot-thinking-image"
-          />
+
+          <img src={robotImage} alt="Robot" className="robot-thinking-image" />
         </div>
 
         {/* Navigation buttons */}
         <div className="navigation-buttons">
-          <button 
-            className="back-button"
-            onClick={onBack}
-          >
+          <button className="back-button" onClick={onBack}>
             Back
           </button>
-          <button 
+          <button
             className="continue-button"
             onClick={onContinue}
             disabled={!bothCloudsCompleted}

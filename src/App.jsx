@@ -12,10 +12,15 @@ import SecondScenarioResult from './pages/scenarios/second/SecondScenarioResult'
 import FinalMessage from './pages/FinalMessage'
 import ProgressIndicator from './components/common/ProgressIndicator'
 import VoiceToggle from './components/common/VoiceToggle'
+import { useClickLogger } from './hooks/useClickLogger'
+import { usePageTimeLogger } from './hooks/usePageTimeLogger'
 import './App.css'
 import './styles/common/VoiceToggle.css'
 
 function App() {
+  useClickLogger();
+  usePageTimeLogger();
+
   return (
     <>
       <ProgressIndicator />

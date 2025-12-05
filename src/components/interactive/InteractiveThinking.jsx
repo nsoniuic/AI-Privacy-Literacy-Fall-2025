@@ -1,11 +1,17 @@
-import { useState } from 'react';
-import robotImage from '../../assets/robot.png';
-import '../../styles/pages/RobotThinking.css';
+import { useState } from "react";
+import { useNodeInputLogger } from "../../hooks/useNodeInputLogger";
+import robotImage from "../../assets/robot.png";
+import "../../styles/pages/RobotThinking.css";
 
-export default function InteractiveThinking({ selectedCharacter, onContinue, onBack }) {
-  const [userInput, setUserInput] = useState('');
+export default function InteractiveThinking({
+  selectedCharacter,
+  onContinue,
+  onBack,
+}) {
+  const [userInput, setUserInput] = useState("");
   const [showEncouragement, setShowEncouragement] = useState(false);
-  const characterName = 'Parker';
+  const characterName = "Parker";
+  const { logNodeChange } = useNodeInputLogger();
 
   const handleSubmit = () => {
     if (userInput.trim() && !showEncouragement) {
@@ -22,35 +28,43 @@ export default function InteractiveThinking({ selectedCharacter, onContinue, onB
         <div className="memory-clouds-container">
           <div className="memory-cloud-container-left">
             <div className="memory-cloud show">
-              <p className="memory-cloud-text">{characterName}'s birthday is July 12th</p>
+              <p className="memory-cloud-text">
+                {characterName}'s birthday is July 12th
+              </p>
             </div>
-            
+
             {/* Arrow pointing down from birthday cloud to deduction bubble */}
             <div className="deduction-arrow">
               <div className="deduction-arrow-line"></div>
               <div className="deduction-arrow-head"></div>
             </div>
-            
+
             {/* Birthday deduction bubble below birthday cloud */}
             <div className="deduction-bubble">
-              <p className="deduction-text">{characterName}'s birthday passed</p>
+              <p className="deduction-text">
+                {characterName}'s birthday passed
+              </p>
             </div>
           </div>
-          
+
           <div className="memory-cloud-container-right">
             <div className="memory-cloud show">
-              <p className="memory-cloud-text">{characterName} is in 8th grade</p>
+              <p className="memory-cloud-text">
+                {characterName} is in 8th grade
+              </p>
             </div>
-            
+
             {/* Arrow pointing down from grade cloud to deduction bubble */}
             <div className="deduction-arrow">
               <div className="deduction-arrow-line"></div>
               <div className="deduction-arrow-head"></div>
             </div>
-            
+
             {/* Deduction bubble below grade cloud */}
             <div className="deduction-bubble">
-              <p className="deduction-text">{characterName} is around 13 to 14 years old</p>
+              <p className="deduction-text">
+                {characterName} is around 13 to 14 years old
+              </p>
             </div>
           </div>
         </div>
@@ -74,8 +88,16 @@ export default function InteractiveThinking({ selectedCharacter, onContinue, onB
               placeholder="Type your answer here..."
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
+              onBlur={() => {
+                if (userInput.trim()) {
+                  logNodeChange({
+                    nodeId: "final-deduction",
+                    value: userInput,
+                  });
+                }
+              }}
               onKeyPress={(e) => {
-                if (e.key === 'Enter') {
+                if (e.key === "Enter") {
                   handleSubmit();
                 }
               }}
@@ -91,29 +113,25 @@ export default function InteractiveThinking({ selectedCharacter, onContinue, onB
               Great job!
             </div>
           )}
-          
-          <img 
-            src={robotImage} 
-            alt="Robot" 
-            className="robot-thinking-image"
-          />
+
+          <img src={robotImage} alt="Robot" className="robot-thinking-image" />
         </div>
 
         {/* Navigation buttons */}
         <div className="navigation-buttons">
-          <button 
+          <button
             className="back-button"
             onClick={onBack}
             disabled={showEncouragement}
           >
             Back
           </button>
-          <button 
+          <button
             className="continue-button"
             onClick={handleSubmit}
             disabled={!userInput.trim()}
           >
-            {showEncouragement ? 'Continue' : 'Submit'}
+            {showEncouragement ? "Continue" : "Submit"}
           </button>
         </div>
       </div>
