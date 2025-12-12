@@ -1,12 +1,42 @@
-import { PUZZLE_1_CONFIG, PUZZLE_2_CONFIG, getCellColor, createInitialGrid } from '../../utils/puzzleConfig';
+import { PUZZLE_1_CONFIG, PUZZLE_2_CONFIG, getCellColor, getCellColorWithRed, createInitialGrid } from '../../utils/puzzleConfig';
 import PuzzleGrid from './PuzzleGrid';
 import p2input from '../../assets/p2input.png';
 import p2output from '../../assets/p2output.png';
 import '../../styles/puzzles/PuzzleExamplesExplain.css';
 
-export default function PuzzleExamplesExplain({ puzzleNumber, explanationIndex }) {
-  // Select the appropriate configuration based on puzzle number
+export default function PuzzleExamplesExplain({ puzzleNumber, explanationIndex, inputImage, outputImage, puzzleConfig, useRedColor = false }) {
+  // If custom images are provided, use them
+  if (inputImage && outputImage) {
+    return (
+      <div>
+        <h2 className="sample-puzzle-title">Puzzle {puzzleNumber}</h2>
+        
+        <div className="sample-puzzle-grids">
+          <div className="sample-puzzle-side">
+            <p className="sample-label sample-label-start">Start</p>
+            <div className="sample-grid-container">
+              <img src={inputImage} alt={`Puzzle ${puzzleNumber} Start`} className="sample-puzzle-image" />
+            </div>
+          </div>
+
+          <div className="sample-arrow-large">→</div>
+
+          <div className="sample-puzzle-side">
+            <p className="sample-label sample-label-finish">Finish</p>
+            <div className="sample-grid-container">
+              <img src={outputImage} alt={`Puzzle ${puzzleNumber} Finish`} className="sample-puzzle-image" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Select the appropriate configuration based on puzzle config or puzzle number
   const getConfig = () => {
+    if (puzzleConfig) {
+      return puzzleConfig;
+    }
     if (puzzleNumber === 1) {
       return PUZZLE_1_CONFIG;
     } else if (puzzleNumber === 2) {
@@ -16,11 +46,16 @@ export default function PuzzleExamplesExplain({ puzzleNumber, explanationIndex }
   };
 
   const config = getConfig();
-  const startGrid = createInitialGrid(config.greenCells, config.gridSize);
+  const cellValue = config.cellValue || (config.useBlueOutline ? 4 : 1);
+  const startGrid = createInitialGrid(config.greenCells, config.gridSize, cellValue);
   const finishGrid = config.resultGrid;
+  const colorFunction = useRedColor ? getCellColorWithRed : getCellColor;
 
-  // Add glow effect to green cells on first explanation screen
-  const shouldGlowGreen = explanationIndex === 0;
+  // Add glow effect to cells on first explanation screen
+  const shouldGlowGreen = explanationIndex === 0 && !useRedColor;
+  const shouldGlowBlue = explanationIndex === 0 && useRedColor && puzzleNumber === 4;
+  const shouldGlowDarkBlue = explanationIndex === 0 && useRedColor && puzzleNumber === 5;
+  const shouldGlowWhite = explanationIndex === 0 && useRedColor && puzzleNumber !== 4 && puzzleNumber !== 5;
   // Add glow effect to yellow cells and arrow on second explanation screen
   const shouldGlowYellow = explanationIndex === 1;
   const shouldGlowArrow = explanationIndex === 1;
@@ -88,9 +123,12 @@ export default function PuzzleExamplesExplain({ puzzleNumber, explanationIndex }
           <div className="sample-grid-container">
             <PuzzleGrid 
               grid={startGrid} 
-              getCellColor={getCellColor}
+              getCellColor={colorFunction}
               interactive={false}
               glowGreen={shouldGlowGreen}
+              glowWhite={shouldGlowWhite}
+              glowBlue={shouldGlowBlue}
+              glowDarkBlue={shouldGlowDarkBlue}
             />
           </div>
         </div>
@@ -102,9 +140,12 @@ export default function PuzzleExamplesExplain({ puzzleNumber, explanationIndex }
           <div className="sample-grid-container">
             <PuzzleGrid 
               grid={finishGrid} 
-              getCellColor={getCellColor}
+              getCellColor={colorFunction}
               interactive={false}
               glowGreen={false}
+              glowWhite={false}
+              glowBlue={false}
+              glowDarkBlue={false}
               glowYellow={shouldGlowYellow}
             />
           </div>

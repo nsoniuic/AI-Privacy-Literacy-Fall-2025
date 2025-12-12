@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import robotImage from '../../../assets/robot.png';
+import robotImage from '../../../assets/robot-happy.png';
 import CharacterSelection from '../../../components/interactive/CharacterSelection';
 import ConversationContainer from '../../../components/conversation/ConversationContainer';
+import AppTitle from '../../../components/common/AppTitle';
+import '../../../styles/puzzles/Puzzles.css';
 import '../../../styles/pages/InitialGreeting.css';
 import '../../../App.css';
 
@@ -19,9 +21,12 @@ export default function FirstScenario() {
   const characterName = 'Parker';
 
   const dialogues = [
-    "Awesome job with the puzzles! Ready to see how I can connect the dots from what you've shared and figure out things you never told me?",
+    "Awesome job solving the puzzles! You just learned how AI figures things out by spotting patterns - just like you did!",
+    "In the puzzles, AI deduced the rules without anyone telling it.",
+    "The same thing can happen when I look at the things you tell it about yourself, like your name, age, or where you live. I can connect clues from different bits of information and make guesses about you, even if you never said those things directly.",
+    "Now, I’ll show you some conversations I’ve had with other children like you. As you watch, see how I used little clues they shared, like things about themselves, to figure out new information they never told me directly. Ready to take a look?",
     "Before we continue, which character would you like to see moving forward?",
-    "Great! Now, let me show you an example with my friend. I'll show you what they told me, and what I was able to discover on my own."
+    "Great! Now, let me show you an example with my friend, Parker. I’ll show you what Parker told me, and what I was able to figure out on my own."
   ];
 
   // Define the conversation between robot and character
@@ -70,19 +75,20 @@ export default function FirstScenario() {
     }
   }, [displayedText, isTyping, currentDialogue, dialogues]);
 
-  const handleInitialContinue = () => {
-    // Show character selection and move to second dialogue
-    setShowCharacterSelection(true);
-    setCurrentDialogue(1);
+  const handleContinue = () => {
+    if (currentDialogue === 3) {
+      // After 4th dialogue, show character selection
+      setShowCharacterSelection(true);
+    }
+    setCurrentDialogue(prev => prev + 1);
     setDisplayedText('');
     setIsTyping(true);
   };
 
-  const handleFinalContinue = () => {
+  const handleCharacterContinue = () => {
     if (selectedCharacter) {
-      // Hide character selection and show next dialogue
-      setShowCharacterSelection(false);
-      setCurrentDialogue(2);
+      // Keep character selection visible and move to next dialogue
+      setCurrentDialogue(5);
       setDisplayedText('');
       setIsTyping(true);
     }
@@ -94,16 +100,20 @@ export default function FirstScenario() {
   };
 
   const handleBack = () => {
-    if (currentDialogue === 2) {
-      // Go back to character selection
-      setShowCharacterSelection(true);
-      setCurrentDialogue(1);
+    if (currentDialogue === 5) {
+      // Go back to character selection (keep it visible)
+      setCurrentDialogue(4);
       setDisplayedText('');
       setIsTyping(true);
-    } else if (currentDialogue === 1) {
-      // Go back to first dialogue
+    } else if (currentDialogue === 4) {
+      // Go back to previous dialogue and hide character selection
       setShowCharacterSelection(false);
-      setCurrentDialogue(0);
+      setCurrentDialogue(3);
+      setDisplayedText('');
+      setIsTyping(true);
+    } else if (currentDialogue > 0) {
+      // Go back to previous dialogue
+      setCurrentDialogue(prev => prev - 1);
       setDisplayedText('');
       setIsTyping(true);
     }
@@ -121,25 +131,27 @@ export default function FirstScenario() {
   return (
     <div className="page-container">
       <AppTitle />
-      <div className="robot-greeting-content">
-        {!showConversation ? (
-          <>
-            <div className="dialog-box">
+      {!showConversation ? (
+        <>
+          <div className="puzzle-content">
+            <div className="dialog-box-top">
               <p className="dialog-text">{displayedText}</p>
             </div>
 
-            <div className="robot-greeting-robot-container">
+            <div className="puzzle-robot-container-right">
               <img 
                 src={robotImage} 
                 alt="Robot" 
-                className="robot-greeting-robot-image"
+                className="puzzle-robot-image"
               />
             </div>
+          </div>
 
             {showCharacterSelection && (
               <CharacterSelection 
                 selectedCharacter={selectedCharacter}
                 onCharacterSelect={handleCharacterSelect}
+                locked={currentDialogue === 5}
               />
             )}
 
@@ -152,27 +164,27 @@ export default function FirstScenario() {
                 Back
               </button>
 
-              {currentDialogue === 0 && (
+              {currentDialogue <= 3 && (
                 <button 
                   className="continue-button"
-                  onClick={handleInitialContinue}
+                  onClick={handleContinue}
                   disabled={isTyping}
                 >
-                  Let's go!
+                  {currentDialogue === 3 ? "Let's Go!" : "Continue"}
                 </button>
               )}
 
-              {currentDialogue === 1 && (
+              {currentDialogue === 4 && (
                 <button 
                   className="continue-button"
-                  onClick={handleFinalContinue}
+                  onClick={handleCharacterContinue}
                   disabled={isTyping || !selectedCharacter}
                 >
                   Continue
                 </button>
               )}
 
-              {currentDialogue === 2 && (
+              {currentDialogue === 5 && (
                 <button 
                   className="continue-button"
                   onClick={handleNextStep}
@@ -182,15 +194,14 @@ export default function FirstScenario() {
                 </button>
               )}
             </div>
-          </>
-        ) : (
-          <ConversationContainer 
-            selectedCharacter={selectedCharacter}
-            conversation={conversation}
-            onConversationEnd={handleConversationEnd}
-          />
-        )}
-      </div>
+        </>
+      ) : (
+        <ConversationContainer 
+          selectedCharacter={selectedCharacter}
+          conversation={conversation}
+          onConversationEnd={handleConversationEnd}
+        />
+      )}
     </div>
   );
 }

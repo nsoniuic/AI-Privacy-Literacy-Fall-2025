@@ -116,6 +116,30 @@
   animation: pulseGreenGlow 2s ease-in-out infinite;
 }
 
+.sample-grid-container .grid-cell.glow-white {
+  box-shadow: 0 0 15px rgba(255, 255, 255, 1),
+              0 0 30px rgba(255, 255, 255, 0.8),
+              0 0 45px rgba(255, 255, 255, 0.6),
+              0 0 60px rgba(255, 255, 255, 0.4);
+  animation: pulseWhiteGlow 2s ease-in-out infinite;
+}
+
+.sample-grid-container .grid-cell.glow-blue {
+  box-shadow: 0 0 15px rgba(37, 117, 222, 1),
+              0 0 30px rgba(37, 117, 222, 0.8),
+              0 0 45px rgba(37, 117, 222, 0.6),
+              0 0 60px rgba(37, 117, 222, 0.4);
+  animation: pulseBlueGlow 2s ease-in-out infinite;
+}
+
+.sample-grid-container .grid-cell.glow-darkblue {
+  box-shadow: 0 0 15px rgba(0, 75, 175, 1),
+              0 0 30px rgba(0, 75, 175, 0.8),
+              0 0 45px rgba(0, 75, 175, 0.6),
+              0 0 60px rgba(0, 75, 175, 0.4);
+  animation: pulseDarkBlueGlow 2s ease-in-out infinite;
+}
+
 @keyframes pulseGreenGlow {
   0%, 100% {
     box-shadow: 0 0 15px rgba(3, 183, 3, 1),
@@ -128,6 +152,51 @@
                 0 0 50px rgba(3, 183, 3, 1),
                 0 0 75px rgba(3, 183, 3, 0.8),
                 0 0 100px rgba(3, 183, 3, 0.6);
+  }
+}
+
+@keyframes pulseWhiteGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 1),
+                0 0 30px rgba(255, 255, 255, 0.8),
+                0 0 45px rgba(255, 255, 255, 0.6),
+                0 0 60px rgba(255, 255, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 255, 255, 1),
+                0 0 50px rgba(255, 255, 255, 1),
+                0 0 75px rgba(255, 255, 255, 0.8),
+                0 0 100px rgba(255, 255, 255, 0.6);
+  }
+}
+
+@keyframes pulseBlueGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(37, 117, 222, 1),
+                0 0 30px rgba(37, 117, 222, 0.8),
+                0 0 45px rgba(37, 117, 222, 0.6),
+                0 0 60px rgba(37, 117, 222, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(37, 117, 222, 1),
+                0 0 50px rgba(37, 117, 222, 1),
+                0 0 75px rgba(37, 117, 222, 0.8),
+                0 0 100px rgba(37, 117, 222, 0.6);
+  }
+}
+
+@keyframes pulseDarkBlueGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(0, 75, 175, 1),
+                0 0 30px rgba(0, 75, 175, 0.8),
+                0 0 45px rgba(0, 75, 175, 0.6),
+                0 0 60px rgba(0, 75, 175, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(0, 75, 175, 1),
+                0 0 50px rgba(0, 75, 175, 1),
+                0 0 75px rgba(0, 75, 175, 0.8),
+                0 0 100px rgba(0, 75, 175, 0.6);
   }
 }
 

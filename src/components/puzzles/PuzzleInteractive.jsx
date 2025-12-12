@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import PuzzleGrid from './PuzzleGrid';
-import { PUZZLE_3_CONFIG, getCellColor, createInitialGrid } from '../../utils/puzzleConfig';
+import { PUZZLE_3_CONFIG, getCellColor, getCellColorWithRed, createInitialGrid } from '../../utils/puzzleConfig';
 import '../../styles/puzzles/PuzzleInteractive.css';
 
-export default function PuzzleInteractive({ onSubmitResult, onBack, puzzleConfig = PUZZLE_3_CONFIG, puzzleNumber = 3 }) {
+export default function PuzzleInteractive({ onSubmitResult, onBack, puzzleConfig = PUZZLE_3_CONFIG, puzzleNumber = 3, useRedColor = false }) {
   const { greenCells, gridSize, resultGrid } = puzzleConfig;
 
-  // 6x6 grid state: 0 = empty, 1 = green (prefilled), 2 = yellow (user added)
+  // grid state: 0 = empty, 1 = green (prefilled), 2 = yellow (user added), 3 = red (user added)
   const [grid, setGrid] = useState(() => createInitialGrid(greenCells, gridSize));
 
   const [showButtons, setShowButtons] = useState(true);
@@ -17,8 +17,9 @@ export default function PuzzleInteractive({ onSubmitResult, onBack, puzzleConfig
     if (grid[row][col] === 1) return;
 
     const newGrid = grid.map(r => [...r]);
-    // Toggle between empty (0) and yellow (2)
-    newGrid[row][col] = grid[row][col] === 0 ? 2 : 0;
+    // Toggle between empty (0) and yellow (2) or red (3)
+    const fillValue = useRedColor ? 3 : 2;
+    newGrid[row][col] = grid[row][col] === 0 ? fillValue : 0;
     setGrid(newGrid);
   };
 
@@ -53,6 +54,7 @@ export default function PuzzleInteractive({ onSubmitResult, onBack, puzzleConfig
 
   // Create a static grid for the left side
   const staticGrid = createInitialGrid(greenCells, gridSize);
+  const colorFunction = useRedColor ? getCellColorWithRed : getCellColor;
 
   return (
     <>
@@ -64,7 +66,7 @@ export default function PuzzleInteractive({ onSubmitResult, onBack, puzzleConfig
           <div className="puzzle-side">
             <p className="label label-start">Start</p>
             <div className="puzzle-outside-container">
-              <PuzzleGrid grid={staticGrid} getCellColor={getCellColor} interactive={false} />
+              <PuzzleGrid grid={staticGrid} getCellColor={colorFunction} interactive={false} />
             </div>
           </div>
 
@@ -73,7 +75,7 @@ export default function PuzzleInteractive({ onSubmitResult, onBack, puzzleConfig
           <div className="puzzle-side">
             <p className="label label-finish">Finish</p>
             <div className="puzzle-outside-container">
-              <PuzzleGrid grid={grid} getCellColor={getCellColor} onCellClick={handleCellClick} interactive={true} />
+              <PuzzleGrid grid={grid} getCellColor={colorFunction} onCellClick={handleCellClick} interactive={true} />
             </div>
             {showButtons && (
               <button className="reset-button" onClick={handleReset}>↺ Reset</button>

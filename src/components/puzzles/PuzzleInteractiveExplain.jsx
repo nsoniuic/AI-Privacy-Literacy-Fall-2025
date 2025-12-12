@@ -1,12 +1,13 @@
 import PuzzleGrid from './PuzzleGrid';
-import { PUZZLE_1_CONFIG, getCellColor, createInitialGrid } from '../../utils/puzzleConfig';
+import { PUZZLE_1_CONFIG, getCellColor, getCellColorWithRed, createInitialGrid } from '../../utils/puzzleConfig';
 import '../../styles/puzzles/PuzzleInteractiveExplain.css';
 
-export default function PuzzleInteractiveExplain({ showResult = false, puzzleConfig = PUZZLE_1_CONFIG, puzzleNumber = 1 }) {
+export default function PuzzleInteractiveExplain({ showResult = false, puzzleConfig = PUZZLE_1_CONFIG, puzzleNumber = 1, useRedColor = false }) {
   const { greenCells, gridSize, resultGrid } = puzzleConfig;
 
   // Create start grid (same as PuzzleInteractive)
   const startGrid = createInitialGrid(greenCells, gridSize);
+  const colorFunction = useRedColor ? getCellColorWithRed : getCellColor;
 
   return (
     <div>
@@ -16,7 +17,7 @@ export default function PuzzleInteractiveExplain({ showResult = false, puzzleCon
         <div className="user-puzzle-side">
           <p className="user-label">Start</p>
           <div className="user-grid-container">
-            <PuzzleGrid grid={startGrid} getCellColor={getCellColor} interactive={false} />
+            <PuzzleGrid grid={startGrid} getCellColor={colorFunction} interactive={false} />
           </div>
         </div>
 
@@ -25,7 +26,7 @@ export default function PuzzleInteractiveExplain({ showResult = false, puzzleCon
         <div className="user-puzzle-side">
           <p className="user-label">Finish</p>
           <div className="user-grid-container">
-            <PuzzleGrid grid={showResult ? resultGrid : startGrid} getCellColor={getCellColor} interactive={false} />
+            <PuzzleGrid grid={showResult ? resultGrid : startGrid} getCellColor={colorFunction} interactive={false} />
           </div>
         </div>
       </div>

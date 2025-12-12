@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import robotImage from '../../assets/robot.png';
+import robotImage from '../../assets/robot-point.png';
+import robotThumbsUp from '../../assets/robot-thumbs-up.png';
+import p3input from '../../assets/p3input.png';
+import p3output from '../../assets/p3output.png';
+import p4input from '../../assets/p4input.png';
+import p4output from '../../assets/p4output.png';
 import PuzzleInteractive from '../../components/puzzles/PuzzleInteractive';
+import PuzzleExamplesExplain from '../../components/puzzles/PuzzleExamplesExplain';
 import PuzzleInteractiveExplain from '../../components/puzzles/PuzzleInteractiveExplain';
-import { PUZZLE_2_CONFIG } from '../../utils/puzzleConfig';
+import { PUZZLE_4_CONFIG, PUZZLE_5_CONFIG, PUZZLE_6_CONFIG } from '../../utils/puzzleConfig';
 import AppTitle from '../../components/common/AppTitle';
 import useSpeech from '../../utils/useSpeech';
 import { useVoice } from '../../contexts/VoiceContext';
@@ -15,84 +21,58 @@ export default function SecondPuzzle() {
   const navigate = useNavigate();
   const { voiceEnabled, friendlyVoice } = useVoice();
   const userName = location.state?.userName || 'Friend';
+  
+  const [currentView, setCurrentView] = useState('overview');
+  const [puzzle1Viewed, setPuzzle1Viewed] = useState(false);
+  const [puzzle2Viewed, setPuzzle2Viewed] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [shouldSpeak, setShouldSpeak] = useState(false);
+  const [hasLeftOverview, setHasLeftOverview] = useState(false);
+  const [currentExplanationIndex, setCurrentExplanationIndex] = useState(0);
   const [puzzleResult, setPuzzleResult] = useState(null);
-  const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
-  const [showPuzzle, setShowPuzzle] = useState(true);
   const [attemptCount, setAttemptCount] = useState(0);
-  const [puzzleKey, setPuzzleKey] = useState(0); // Used to force puzzle reset
+  const [puzzleKey, setPuzzleKey] = useState(0);
 
-  const dialogues = [
-    {
-      id: 'puzzle-2-intro',
-      text: "Let's see if you can apply the same pattern you spotted. Here's another puzzle, remember to look closely at the inputs and outputs.\nWhat changes this time?",
-      showPuzzle: true,
-    },
-    {
-      id: 'puzzle-2-retry',
-      text: "Not quite. Let's try again! Make sure to think about the pattern of the yellow boxes.",
-      showPuzzle: true,
-      condition: () => attemptCount === 1,
-    },
-    {
-      id: 'result-correct',
-      text: "Nice work, you figured it out! Now let me show you how I solved it.",
-      condition: () => puzzleResult === 'correct',
-    },
-    {
-      id: 'result-incorrect',
-      text: "You're getting closer! Now let me show you how I solved it.",
-      condition: () => puzzleResult === 'incorrect',
-    },
-    {
-      id: 'puzzle-2-explanation',
-      text: "First, I find all the green lines (they're my little fences).",
-      showExplanation: true,
-    },
-    {
-      id: 'puzzle-2-explanation-2',
-      text: "Next, I ask: “does this fence completely surround the area inside it?”",
-      showExplanation: true,
-    },
-    {
-      id: 'puzzle-2-explanation-3',
-      text: "When I find a closed area, I pour yellow paint inside it.",
-      showExplanation: true,
-      showResult: true,
-    },
-    {
-      id: 'puzzle-2-explanation-4',
-      text: "I don’t change the fence itself—green stays green—only the inside becomes yellow!",
-      showExplanation: true,
-      showResult: true,
-    },
-    {
-      id: 'puzzle-2-explanation-5',
-      text: "I leave open fences (with gaps) alone, because paint would “spill out.” so no fill there.",
-      showExplanation: true,
-      showResult: true,
-      navigateTo: '/first_scenario/talk',
-    },
-  ];
+  const getDialogueText = () => {
+    switch(currentView) {
+      case 'overview':
+        return "Let's see if you can apply the same pattern you spotted. Here are two more examples. What changes this time?";
+      
+      case 'puzzle1Focus':
+      case 'puzzle2Focus':
+        return "What rule do you think it's using to change the Start picture into the Finish picture?";
 
-  const getCurrentDialogue = () => {
-    const dialogue = dialogues[currentDialogueIndex];
-    if (dialogue?.condition && !dialogue.condition()) {
-      return null;
+      case 'puzzleSolve':
+        if (attemptCount === 1) {
+          return "Not quite. Let's try again! Make sure to think about the pattern of the yellow boxes.";
+        }
+        return "Now it's your turn! Use the rules you noticed in the earlier examples to solve this new puzzle. Click the blocks that should turn yellow to complete the Finish picture.";
+      
+      case 'transition':
+        return "Nice work, you figured it out how to solve Puzzle 6 based on the new patterns from Puzzle 4 and Puzzle 5! Now let me show you how I would think about it.";
+      
+      case 'explanation':
+        const explanations = [
+          "Lets see, if there is an empty line of blocks between 2 color blocks...",
+          "the Finish picture fills that empty line with red!",
+          "For Puzzle 5, it seems that the same logic holds, even with different color and angles.",
+          "I see that there is a line gap between the top and bottom white blocks in Puzzle 6, ",
+          "so I will fill that line with red blocks to complete the pattern!"
+        ];
+        return explanations[currentExplanationIndex] || "";
+      
+      default:
+        return "";
     }
-    return dialogue;
   };
 
-  const currentDialogue = getCurrentDialogue();
-  const currentText = currentDialogue?.text || '';
+  const currentText = getDialogueText();
   const typingSpeed = 30;
 
-  // Speech control
   const speechControl = useSpeech(
     currentText,
-    voiceEnabled && shouldSpeak,
+    voiceEnabled && shouldSpeak && !(currentView === 'overview' && hasLeftOverview),
     {
       rate: 0.9,
       pitch: 1.0,
@@ -102,7 +82,13 @@ export default function SecondPuzzle() {
   );
 
   useEffect(() => {
-    // Start speech when new dialogue starts
+    if (currentView === 'overview' && hasLeftOverview) {
+      setDisplayedText(currentText);
+      setIsTyping(false);
+      setShouldSpeak(false);
+      return;
+    }
+
     if (displayedText === '') {
       setShouldSpeak(true);
     }
@@ -115,83 +101,79 @@ export default function SecondPuzzle() {
     } else if (displayedText.length === currentText.length) {
       setIsTyping(false);
     }
-  }, [displayedText, isTyping, currentText]);
+  }, [displayedText, isTyping, currentText, currentView, hasLeftOverview]);
 
-  const handleSubmitResult = (isCorrect) => {
+  const resetDialogue = () => {
     speechControl.stop();
     setShouldSpeak(false);
+    setDisplayedText('');
+    setIsTyping(true);
+  };
+
+  const handleStartPuzzle1 = () => {
+    setHasLeftOverview(true);
+    resetDialogue();
+    setCurrentView('puzzle1Focus');
+  };
+
+  const handleStartPuzzle2 = () => {
+    if (!puzzle1Viewed) return;
+    setHasLeftOverview(true);
+    resetDialogue();
+    setCurrentView('puzzle2Focus');
+  };
+
+  const handleContinueToPuzzle = () => {
+    setHasLeftOverview(true);
+    resetDialogue();
+    setAttemptCount(0);
+    setPuzzleKey(prev => prev + 1);
+    setCurrentView('puzzleSolve');
+  };
+
+  const handleDoneThinking = (puzzleNumber) => {
+    if (puzzleNumber === 1) {
+      setPuzzle1Viewed(true);
+    } else {
+      setPuzzle2Viewed(true);
+    }
+    setCurrentView('overview');
+  };
+
+  const handleSubmitResult = (isCorrect) => {
     setAttemptCount(prev => prev + 1);
     
     if (isCorrect) {
-      // Correct answer - proceed to explanation
-      setPuzzleResult('correct');
-      setShowPuzzle(false);
-      setCurrentDialogueIndex(2); // Move to result-correct dialogue
-      setDisplayedText('');
-      setIsTyping(true);
+      resetDialogue();
+      setCurrentView('transition');
     } else if (attemptCount === 0) {
-      // First incorrect attempt - show retry message and reset puzzle
-      setCurrentDialogueIndex(1); // Move to retry dialogue
-      setPuzzleKey(prev => prev + 1); // Force puzzle to reset
-      setDisplayedText('');
-      setIsTyping(true);
+      setPuzzleKey(prev => prev + 1);
+      resetDialogue();
     } else {
-      // Second incorrect attempt - proceed to explanation
-      setPuzzleResult('incorrect');
-      setShowPuzzle(false);
-      setCurrentDialogueIndex(3); // Move to result-incorrect dialogue
-      setDisplayedText('');
-      setIsTyping(true);
+      resetDialogue();
+      setCurrentExplanationIndex(0);
+      setCurrentView('explanation');
     }
   };
 
-  const handleBack = () => {
-    speechControl.stop();
-    setShouldSpeak(false);
-    // Don't allow back on first dialogue after result
-    if (puzzleResult && (currentDialogueIndex === 1 || currentDialogueIndex === 2)) {
-      return;
-    }
+  const handleTransitionContinue = () => {
+    resetDialogue();
+    setCurrentExplanationIndex(0);
+    setCurrentView('explanation');
+  };
 
-    if (currentDialogueIndex > 0) {
-      let prevIndex = currentDialogueIndex - 1;
-      // Skip backwards over any dialogues with unsatisfied conditions
-      while (prevIndex >= 0) {
-        const prevDialogue = dialogues[prevIndex];
-        if (!prevDialogue.condition || prevDialogue.condition()) {
-          setCurrentDialogueIndex(prevIndex);
-          setDisplayedText('');
-          setIsTyping(true);
-          break;
-        }
-        prevIndex--;
-      }
+  const handleNextExplanation = () => {
+    if (currentExplanationIndex < 4) {
+      setCurrentExplanationIndex(prev => prev + 1);
+      resetDialogue();
+    } else {
+      navigate('/first_scenario/talk', { state: { userName } });
     }
   };
 
-  const handleContinueExplanation = () => {
-    speechControl.stop();
-    setShouldSpeak(false);
-    // Check if current dialogue has navigation
-    if (currentDialogue?.navigateTo) {
-      navigate(currentDialogue.navigateTo, { state: { userName } });
-      return;
-    }
-
-    // Move to next valid dialogue
-    if (currentDialogueIndex < dialogues.length - 1) {
-      let nextIndex = currentDialogueIndex + 1;
-      while (nextIndex < dialogues.length) {
-        const nextDialogue = dialogues[nextIndex];
-        if (!nextDialogue.condition || nextDialogue.condition()) {
-          setCurrentDialogueIndex(nextIndex);
-          setDisplayedText('');
-          setIsTyping(true);
-          break;
-        }
-        nextIndex++;
-      }
-    }
+  const handleBackToOverview = () => {
+    resetDialogue();
+    setCurrentView('overview');
   };
 
   return (
@@ -199,67 +181,197 @@ export default function SecondPuzzle() {
       <AppTitle />
       
       <div className="puzzle-content">
-        {/* Dialog box positioned at top left */}
-        <div className="dialog-box-top">
-          <p className="dialog-text">{displayedText}</p>
+        <div className={`dialog-box-top ${currentView === 'transition' || currentView === 'explanation' ? 'thinking-bubble' : ''}`}>
+          <p className="dialog-text" dangerouslySetInnerHTML={{
+            __html: displayedText
+              .replace(/Start/g, '<span style="color: #b50a0a; font-weight: bold;">Start</span>')
+              .replace(/Finish/g, '<span style="color: #FFC107; font-weight: bold;">Finish</span>')
+          }} />
+          {(currentView === 'transition' || currentView === 'explanation') && (
+            <div className="thinking-circles">
+              <div className="circle circle-large"></div>
+              <div className="circle circle-medium"></div>
+              <div className="circle circle-small"></div>
+            </div>
+          )}
         </div>
 
-        {/* Robot image on the right side */}
         <div className="puzzle-robot-container-right">
           <img 
-            src={robotImage} 
+            src={currentView === 'transition' ? robotThumbsUp : robotImage}
             alt="Robot" 
             className="puzzle-robot-image"
           />
         </div>
       </div>
 
-      {currentDialogue?.showPuzzle && showPuzzle && (
-        <PuzzleInteractive 
-          key={puzzleKey}
-          onSubmitResult={handleSubmitResult}
-          onBack={handleBack}
-          puzzleConfig={PUZZLE_2_CONFIG}
-          puzzleNumber={2}
-        />
+      {currentView === 'overview' && (
+        <div className="puzzles-overview">
+          <div className={`puzzle-card ${puzzle1Viewed && !puzzle2Viewed ? '' : ''}`}>
+            <h3>Puzzle 4</h3>
+            <div className="puzzle-preview">
+              <div className="preview-images">
+                <img src={p3input} alt="Puzzle 1 Start" />
+                <span className="arrow">→</span>
+                <img src={p3output} alt="Puzzle 1 Finish" />
+              </div>
+            </div>
+            <button 
+              className="start-puzzle-button"
+              onClick={handleStartPuzzle1}
+            >
+              {puzzle1Viewed ? 'Review Puzzle 4' : 'View Puzzle 4'}
+            </button>
+          </div>
+
+          <div className={`puzzle-card ${!puzzle1Viewed ? 'locked' : ''} ${puzzle1Viewed && !puzzle2Viewed ? 'highlighted' : ''}`}>
+            <h3>Puzzle 5</h3>
+            <div className="puzzle-preview">
+              <div className="preview-images">
+                <img src={p4input} alt="Puzzle 2 Start" />
+                <span className="arrow">→</span>
+                <img src={p4output} alt="Puzzle 2 Finish" />
+              </div>
+              {!puzzle1Viewed && <div className="lock-overlay">🔒</div>}
+            </div>
+            <button 
+              className="start-puzzle-button"
+              onClick={handleStartPuzzle2}
+              disabled={!puzzle1Viewed}
+            >
+              {!puzzle1Viewed ? '🔒 Locked' : puzzle2Viewed ? 'Review Puzzle 5' : 'View Puzzle 5'}
+            </button>
+          </div>
+        </div>
       )}
 
-      {currentDialogue?.showExplanation && (
-        <PuzzleInteractiveExplain 
-          showResult={currentDialogue?.showResult || false}
-          puzzleConfig={PUZZLE_2_CONFIG}
-          puzzleNumber={2}
-        />
-      )}
-
-      {!currentDialogue?.showPuzzle && (
-        <div className="navigation-buttons">
+      {currentView === 'overview' && (
+        <div className="navigation-buttons" style={{ justifyContent: 'center' }}>
           <button 
-            className="back-button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleBack();
-            }}
-            disabled={currentDialogueIndex === 0 || (puzzleResult && (currentDialogueIndex === 2 || currentDialogueIndex === 3))}
+            className="continue-button"
+            onClick={handleContinueToPuzzle}
+            disabled={!puzzle1Viewed || !puzzle2Viewed}
           >
-            Back
+            Continue
           </button>
+        </div>
+      )}
 
-          {puzzleResult && (
+      {currentView === 'puzzle1Focus' && (
+        <div className="puzzle-focus-view">
+          <div className="puzzle-large">
+            <h3>Puzzle 4</h3>
+            <div className="puzzle-images-large">
+              <div className="puzzle-image-container">
+                <h4>Start</h4>
+                <img src={p3input} alt="Puzzle 1 Start" />
+              </div>
+              <span className="arrow-large">→</span>
+              <div className="puzzle-image-container">
+                <h4>Finish</h4>
+                <img src={p3output} alt="Puzzle 1 Finish" />
+              </div>
+            </div>
+          </div>
+          <div className="navigation-buttons">
+            <button className="continue-button" onClick={() => handleDoneThinking(1)}>
+              Done
+            </button>
+          </div>
+        </div>
+      )}
+
+      {currentView === 'puzzle2Focus' && (
+        <div className="puzzle-focus-view">
+          <div className="puzzle-large">
+            <h3>Puzzle 5</h3>
+            <div className="puzzle-images-large">
+              <div className="puzzle-image-container">
+                <h4>Start</h4>
+                <img src={p4input} alt="Puzzle 2 Start" />
+              </div>
+              <span className="arrow-large">→</span>
+              <div className="puzzle-image-container">
+                <h4>Finish</h4>
+                <img src={p4output} alt="Puzzle 2 Finish" />
+              </div>
+            </div>
+          </div>
+          <div className="navigation-buttons">
+            <button className="continue-button" onClick={() => handleDoneThinking(2)}>
+              Done
+            </button>
+          </div>
+        </div>
+      )}
+
+      {currentView === 'puzzleSolve' && (
+        <div className="puzzle-solve-view">
+          <PuzzleInteractive
+            key={puzzleKey}
+            onSubmitResult={handleSubmitResult}
+            onBack={handleBackToOverview}
+            puzzleConfig={PUZZLE_6_CONFIG}
+            puzzleNumber={6}
+            useRedColor={true}
+          />
+        </div>
+      )}      {currentView === 'transition' && (
+        <div className="transition-view">
+          <div className="navigation-buttons">
             <button 
               className="continue-button"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleContinueExplanation();
-              }}
+              onClick={handleTransitionContinue}
               disabled={isTyping}
             >
               Continue
             </button>
-          )}
+          </div>
         </div>
       )}
-      
+
+      {currentView === 'explanation' && (
+        <div className="explanation-view">
+          {currentExplanationIndex <= 1 ? (
+            <PuzzleExamplesExplain
+              puzzleNumber={4}
+              explanationIndex={currentExplanationIndex}
+              puzzleConfig={PUZZLE_4_CONFIG}
+              useRedColor={true}
+            />
+          ) : currentExplanationIndex === 2 ? (
+            <PuzzleExamplesExplain
+              puzzleNumber={5}
+              explanationIndex={0}
+              puzzleConfig={PUZZLE_5_CONFIG}
+              useRedColor={true}
+            />
+          ) : currentExplanationIndex === 3 ? (
+            <PuzzleInteractiveExplain
+              showResult={false}
+              puzzleConfig={PUZZLE_6_CONFIG}
+              puzzleNumber={6}
+              useRedColor={true}
+            />
+          ) : (
+            <PuzzleInteractiveExplain
+              showResult={true}
+              puzzleConfig={PUZZLE_6_CONFIG}
+              puzzleNumber={6}
+              useRedColor={true}
+            />
+          )}
+          <div className="navigation-buttons">
+            <button 
+              className="continue-button"
+              onClick={handleNextExplanation}
+              disabled={isTyping}
+            >
+              {currentExplanationIndex < 4 ? 'Continue' : 'Next'}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
