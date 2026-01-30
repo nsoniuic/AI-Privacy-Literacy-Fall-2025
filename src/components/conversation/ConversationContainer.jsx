@@ -3,6 +3,7 @@ import robotImage from '../../assets/robot.png';
 import boyCharacter from '../../assets/boy.png';
 import girlCharacter from '../../assets/girl.png';
 import useSpeech, { getChildFriendlyVoice } from '../../utils/useSpeech';
+import { useScreenNumber } from '../../hooks/useScreenNumber';
 import '../../styles/pages/Conversation.css';
 
 export default function ConversationContainer({ 
@@ -12,7 +13,8 @@ export default function ConversationContainer({
   memoryTriggers = { gradeLevel: 3, birthday: 6 }, // Default indices for first scenario
   memoryLabels = { first: 'Grade Level', second: 'Birthday' }, // Default labels for first scenario
   thoughtBubbleTexts = { first: 'grade level', second: 'birthday' }, // Default thought bubble texts
-  endThoughtText = null // Custom end thought text (optional)
+  endThoughtText = null, // Custom end thought text (optional)
+  startScreenNumber = 29 // Starting screen number for this conversation
 }) {
   const characterName = 'Parker';
   const characterPronoun = selectedCharacter === 'boy' ? 'his' : 'her';
@@ -34,6 +36,14 @@ export default function ConversationContainer({
   const [shouldSpeak, setShouldSpeak] = useState(false);
   const [friendlyVoice, setFriendlyVoice] = useState(null);
   const [showAnimation, setShowAnimation] = useState(false);
+  
+  // Update screen number based on current dialogue index and screen state
+  // Each message in conversation gets its own screen number
+  // When on thinking screen, use startScreenNumber + conversation.length
+  const screenNumber = currentScreen === 'thinking' 
+    ? startScreenNumber + conversation.length 
+    : startScreenNumber + currentDialogueIndex;
+  useScreenNumber(screenNumber);
   
   // Refs for animation positioning
   const characterDialogRef = useRef(null);

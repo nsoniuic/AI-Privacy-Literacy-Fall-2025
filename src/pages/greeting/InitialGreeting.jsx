@@ -7,6 +7,7 @@ import robotWaveImage from "../../assets/robot-wave.png";
 import robotThinkImage from "../../assets/robot-think.png";
 import useSpeech from "../../utils/useSpeech";
 import { useVoice } from "../../contexts/VoiceContext";
+import { useScreenNumber } from "../../hooks/useScreenNumber";
 import AppTitle from "../../components/common/AppTitle";
 import "../../styles/pages/InitialGreeting.css";
 import "../../App.css";
@@ -20,9 +21,10 @@ export default function InitialGreeting() {
   const [showInput, setShowInput] = useState(true);
   const [isTyping, setIsTyping] = useState(true);
   const [shouldBounce, setShouldBounce] = useState(false);
-  const [shouldVibrate, setShouldVibrate] = useState(false);
-  const [isWaitingForNext, setIsWaitingForNext] = useState(false);
   const [shouldSpeak, setShouldSpeak] = useState(false);
+
+  const screenNumber = currentDialogueIndex + 1;
+  useScreenNumber(screenNumber);
 
   // Dialogue configuration with emotion/image syncing
   // Each dialogue has text and corresponding robot emotion image
@@ -84,25 +86,6 @@ export default function InitialGreeting() {
       return () => clearTimeout(timer);
     } else if (displayedText.length === dialogueText.length) {
       setIsTyping(false);
-
-      // Auto-advance to third dialogue after 2.5 seconds if on second dialogue
-      if (currentDialogueIndex === 1) {
-        setIsWaitingForNext(true);
-        const autoAdvanceTimer = setTimeout(() => {
-          // Trigger vibration
-          setShouldVibrate(true);
-          setTimeout(() => setShouldVibrate(false), 500);
-
-          // Advance to next dialogue
-          speechControl.stop();
-          setShouldSpeak(false);
-          setCurrentDialogueIndex(2);
-          setDisplayedText("");
-          setIsTyping(true);
-          setIsWaitingForNext(false);
-        }, 2500);
-        return () => clearTimeout(autoAdvanceTimer);
-      }
     }
   }, [displayedText, isTyping, currentDialogueIndex, userName]);
 
@@ -174,9 +157,7 @@ export default function InitialGreeting() {
 
       <div className="initial-greeting-content">
         {/* Dialog box positioned at top */}
-        <div
-          className={`dialog-box-top ${shouldVibrate ? "vibrate-animation" : ""}`}
-        >
+        <div className="dialog-box-top">
           <p className="dialog-text">{displayedText}</p>
         </div>
 
@@ -222,7 +203,7 @@ export default function InitialGreeting() {
                 e.stopPropagation();
                 handleContinue();
               }}
-              disabled={isTyping || isWaitingForNext}
+              disabled={isTyping}
             >
               {currentDialogueIndex === dialogueConfig.length - 1
                 ? "Start Puzzle"

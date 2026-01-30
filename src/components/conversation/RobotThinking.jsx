@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import robotImage from '../../assets/robot.png';
+import cloudImage from '../../assets/cloud.svg';
+import { useScreenNumber } from '../../hooks/useScreenNumber';
 import '../../styles/pages/RobotThinking.css';
 
 export default function RobotThinking({ 
@@ -7,6 +9,7 @@ export default function RobotThinking({
   onContinue, 
   showThoughtBubble, 
   onBack,
+  startScreenNumber = 37,
   memoryData = {
     fact1: "birthday is June 26th",
     fact2: "is in 6th grade",
@@ -30,6 +33,9 @@ export default function RobotThinking({
   const [showClouds, setShowClouds] = useState(false);
   const [showDeductionBubble, setShowDeductionBubble] = useState(false);
   const [currentScreen, setCurrentScreen] = useState(0);
+
+  // Track screen number: startScreenNumber + currentScreen
+  useScreenNumber(startScreenNumber + currentScreen);
 
   useEffect(() => {
     // Sequence: brain -> arrows -> clouds
@@ -89,6 +95,7 @@ export default function RobotThinking({
         <div className="memory-clouds-container">
           <div className="memory-cloud-container-left">
             <div className={`memory-cloud ${showClouds ? 'show' : ''}`}>
+              <img src={cloudImage} alt="Cloud" className="cloud-background" />
               <p className="memory-cloud-text">{characterName}'s {memoryData.fact1}</p>
             </div>
             
@@ -103,6 +110,7 @@ export default function RobotThinking({
             {/* Birthday deduction bubble below birthday cloud */}
             {currentScreen >= 4 && (
               <div className="deduction-bubble">
+                <img src={cloudImage} alt="Cloud" className="cloud-background" />
                 <p className="deduction-text">{possessivePronoun === 'his' ? 'His' : 'Her'} {memoryData.deduction2}</p>
               </div>
             )}
@@ -110,6 +118,7 @@ export default function RobotThinking({
           
           <div className="memory-cloud-container-right">
             <div className={`memory-cloud ${showClouds ? 'show' : ''}`}>
+              <img src={cloudImage} alt="Cloud" className="cloud-background" />
               <p className="memory-cloud-text">{characterName} {memoryData.fact2}</p>
             </div>
             
@@ -124,6 +133,7 @@ export default function RobotThinking({
             {/* Deduction bubble below grade cloud */}
             {currentScreen >= 2 && (
               <div className="deduction-bubble">
+                <img src={cloudImage} alt="Cloud" className="cloud-background" />
                 <p className="deduction-text">{characterName} {memoryData.deduction1}</p>
               </div>
             )}
@@ -144,6 +154,7 @@ export default function RobotThinking({
               </div>
             </div>
             <div className="deduction-bubble">
+              <img src={cloudImage} alt="Cloud" className="cloud-background" />
               <p className="deduction-text">{characterName} {finalDeduction}</p>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import robotImage from '../../../assets/robot.png';
 import ConversationContainer from '../../../components/conversation/ConversationContainer';

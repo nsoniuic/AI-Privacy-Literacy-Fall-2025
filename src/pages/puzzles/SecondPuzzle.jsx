@@ -13,6 +13,7 @@ import { PUZZLE_4_CONFIG, PUZZLE_5_CONFIG, PUZZLE_6_CONFIG } from '../../utils/p
 import AppTitle from '../../components/common/AppTitle';
 import useSpeech from '../../utils/useSpeech';
 import { useVoice } from '../../contexts/VoiceContext';
+import { useScreenNumber } from '../../hooks/useScreenNumber';
 import '../../styles/puzzles/Puzzles.css';
 import '../../App.css';
 
@@ -33,6 +34,26 @@ export default function SecondPuzzle() {
   const [puzzleResult, setPuzzleResult] = useState(null);
   const [attemptCount, setAttemptCount] = useState(0);
   const [puzzleKey, setPuzzleKey] = useState(0);
+
+  // Update screen number based on current view
+  // Screen 13: overview
+  // Screen 14: puzzle1Focus
+  // Screen 15: puzzle2Focus
+  // Screen 16: puzzleSolve
+  // Screen 17: transition
+  // Screen 18-22: explanation (increments with each explanationIndex)
+  const getScreenNumber = () => {
+    switch(currentView) {
+      case 'overview': return 13;
+      case 'puzzle1Focus': return 14;
+      case 'puzzle2Focus': return 15;
+      case 'puzzleSolve': return 16;
+      case 'transition': return 17;
+      case 'explanation': return 18 + currentExplanationIndex;
+      default: return 16.5;
+    }
+  };
+  useScreenNumber(getScreenNumber());
 
   const getDialogueText = () => {
     switch(currentView) {

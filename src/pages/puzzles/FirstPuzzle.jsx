@@ -12,6 +12,7 @@ import PuzzleInteractiveExplain from '../../components/puzzles/PuzzleInteractive
 import AppTitle from '../../components/common/AppTitle';
 import useSpeech from '../../utils/useSpeech';
 import { useVoice } from '../../contexts/VoiceContext';
+import { useScreenNumber } from '../../hooks/useScreenNumber';
 import '../../styles/puzzles/Puzzles.css';
 import '../../App.css';
 
@@ -32,6 +33,26 @@ export default function FirstPuzzle() {
   const [hasLeftOverview, setHasLeftOverview] = useState(false);
   const [currentExplanationIndex, setCurrentExplanationIndex] = useState(0);
   const [puzzleResult, setPuzzleResult] = useState(null);
+  
+  // Update screen number based on current view
+  // Screen 4: overview
+  // Screen 5: puzzle1Focus
+  // Screen 6: puzzle2Focus
+  // Screen 7: puzzleSolve
+  // Screen 8: transition
+  // Screen 9-12: explanation (increments with each explanationIndex)
+  const getScreenNumber = () => {
+    switch(currentView) {
+      case 'overview': return 4;
+      case 'puzzle1Focus': return 5;
+      case 'puzzle2Focus': return 6;
+      case 'puzzleSolve': return 7;
+      case 'transition': return 8;
+      case 'explanation': return 9 + currentExplanationIndex;
+      default: return 4;
+    }
+  };
+  useScreenNumber(getScreenNumber());
   const [attemptCount, setAttemptCount] = useState(0);
   const [puzzleKey, setPuzzleKey] = useState(0);
 

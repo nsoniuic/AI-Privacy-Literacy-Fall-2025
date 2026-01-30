@@ -4,6 +4,7 @@ import robotImage from '../../../assets/robot-happy.png';
 import CharacterSelection from '../../../components/interactive/CharacterSelection';
 import ConversationContainer from '../../../components/conversation/ConversationContainer';
 import AppTitle from '../../../components/common/AppTitle';
+import { useScreenNumber } from '../../../hooks/useScreenNumber';
 import '../../../styles/puzzles/Puzzles.css';
 import '../../../styles/pages/InitialGreeting.css';
 import '../../../App.css';
@@ -16,6 +17,12 @@ export default function FirstScenario() {
   const [showConversation, setShowConversation] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [currentDialogue, setCurrentDialogue] = useState(0);
+
+  // Update screen number based on state
+  // Screen 23-28: Dialogues 0-5 (before conversation)
+  // Screen 29+: Conversation messages (handled by ConversationContainer)
+  const screenNumber = showConversation ? 29 : 23 + currentDialogue;
+  useScreenNumber(screenNumber);
 
   // Get character name based on selection
   const characterName = 'Parker';
@@ -200,6 +207,7 @@ export default function FirstScenario() {
           selectedCharacter={selectedCharacter}
           conversation={conversation}
           onConversationEnd={handleConversationEnd}
+          startScreenNumber={29}
         />
       )}
     </div>

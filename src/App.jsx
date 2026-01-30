@@ -12,6 +12,7 @@ import SecondScenarioResult from './pages/scenarios/second/SecondScenarioResult'
 import FinalMessage from './pages/FinalMessage'
 import ProgressIndicator from './components/common/ProgressIndicator'
 import VoiceToggle from './components/common/VoiceToggle'
+import ScreenCounter from './components/common/ScreenCounter'
 import { useClickLogger } from './hooks/useClickLogger'
 import { usePageTimeLogger } from './hooks/usePageTimeLogger'
 import './App.css'
@@ -25,6 +26,7 @@ function App() {
     <>
       <ProgressIndicator />
       <VoiceToggle />
+      <ScreenCounter />
       <Routes>
       <Route path="/" element={<InitialGreeting />} />
       <Route path="/puzzle/first" element={<FirstPuzzle />} />

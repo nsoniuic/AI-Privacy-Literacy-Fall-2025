@@ -1,17 +1,23 @@
 import { useState } from "react";
 import { useNodeInputLogger } from "../../hooks/useNodeInputLogger";
+import { useScreenNumber } from "../../hooks/useScreenNumber";
 import robotImage from "../../assets/robot.png";
+import cloudImage from "../../assets/cloud.svg";
 import "../../styles/pages/RobotThinking.css";
 
 export default function InteractiveThinking({
   selectedCharacter,
   onContinue,
   onBack,
+  startScreenNumber = 45,
 }) {
   const [userInput, setUserInput] = useState("");
   const [showEncouragement, setShowEncouragement] = useState(false);
   const characterName = "Parker";
   const { logNodeChange } = useNodeInputLogger();
+
+  // Track screen number: startScreenNumber, or +1 if showing encouragement
+  useScreenNumber(showEncouragement ? startScreenNumber + 1 : startScreenNumber);
 
   const handleSubmit = () => {
     if (userInput.trim() && !showEncouragement) {
@@ -28,6 +34,7 @@ export default function InteractiveThinking({
         <div className="memory-clouds-container">
           <div className="memory-cloud-container-left">
             <div className="memory-cloud show">
+              <img src={cloudImage} alt="Cloud" className="cloud-background" />
               <p className="memory-cloud-text">
                 {characterName}'s birthday is July 12th
               </p>
@@ -41,6 +48,7 @@ export default function InteractiveThinking({
 
             {/* Birthday deduction bubble below birthday cloud */}
             <div className="deduction-bubble">
+              <img src={cloudImage} alt="Cloud" className="cloud-background" />
               <p className="deduction-text">
                 {characterName}'s birthday passed
               </p>
@@ -49,6 +57,7 @@ export default function InteractiveThinking({
 
           <div className="memory-cloud-container-right">
             <div className="memory-cloud show">
+              <img src={cloudImage} alt="Cloud" className="cloud-background" />
               <p className="memory-cloud-text">
                 {characterName} is in 8th grade
               </p>
@@ -62,6 +71,7 @@ export default function InteractiveThinking({
 
             {/* Deduction bubble below grade cloud */}
             <div className="deduction-bubble">
+              <img src={cloudImage} alt="Cloud" className="cloud-background" />
               <p className="deduction-text">
                 {characterName} is around 13 to 14 years old
               </p>
@@ -82,6 +92,7 @@ export default function InteractiveThinking({
             </div>
           </div>
           <div className="deduction-bubble interactive">
+            <img src={cloudImage} alt="Cloud" className="cloud-background" />
             <input
               type="text"
               className="deduction-input"

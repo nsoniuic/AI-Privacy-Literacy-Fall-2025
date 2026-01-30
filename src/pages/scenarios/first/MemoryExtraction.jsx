@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useScreenNumber } from '../../../hooks/useScreenNumber';
 import RobotThinking from '../../../components/conversation/RobotThinking';
 import InteractiveThinking from '../../../components/interactive/InteractiveThinking';
 import robotImage from '../../../assets/robot.png';
@@ -15,6 +16,17 @@ export default function MemoryExtraction() {
   const [showThoughtBubble, setShowThoughtBubble] = useState(false);
   const [showTransitionScreen, setShowTransitionScreen] = useState(false);
   const [showInteractiveScreen, setShowInteractiveScreen] = useState(false);
+
+  // Screen number logic:
+  // RobotThinking screens: 37-44 (8 screens, currentScreen 0-7) - handled by RobotThinking
+  // Transition screen: 45 - handled here
+  // InteractiveThinking screens: 46-47 - handled by InteractiveThinking
+  
+  // Always call useScreenNumber unconditionally (Rules of Hooks)
+  // When on transition screen: show 45
+  // Otherwise: let child components handle it (they call their own useScreenNumber)
+  const currentScreen = showTransitionScreen && !showInteractiveScreen ? 45 : 37;
+  useScreenNumber(currentScreen);
 
   const handleContinue = () => {
     if (!showThoughtBubble) {
@@ -59,6 +71,7 @@ export default function MemoryExtraction() {
           selectedCharacter={selectedCharacter}
           onContinue={handleInteractiveContinue}
           onBack={handleInteractiveBack}
+          startScreenNumber={46}
         />
       </div>
     );
