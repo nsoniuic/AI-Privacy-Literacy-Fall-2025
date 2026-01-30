@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import robotImage from '../../assets/robot.png';
 import boyCharacter from '../../assets/boy.png';
 import girlCharacter from '../../assets/girl.png';
@@ -26,10 +26,19 @@ export default function ConversationContainer({
   const [showBirthdayThought, setShowBirthdayThought] = useState(false);
   const [showGradeLevelInMemory, setShowGradeLevelInMemory] = useState(false);
   const [showBirthdayInMemory, setShowBirthdayInMemory] = useState(false);
+  const [newlyAddedItem, setNewlyAddedItem] = useState(null); // Track which item was just added
+  const [hasTriggeredGradeAnimation, setHasTriggeredGradeAnimation] = useState(false);
+  const [hasTriggeredBirthdayAnimation, setHasTriggeredBirthdayAnimation] = useState(false);
   const [currentScreen, setCurrentScreen] = useState('conversation'); // 'conversation', 'thinking', 'memory-extraction'
   const [voiceEnabled, setVoiceEnabled] = useState(true); // Toggle for voice
   const [shouldSpeak, setShouldSpeak] = useState(false);
   const [friendlyVoice, setFriendlyVoice] = useState(null);
+  const [showAnimation, setShowAnimation] = useState(false);
+  
+  // Refs for animation positioning
+  const characterDialogRef = useRef(null);
+  const memoryBoxRef = useRef(null);
+  const robotAvatarRef = useRef(null);
 
   const typingSpeed = 40;
   const currentDialogue = conversation[currentDialogueIndex];
@@ -80,33 +89,50 @@ export default function ConversationContainer({
       }
       
       // Check if this is the dialogue where character mentions grade level
-      if (currentDialogueIndex === memoryTriggers.gradeLevel && currentDialogue.speaker === 'character') {
-        // Trigger thought bubble after 0.5 second delay
+      if (currentDialogueIndex === memoryTriggers.gradeLevel && currentDialogue.speaker === 'character' && !hasTriggeredGradeAnimation) {
+        setHasTriggeredGradeAnimation(true);
+        // Start animation sequence
         setTimeout(() => {
-          setShowGradeLevelThought(true);
+          setShowAnimation(true);
           setShowMemoryContainer(true);
           
-          // Add to memory container after additional delay (1.5 seconds total)
+          // Show thought bubble after short delay
+          setTimeout(() => {
+            setShowGradeLevelThought(true);
+          }, 800);
+          
+          // Add to memory container after delay
           setTimeout(() => {
             setShowGradeLevelInMemory(true);
+            setNewlyAddedItem('grade');
             setIsTyping(false);
-          }, 1000);
+            // Clear the new item flag after animation completes
+            setTimeout(() => setNewlyAddedItem(null), 2000);
+          }, 1700);
 
         }, 500); // 0.5 second delay after typing finishes
       }
       
       // Check if this is the dialogue where character mentions birthday
-      else if (currentDialogueIndex === memoryTriggers.birthday && currentDialogue.speaker === 'character') {
-        // Trigger thought bubble after 0.5 second delay
+      else if (currentDialogueIndex === memoryTriggers.birthday && currentDialogue.speaker === 'character' && !hasTriggeredBirthdayAnimation) {
+        setHasTriggeredBirthdayAnimation(true);
+        // Start animation sequence
         setTimeout(() => {
-          setShowBirthdayThought(true);
-          setShowMemoryContainer(true);
+          setShowAnimation(true);
           
-          // Add to memory container after additional delay (1.5 seconds total)
+          // Show thought bubble after short delay
+          setTimeout(() => {
+            setShowBirthdayThought(true);
+          }, 800);
+          
+          // Add to memory container after delay
           setTimeout(() => {
             setShowBirthdayInMemory(true);
+            setNewlyAddedItem('birthday');
             setIsTyping(false);
-          }, 1000);
+            // Clear the new item flag after animation completes
+            setTimeout(() => setNewlyAddedItem(null), 2000);
+          }, 1700);
 
         }, 500); // 0.5 second delay after typing finishes
       }
@@ -123,12 +149,11 @@ export default function ConversationContainer({
     speechControl.stop();
     setShouldSpeak(false);
     
-    // Hide memory container when continuing to next dialogue after animation
-    if (showMemoryContainer && (currentDialogueIndex === memoryTriggers.gradeLevel || currentDialogueIndex === memoryTriggers.birthday)) {
-      setShowMemoryContainer(false);
-      setShowBirthdayThought(false);
-      setShowGradeLevelThought(false);
-    }
+    // Only hide thought bubbles and animation, keep memory visible
+    setShowBirthdayThought(false);
+    setShowGradeLevelThought(false);
+    setShowAnimation(false);
+    setNewlyAddedItem(null);
     
     if (currentDialogueIndex < conversation.length - 1) {
       setCurrentDialogueIndex(currentDialogueIndex + 1);
@@ -196,10 +221,20 @@ export default function ConversationContainer({
   const getCollectedInfo = () => {
     const info = [];
     if (showGradeLevelInMemory) {
-      info.push(memoryLabels.first);
+      info.push({ 
+        id: 'grade',
+        icon: '📚',
+        text: `Clue ${info.length + 1}: I learned ${characterName}'s grade`,
+        isNew: newlyAddedItem === 'grade'
+      });
     }
     if (showBirthdayInMemory) {
-      info.push(memoryLabels.second);
+      info.push({ 
+        id: 'birthday',
+        icon: '🎂',
+        text: `Clue ${info.length + 1}: I learned ${characterName}'s birthday`,
+        isNew: newlyAddedItem === 'birthday'
+      });
     }
     return info;
   };
@@ -213,6 +248,40 @@ export default function ConversationContainer({
   const getLastRobotDialogue = () => {
     const robotDialogues = completedDialogues.filter(d => d.speaker === 'robot');
     return robotDialogues.length > 0 ? robotDialogues[robotDialogues.length - 1] : null;
+  };
+
+  // Calculate SVG path for animated connection
+  const getConnectionPath = () => {
+    if (!characterDialogRef.current || !memoryBoxRef.current || !robotAvatarRef.current) {
+      return { path1: '', path2: '' };
+    }
+
+    const containerRect = characterDialogRef.current.closest('.characters-container')?.getBoundingClientRect();
+    const charRect = characterDialogRef.current.getBoundingClientRect();
+    const memoryRect = memoryBoxRef.current.getBoundingClientRect();
+    const robotRect = robotAvatarRef.current.getBoundingClientRect();
+
+    if (!containerRect) {
+      return { path1: '', path2: '' };
+    }
+
+    // Calculate relative positions
+    const charX = charRect.right - containerRect.left;
+    const charY = charRect.top + charRect.height / 2 - containerRect.top;
+    
+    const memoryX = memoryRect.left - containerRect.left;
+    const memoryY = memoryRect.top + memoryRect.height / 2 - containerRect.top;
+    
+    const robotX = robotRect.left + robotRect.width / 2 - containerRect.left;
+    const robotY = robotRect.top - containerRect.top - 50; // Above robot
+
+    // Path 1: Character dialog to memory
+    const path1 = `M ${charX} ${charY} Q ${(charX + memoryX) / 2} ${charY - 50} ${memoryX} ${memoryY}`;
+    
+    // Path 2: Memory to robot (thought bubble position)
+    const path2 = `M ${memoryX + memoryRect.width} ${memoryY} Q ${(memoryX + memoryRect.width + robotX) / 2} ${memoryY - 50} ${robotX} ${robotY}`;
+
+    return { path1, path2 };
   };
 
   return (
@@ -260,31 +329,27 @@ export default function ConversationContainer({
         </div>
       ) : (
         <>
-          {/* Brain/Memory System - always visible */}
-          <div className="brain-system">
-            <div className="brain-icon">🧠</div>
-            <div className="brain-label">AI Memory</div>
-            <div className="collected-info-list">
-              {getCollectedInfo().length > 0 ? (
-                getCollectedInfo().map((info, index) => (
-                  <div key={index} className="collected-info-item">{info}</div>
-                ))
-              ) : (
-                <div className="empty-memory-message">No data collected yet</div>
-              )}
-            </div>
-          </div>
-
           <div className="characters-container">
+            {/* SVG overlay for connection animation */}
+            {showAnimation && (
+              <svg className="thought-connection-container" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 20 }}>
+                <path 
+                  d={getConnectionPath().path1} 
+                  className="connection-line animate-line-1"
+                  strokeDasharray="5,5"
+                />
+              </svg>
+            )}
+
             {/* Character avatar with dialogue box */}
             <div className={`character-avatar ${currentDialogue.speaker === 'character' ? 'speaking' : ''}`}>
               {/* Show current typing dialogue or last completed dialogue */}
               {currentDialogue.speaker === 'character' ? (
-                <div className="character-dialog-box">
+                <div className="character-dialog-box" ref={characterDialogRef}>
                   <p className="dialog-text">{displayedText}</p>
                 </div>
               ) : getLastCharacterDialogue() && (
-                <div className="character-dialog-box previous-dialogue">
+                <div className="character-dialog-box previous-dialogue" ref={characterDialogRef}>
                   <p className="dialog-text">{getLastCharacterDialogue().text}</p>
                 </div>
               )}
@@ -296,18 +361,18 @@ export default function ConversationContainer({
             </div>
 
             {/* Robot avatar with dialogue box */}
-            <div className={`robot-avatar ${currentDialogue.speaker === 'robot' ? 'speaking' : ''}`}>
+            <div className={`robot-avatar ${currentDialogue.speaker === 'robot' ? 'speaking' : ''}`} ref={robotAvatarRef}>
               {/* Thought bubble for grade level */}
               {showGradeLevelThought && (
-                <div className="thought-bubble">
-                  {characterPossessive} mentioned {thoughtBubbleTexts.first}!
+                <div className={`thought-bubble ${showAnimation ? 'thought-bubble-delayed' : ''}`}>
+                  Oh! {characterName} just told me {characterPronoun === 'his' ? 'he\'s' : 'she\'s'} in 6th grade. I'll remember that!
                 </div>
               )}
               
               {/* Thought bubble for birthday */}
               {showBirthdayThought && (
-                <div className="thought-bubble">
-                  {characterPossessive} mentioned {thoughtBubbleTexts.second}!
+                <div className={`thought-bubble ${showAnimation ? 'thought-bubble-delayed' : ''}`}>
+                  Oh! {characterName} just told me {characterPronoun === 'his' ? 'his' : 'her'} birthday. I'll remember that!
                 </div>
               )}
               
@@ -330,6 +395,29 @@ export default function ConversationContainer({
                 alt="Robot" 
                 className="robot-conversation-image"
               />
+            </div>
+
+            {/* Brain/Memory System - always visible */}
+            <div className="brain-system">
+              <div ref={memoryBoxRef} className={showAnimation ? 'memory-pulse' : ''}>
+                <div className="brain-icon">🧠</div>
+                <div className="brain-label">Robo's Memory</div>
+                <div className="collected-info-list">
+                  {getCollectedInfo().length > 0 ? (
+                    getCollectedInfo().map((info, index) => (
+                      <div 
+                        key={info.id} 
+                        className={`collected-info-item ${info.isNew ? 'newly-added' : ''}`}
+                      >
+                        <span className="info-icon">{info.icon}</span>
+                        <span className="info-text">{info.text}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="empty-memory-message">No data collected yet</div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
