@@ -317,11 +317,11 @@
 }
 
 .connection-line.animate-line-1 {
-  animation: drawLine1 1s ease-out forwards;
+  animation: drawLine1 1s ease-out 0.8s forwards;
 }
 
 .connection-line.animate-line-2 {
-  animation: drawLine2 1s ease-out 1s forwards;
+  animation: drawLine2 1s ease-out 1.8s forwards;
 }
 
 @keyframes drawLine1 {
@@ -368,7 +368,7 @@
 }
 
 .thought-bubble-delayed {
-  animation: thoughtBubbleAppear 0.5s ease-out 1.2s forwards;
+  animation: thoughtBubbleAppear 0.5s ease-out forwards;
   opacity: 0;
 }
 

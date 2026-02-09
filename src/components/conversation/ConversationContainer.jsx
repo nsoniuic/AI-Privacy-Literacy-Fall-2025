@@ -103,13 +103,14 @@ export default function ConversationContainer({
         setHasTriggeredGradeAnimation(true);
         // Start animation sequence
         setTimeout(() => {
+          setShowGradeLevelThought(true);
           setShowAnimation(true);
           setShowMemoryContainer(true);
           
           // Show thought bubble after short delay
-          setTimeout(() => {
-            setShowGradeLevelThought(true);
-          }, 800);
+          // setTimeout(() => {
+            
+          // }, 800);
           
           // Add to memory container after delay
           setTimeout(() => {
@@ -343,10 +344,23 @@ export default function ConversationContainer({
             {/* SVG overlay for connection animation */}
             {showAnimation && (
               <svg className="thought-connection-container" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 20 }}>
+                <defs>
+                  <marker
+                    id="arrowhead"
+                    markerWidth="10"
+                    markerHeight="10"
+                    refX="9"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <polygon points="0 0, 10 3, 0 6" fill="#ff6b35" />
+                  </marker>
+                </defs>
                 <path 
                   d={getConnectionPath().path1} 
                   className="connection-line animate-line-1"
                   strokeDasharray="5,5"
+                  markerEnd="url(#arrowhead)"
                 />
               </svg>
             )}
