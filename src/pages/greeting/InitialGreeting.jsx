@@ -46,7 +46,7 @@ export default function InitialGreeting() {
     },
   ];
 
-  const typingSpeed = 50;
+  const typingSpeed = 40;
 
   // Get current dialogue configuration
   const currentDialogueConfig = dialogueConfig[currentDialogueIndex];

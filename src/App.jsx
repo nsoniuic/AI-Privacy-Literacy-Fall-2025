@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import InitialGreeting from './pages/greeting/InitialGreeting'
 import FirstPuzzle from './pages/puzzles/FirstPuzzle'
@@ -15,12 +16,28 @@ import VoiceToggle from './components/common/VoiceToggle'
 import ScreenCounter from './components/common/ScreenCounter'
 import { useClickLogger } from './hooks/useClickLogger'
 import { usePageTimeLogger } from './hooks/usePageTimeLogger'
+import { initializeElevenLabs } from './services/elevenLabsService'
 import './App.css'
 import './styles/common/VoiceToggle.css'
 
 function App() {
   useClickLogger();
   usePageTimeLogger();
+
+  // Initialize ElevenLabs TTS on app mount
+  useEffect(() => {
+    const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY;
+    if (apiKey && apiKey !== 'your_api_key_here') {
+      const success = initializeElevenLabs(apiKey);
+      if (success) {
+        console.log('ElevenLabs TTS initialized successfully');
+      } else {
+        console.log('Using browser default TTS');
+      }
+    } else {
+      console.log('ElevenLabs API key not found, using browser default TTS');
+    }
+  }, []);
 
   return (
     <>
@@ -47,3 +64,4 @@ function App() {
 }
 
 export default App
+

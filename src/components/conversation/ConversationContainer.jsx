@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import robotImage from '../../assets/robot.png';
+import robotHappyImage from '../../assets/robot-happy.png';
 import boyCharacter from '../../assets/boy.png';
 import girlCharacter from '../../assets/girl.png';
 import useSpeech, { getChildFriendlyVoice } from '../../utils/useSpeech';
+import { CHILD_FRIENDLY_VOICES } from '../../services/elevenLabsService';
 import { useScreenNumber } from '../../hooks/useScreenNumber';
 import '../../styles/pages/Conversation.css';
 
@@ -14,6 +15,7 @@ export default function ConversationContainer({
   memoryLabels = { first: 'Grade Level', second: 'Birthday' }, // Default labels for first scenario
   thoughtBubbleTexts = { first: 'grade level', second: 'birthday' }, // Default thought bubble texts
   endThoughtText = null, // Custom end thought text (optional)
+  clueStartNumber = 1, // Starting clue number (1 for first scenario, 3 for second scenario)
   startScreenNumber = 29 // Starting screen number for this conversation
 }) {
   const characterName = 'Parker';
@@ -33,7 +35,8 @@ export default function ConversationContainer({
   const [hasTriggeredBirthdayAnimation, setHasTriggeredBirthdayAnimation] = useState(false);
   const [currentScreen, setCurrentScreen] = useState('conversation'); // 'conversation', 'thinking', 'memory-extraction'
   const [voiceEnabled, setVoiceEnabled] = useState(true); // Toggle for voice
-  const [shouldSpeak, setShouldSpeak] = useState(false);
+  const [shouldSpeakRobot, setShouldSpeakRobot] = useState(false);
+  const [shouldSpeakCharacter, setShouldSpeakCharacter] = useState(false);
   const [friendlyVoice, setFriendlyVoice] = useState(null);
   const [showAnimation, setShowAnimation] = useState(false);
   
@@ -62,22 +65,41 @@ export default function ConversationContainer({
     });
   }, []);
 
-  // Start speech when robot starts speaking (synchronize with typing)
+  // Start speech when dialogue starts (synchronize with typing)
   useEffect(() => {
-    if (currentDialogue.speaker === 'robot' && displayedText === '') {
-      setShouldSpeak(true);
+    if (displayedText === '') {
+      if (currentDialogue.speaker === 'robot') {
+        setShouldSpeakRobot(true);
+        setShouldSpeakCharacter(false);
+      } else if (currentDialogue.speaker === 'character') {
+        setShouldSpeakCharacter(true);
+        setShouldSpeakRobot(false);
+      }
     }
   }, [currentDialogueIndex, currentDialogue.speaker, displayedText]);
 
-  // Use speech hook - only speak when it's the robot speaking
-  const speechControl = useSpeech(
+  // Robot speech - warm male voice
+  const robotSpeechControl = useSpeech(
     currentDialogue.speaker === 'robot' ? currentDialogue.text : '',
-    voiceEnabled && shouldSpeak && currentDialogue.speaker === 'robot',
+    voiceEnabled && shouldSpeakRobot && currentDialogue.speaker === 'robot',
     {
-      rate: 0.9,      // Slightly slower for friendly, clear speech
-      pitch: 1.0,     // Normal pitch for natural, warm voice
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.CALLUM, // Warm male voice for robot
+      rate: 0.9,
+      pitch: 1.0,
       volume: 1.0,
-      voiceName: friendlyVoice?.name // Use child-friendly voice if available
+      voiceName: friendlyVoice?.name
+    }
+  );
+
+  // Child character speech - child voice
+  const characterSpeechControl = useSpeech(
+    currentDialogue.speaker === 'character' ? currentDialogue.text : '',
+    voiceEnabled && shouldSpeakCharacter && currentDialogue.speaker === 'character',
+    {
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.LILY, // Child voice for character
+      rate: 0.6,
+      pitch: 0.2,
+      volume: 1.0
     }
   );
 
@@ -157,8 +179,10 @@ export default function ConversationContainer({
 
   const handleContinue = () => {
     // Stop any ongoing speech
-    speechControl.stop();
-    setShouldSpeak(false);
+    robotSpeechControl.stop();
+    characterSpeechControl.stop();
+    setShouldSpeakRobot(false);
+    setShouldSpeakCharacter(false);
     
     // Only hide thought bubbles and animation, keep memory visible
     setShowBirthdayThought(false);
@@ -187,8 +211,10 @@ export default function ConversationContainer({
 
   const handleBack = () => {
     // Stop any ongoing speech
-    speechControl.stop();
-    setShouldSpeak(false);
+    robotSpeechControl.stop();
+    characterSpeechControl.stop();
+    setShouldSpeakRobot(false);
+    setShouldSpeakCharacter(false);
     
     if (currentDialogueIndex > 0) {
       // Remove the last completed dialogue
@@ -235,7 +261,7 @@ export default function ConversationContainer({
       info.push({ 
         id: 'grade',
         icon: '📚',
-        text: `Clue ${info.length + 1}: I learned ${characterName}'s grade`,
+        text: `Clue ${clueStartNumber}: I learned ${characterName}'s ${memoryLabels.first.toLowerCase()}`,
         isNew: newlyAddedItem === 'grade'
       });
     }
@@ -243,7 +269,7 @@ export default function ConversationContainer({
       info.push({ 
         id: 'birthday',
         icon: '🎂',
-        text: `Clue ${info.length + 1}: I learned ${characterName}'s birthday`,
+        text: `Clue ${clueStartNumber + 1}: I learned ${characterName}'s ${memoryLabels.second.toLowerCase()}`,
         isNew: newlyAddedItem === 'birthday'
       });
     }
@@ -323,7 +349,7 @@ export default function ConversationContainer({
             {/* Robot image */}
             <div className="conversation-robot-image-container">
               <img 
-                src={robotImage} 
+                src={robotHappyImage} 
                 alt="Robot" 
                 className="robot-thinking-image"
               />
@@ -386,17 +412,17 @@ export default function ConversationContainer({
 
             {/* Robot avatar with dialogue box */}
             <div className={`robot-avatar ${currentDialogue.speaker === 'robot' ? 'speaking' : ''}`} ref={robotAvatarRef}>
-              {/* Thought bubble for grade level */}
+              {/* Thought bubble for first item */}
               {showGradeLevelThought && (
                 <div className={`thought-bubble ${showAnimation ? 'thought-bubble-delayed' : ''}`}>
-                  Oh! {characterName} just told me {characterPronoun === 'his' ? 'he\'s' : 'she\'s'} in 6th grade. I'll remember that!
+                  Oh! {characterName} just told me {characterPronoun === 'his' ? 'his' : 'her'} {thoughtBubbleTexts.first}. I'll remember that!
                 </div>
               )}
               
-              {/* Thought bubble for birthday */}
+              {/* Thought bubble for second item */}
               {showBirthdayThought && (
                 <div className={`thought-bubble ${showAnimation ? 'thought-bubble-delayed' : ''}`}>
-                  Oh! {characterName} just told me {characterPronoun === 'his' ? 'his' : 'her'} birthday. I'll remember that!
+                  Oh! {characterName} just told me {characterPronoun === 'his' ? 'his' : 'her'} {thoughtBubbleTexts.second}. I'll remember that!
                 </div>
               )}
               
@@ -415,7 +441,7 @@ export default function ConversationContainer({
                 </>
               )}
               <img 
-                src={robotImage} 
+                src={robotHappyImage} 
                 alt="Robot" 
                 className="robot-conversation-image"
               />

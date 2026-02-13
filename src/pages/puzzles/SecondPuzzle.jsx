@@ -89,7 +89,7 @@ export default function SecondPuzzle() {
   };
 
   const currentText = getDialogueText();
-  const typingSpeed = 30;
+  const typingSpeed = 40;
 
   const speechControl = useSpeech(
     currentText,

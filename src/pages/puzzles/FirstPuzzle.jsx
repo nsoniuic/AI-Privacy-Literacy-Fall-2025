@@ -90,7 +90,7 @@ export default function FirstPuzzle() {
   };
 
   const currentText = getDialogueText();
-  const typingSpeed = 30;
+  const typingSpeed = 40;
 
   // Speech control
   const speechControl = useSpeech(

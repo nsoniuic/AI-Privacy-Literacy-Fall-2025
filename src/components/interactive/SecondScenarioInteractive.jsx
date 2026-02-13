@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNodeInputLogger } from "../../hooks/useNodeInputLogger";
-import robotImage from "../../assets/robot.png";
+import robotThinkImage from "../../assets/robot-think.png";
+import cloudImage from "../../assets/cloud.svg";
 import "../../styles/pages/RobotThinking.css";
 
 export default function SecondScenarioInteractive({
@@ -57,6 +58,7 @@ export default function SecondScenarioInteractive({
         <div className="memory-clouds-container">
           <div className="memory-cloud-container-left">
             <div className="memory-cloud show">
+              <img src={cloudImage} alt="Cloud" className="cloud-background" />
               <p className="memory-cloud-text">
                 Parker mentioned her school name
               </p>
@@ -65,6 +67,7 @@ export default function SecondScenarioInteractive({
 
           <div className="memory-cloud-container-right">
             <div className="memory-cloud show">
+              <img src={cloudImage} alt="Cloud" className="cloud-background" />
               <p className="memory-cloud-text">
                 Parker takes 5 minutes to travel from home to school
               </p>
@@ -98,11 +101,12 @@ export default function SecondScenarioInteractive({
             {leftCloudAdded && (
               <div className="middle-cloud-container">
                 <div className="memory-cloud show">
+                  <img src={cloudImage} alt="Cloud" className="cloud-background" />
                   {editingLeft ? (
                     <input
                       type="text"
                       className="cloud-input"
-                      placeholder="Type your deduction..."
+                      placeholder="What's Robo thinking?"
                       value={leftCloudText}
                       onChange={(e) => setLeftCloudText(e.target.value)}
                       onBlur={handleLeftInputBlur}
@@ -150,11 +154,12 @@ export default function SecondScenarioInteractive({
             {rightCloudAdded && (
               <div className="middle-cloud-container">
                 <div className="memory-cloud show">
+                  <img src={cloudImage} alt="Cloud" className="cloud-background" />
                   {editingRight ? (
                     <input
                       type="text"
                       className="cloud-input"
-                      placeholder="Type your deduction..."
+                      placeholder="What's Robo thinking?"
                       value={rightCloudText}
                       onChange={(e) => setRightCloudText(e.target.value)}
                       onBlur={handleRightInputBlur}
@@ -198,6 +203,7 @@ export default function SecondScenarioInteractive({
         {/* Final deduction bubble - always visible at bottom */}
         <div className="final-deduction-container">
           <div className="deduction-bubble show">
+            <img src={cloudImage} alt="Cloud" className="cloud-background" />
             <p className="deduction-text">
               Parker's neighborhood location is known
             </p>
@@ -212,7 +218,7 @@ export default function SecondScenarioInteractive({
             </p>
           </div>
 
-          <img src={robotImage} alt="Robot" className="robot-thinking-image" />
+          <img src={robotThinkImage} alt="Robot" className="robot-thinking-image" />
         </div>
 
         {/* Navigation buttons */}

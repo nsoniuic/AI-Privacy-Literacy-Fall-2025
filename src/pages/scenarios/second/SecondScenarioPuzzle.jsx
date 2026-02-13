@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import SecondScenarioInteractive from '../../../components/interactive/SecondScenarioInteractive';
-import robotImage from '../../../assets/robot.png';
+import robotHappyImage from '../../../assets/robot-happy.png';
 import AppTitle from '../../../components/common/AppTitle';
+import '../../../styles/puzzles/Puzzles.css';
 import '../../../styles/pages/InitialGreeting.css';
+import '../../../App.css';
 
 export default function SecondScenarioPuzzle() {
   const navigate = useNavigate();
@@ -35,23 +37,31 @@ export default function SecondScenarioPuzzle() {
           onBack={handleBack}
         />
       ) : showTransition ? (
-        <div className="robot-greeting-content">
-          <div className="dialog-box">
-            <p className="dialog-text">
-              Great work! Now I will show you how I reason with Parker's information 
-              to get to her neighborhood location, which she didn't tell me.
-            </p>
-          </div>
+        <>
+          <div className="puzzle-content">
+            <div className="dialog-box-top">
+              <p className="dialog-text">
+                Great work! Now I will show you how I reason with Parker's information 
+                to get to her neighborhood location, which she didn't tell me.
+              </p>
+            </div>
 
-          <div className="robot-greeting-robot-container">
-            <img 
-              src={robotImage} 
-              alt="Robot" 
-              className="robot-greeting-robot-image"
-            />
+            <div className="puzzle-robot-container-right">
+              <img 
+                src={robotHappyImage} 
+                alt="Robot" 
+                className="puzzle-robot-image"
+              />
+            </div>
           </div>
 
           <div className="navigation-buttons">
+            <button 
+              className="back-button"
+              onClick={handleBack}
+            >
+              Back
+            </button>
             <button 
               className="continue-button"
               onClick={handleContinue}
@@ -59,7 +69,7 @@ export default function SecondScenarioPuzzle() {
               Continue
             </button>
           </div>
-        </div>
+        </>
       ) : null}
     </div>
   );

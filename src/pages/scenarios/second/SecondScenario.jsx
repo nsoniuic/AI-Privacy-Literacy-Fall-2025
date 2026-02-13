@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import robotImage from '../../../assets/robot.png';
+import robotHappyImage from '../../../assets/robot-happy.png';
 import ConversationContainer from '../../../components/conversation/ConversationContainer';
 import AppTitle from '../../../components/common/AppTitle';
+import { useScreenNumber } from '../../../hooks/useScreenNumber';
+import '../../../styles/puzzles/Puzzles.css';
 import '../../../styles/pages/InitialGreeting.css';
 import '../../../App.css';
 
@@ -13,6 +15,11 @@ export default function SecondScenario() {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [showConversation, setShowConversation] = useState(false);
+
+  // Screen 55: Initial dialogue
+  // Screen 56+: Conversation messages (handled by ConversationContainer)
+  const screenNumber = showConversation ? 56 : 55;
+  useScreenNumber(screenNumber);
 
   const dialogueText = "Ready to see another example? This time, you'll get the chance to discover the thinking process yourself!";
 
@@ -77,43 +84,46 @@ export default function SecondScenario() {
 
   return (
     <div className="page-container">
-      <div className="robot-greeting-content">
-        {!showConversation ? (
-          <>
-            <div className="dialog-box">
+      <AppTitle />
+      {!showConversation ? (
+        <>
+          <div className="puzzle-content">
+            <div className="dialog-box-top">
               <p className="dialog-text">{displayedText}</p>
             </div>
 
-            <div className="robot-greeting-robot-container">
+            <div className="puzzle-robot-container-right">
               <img 
-                src={robotImage} 
+                src={robotHappyImage} 
                 alt="Robot" 
-                className="robot-greeting-robot-image"
+                className="puzzle-robot-image"
               />
             </div>
+          </div>
 
-            <div className="navigation-buttons">
-              <button 
-                className="continue-button"
-                onClick={handleContinue}
-                disabled={isTyping}
-              >
-                Let's go!
-              </button>
-            </div>
-          </>
-        ) : (
-          <ConversationContainer 
-            selectedCharacter={selectedCharacter}
-            conversation={conversation}
-            onConversationEnd={handleConversationEnd}
-            memoryTriggers={{ gradeLevel: 3, birthday: 7 }}
-            memoryLabels={{ first: 'Travel Time', second: 'School Name' }}
-            thoughtBubbleTexts={{ first: 'travel time', second: 'school name' }}
-            endThoughtText="Now that you have seen how AI reasons, try guessing what I could know based on what Parker have mentioned!"
-          />
-        )}
-      </div>
+          <div className="navigation-buttons">
+            <button 
+              className="continue-button"
+              onClick={handleContinue}
+              disabled={isTyping}
+            >
+              Let's go!
+            </button>
+          </div>
+        </>
+      ) : (
+        <ConversationContainer 
+          selectedCharacter={selectedCharacter}
+          conversation={conversation}
+          onConversationEnd={handleConversationEnd}
+          memoryTriggers={{ gradeLevel: 3, birthday: 7 }}
+          memoryLabels={{ first: 'Travel Time', second: 'School Name' }}
+          thoughtBubbleTexts={{ first: 'travel time', second: 'school name' }}
+          endThoughtText="Now that you have seen how AI reasons, try guessing what I could know based on what Parker have mentioned!"
+          clueStartNumber={3}
+          startScreenNumber={56}
+        />
+      )}
     </div>
   );
 }

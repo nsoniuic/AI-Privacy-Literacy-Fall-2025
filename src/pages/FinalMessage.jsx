@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import robotImage from '../assets/robot.png';
+import robotHappyImage from '../assets/robot-happy.png';
 import AppTitle from '../components/common/AppTitle';
-import '../styles/pages/Conversation.css';
+import '../styles/pages/InitialGreeting.css';
+import '../App.css';
 
 export default function FinalMessage() {
   const location = useLocation();
@@ -68,37 +69,40 @@ export default function FinalMessage() {
   return (
     <div className="page-container">
       <AppTitle />
-      <div className="characters-container" style={{ justifyContent: 'center' }}>
-        {/* Robot avatar with dialogue box */}
-        <div className="robot-avatar speaking">
-          <div className="robot-dialog-box">
-            <p className="dialog-text">
-              {displayedText}
-            </p>
-          </div>
-          
+      
+      <div className="initial-greeting-content">
+        {/* Dialog box positioned at top */}
+        <div className="dialog-box-top">
+          <p className="dialog-text">
+            {displayedText}
+          </p>
+        </div>
+
+        {/* Robot image on the right side */}
+        <div className="initial-greeting-robot-container-right">
           <img 
-            src={robotImage} 
+            src={robotHappyImage} 
             alt="Robot" 
-            className="robot-conversation-image"
+            className="initial-greeting-robot-image"
           />
         </div>
-      </div>
-
-      <div className="navigation-buttons">
-        <button 
-          className="back-button"
-          onClick={handleBack}
-        >
-          Back
-        </button>
-        <button 
-          className="continue-button"
-          onClick={handleContinue}
-          disabled={isTyping}
-        >
-          {showSecondMessage ? 'Finish' : 'Continue'}
-        </button>
+        
+        <div className="navigation-buttons">
+          <button 
+            className="back-button"
+            onClick={handleBack}
+            disabled={isTyping}
+          >
+            Back
+          </button>
+          <button 
+            className="continue-button"
+            onClick={handleContinue}
+            disabled={isTyping}
+          >
+            {showSecondMessage ? 'Finish' : 'Continue'}
+          </button>
+        </div>
       </div>
     </div>
   );

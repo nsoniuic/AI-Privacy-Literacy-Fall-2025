@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import robotImage from '../../../assets/robot.png';
+import robotHappyImage from '../../../assets/robot-happy.png';
 import boyImage from '../../../assets/boy.png';
 import girlImage from '../../../assets/girl.png';
 import locationImage from '../../../assets/location.png';
@@ -184,7 +184,7 @@ export default function SecondScenarioResult() {
             )}
             
             <img 
-              src={robotImage} 
+              src={robotHappyImage} 
               alt="Robot" 
               className="robot-conversation-image"
             />
@@ -254,7 +254,7 @@ export default function SecondScenarioResult() {
           
           <div className="conversation-robot-image-container">
             <img 
-              src={robotImage} 
+              src={robotHappyImage} 
               alt="Robot" 
               className="robot-thinking-image"
             />

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import robotImage from '../../assets/robot.png';
+import robotThinkImage from '../../assets/robot-think.png';
 import cloudImage from '../../assets/cloud.svg';
 import { useScreenNumber } from '../../hooks/useScreenNumber';
 import '../../styles/pages/RobotThinking.css';
@@ -212,7 +212,7 @@ export default function RobotThinking({
           )}
           
           <img 
-            src={robotImage} 
+            src={robotThinkImage} 
             alt="Robot" 
             className="robot-thinking-image"
           />
