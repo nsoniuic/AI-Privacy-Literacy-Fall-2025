@@ -5,6 +5,7 @@ import girlCharacter from '../../assets/girl.png';
 import useSpeech, { getChildFriendlyVoice } from '../../utils/useSpeech';
 import { CHILD_FRIENDLY_VOICES } from '../../services/elevenLabsService';
 import { useScreenNumber } from '../../hooks/useScreenNumber';
+import { useVoice } from '../../contexts/VoiceContext';
 import '../../styles/pages/Conversation.css';
 
 export default function ConversationContainer({ 
@@ -34,7 +35,7 @@ export default function ConversationContainer({
   const [hasTriggeredGradeAnimation, setHasTriggeredGradeAnimation] = useState(false);
   const [hasTriggeredBirthdayAnimation, setHasTriggeredBirthdayAnimation] = useState(false);
   const [currentScreen, setCurrentScreen] = useState('conversation'); // 'conversation', 'thinking', 'memory-extraction'
-  const [voiceEnabled, setVoiceEnabled] = useState(true); // Toggle for voice
+  const { voiceEnabled } = useVoice(); // Use global voice state
   const [shouldSpeakRobot, setShouldSpeakRobot] = useState(false);
   const [shouldSpeakCharacter, setShouldSpeakCharacter] = useState(false);
   const [friendlyVoice, setFriendlyVoice] = useState(null);
@@ -323,20 +324,6 @@ export default function ConversationContainer({
 
   return (
     <>
-      {/* Voice Toggle Button */}
-      <button 
-        className="voice-toggle-button"
-        onClick={() => {
-          setVoiceEnabled(!voiceEnabled);
-          if (voiceEnabled) {
-            speechControl.stop();
-          }
-        }}
-        title={voiceEnabled ? "Mute voice" : "Enable voice"}
-      >
-        {voiceEnabled ? "🔊" : "🔇"}
-      </button>
-
       {currentScreen === 'thinking' ? (
         // AI thinking to itself screen
         <div className="robot-thinking-container">

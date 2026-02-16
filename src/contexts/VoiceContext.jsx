@@ -12,7 +12,7 @@ export const useVoice = () => {
 };
 
 export const VoiceProvider = ({ children }) => {
-  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [friendlyVoice, setFriendlyVoice] = useState(null);
 
   // Load child-friendly voice on mount

@@ -2,7 +2,6 @@
 .voice-toggle-button {
   position: fixed;
   top: 8%;
-  right: 20px;
   background: rgba(255, 255, 255, 0.2);
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 50%;
@@ -14,7 +13,6 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  z-index: 1000;
   backdrop-filter: blur(10px);
 }
 
@@ -25,4 +23,20 @@
 
 .voice-toggle-button:active {
   transform: scale(0.95);
+}
+
+/* Voice Hint Message */
+.voice-hint {
+  position: fixed;
+  left: 20px;
+  top: 15%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+  pointer-events: none;
 }

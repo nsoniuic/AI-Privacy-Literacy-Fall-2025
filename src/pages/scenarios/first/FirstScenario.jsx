@@ -18,25 +18,20 @@ export default function FirstScenario() {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [currentDialogue, setCurrentDialogue] = useState(0);
 
-  // Update screen number based on state
-  // Screen 23-28: Dialogues 0-5 (before conversation)
-  // Screen 29+: Conversation messages (handled by ConversationContainer)
   const screenNumber = showConversation ? 29 : 23 + currentDialogue;
   useScreenNumber(screenNumber);
 
-  // Get character name based on selection
   const characterName = 'Parker';
 
   const dialogues = [
-    "Awesome job solving the puzzles! You just learned how AI figures things out by spotting patterns - just like you did!",
+    "Awesome job solving the puzzles! You just learned how AI figures things out by spotting patterns - just like how you would spot it!",
     "In the puzzles, AI deduced the rules without anyone telling it.",
-    "The same thing can happen when I look at the things you tell it about yourself, like your name, age, or where you live. I can connect clues from different bits of information and make guesses about you, even if you never said those things directly.",
-    "Now, I’ll show you some conversations I’ve had with other children like you. As you watch, see how I used little clues they shared, like things about themselves, to figure out new information they never told me directly. Ready to take a look?",
+    "The same thing can happen when I look at the things you tell me about yourself, like your name, age, or where you live. I can connect clues from different bits of information and make guesses about you, even if you never said them.",
+    "Now, I’ll show you conversations I’ve had with other children like you. As you watch, see how I use little clues they shared about themselves, to figure out new information they never told me directly. Ready to take a look?",
     "Before we continue, which character would you like to see moving forward?",
     "Great! Now, let me show you an example with my friend, Parker. I’ll show you what Parker told me, and what I was able to figure out on my own."
   ];
 
-  // Define the conversation between robot and character
   const conversation = [
     {
       speaker: 'robot',
@@ -68,7 +63,7 @@ export default function FirstScenario() {
     },
   ];
 
-  const typingSpeed = 40;
+  const typingSpeed = 10;
 
   useEffect(() => {
     const dialogueText = dialogues[currentDialogue];
@@ -102,7 +97,6 @@ export default function FirstScenario() {
   };
 
   const handleNextStep = () => {
-    // Show conversation
     setShowConversation(true);
   };
 
