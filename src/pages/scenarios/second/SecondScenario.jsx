@@ -16,9 +16,9 @@ export default function SecondScenario() {
   const [isTyping, setIsTyping] = useState(true);
   const [showConversation, setShowConversation] = useState(false);
 
-  // Screen 55: Initial dialogue
-  // Screen 56+: Conversation messages (handled by ConversationContainer)
-  const screenNumber = showConversation ? 56 : 55;
+  // Screen 54: Initial dialogue
+  // Screen 55+: Conversation messages (handled by ConversationContainer)
+  const screenNumber = showConversation ? 55 : 54;
   useScreenNumber(screenNumber);
 
   const dialogueText = "Ready to see another example? This time, you'll get the chance to discover the thinking process yourself!";
@@ -121,7 +121,7 @@ export default function SecondScenario() {
           thoughtBubbleTexts={{ first: 'travel time', second: 'school name' }}
           endThoughtText="Now that you have seen how AI reasons, try guessing what I could know based on what Parker have mentioned!"
           clueStartNumber={3}
-          startScreenNumber={56}
+          startScreenNumber={55}
         />
       )}
     </div>

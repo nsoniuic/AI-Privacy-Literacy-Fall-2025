@@ -95,7 +95,6 @@
   max-width: 550px;
   text-align: center;
   filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.2));
-  animation: thoughtBubbleAppear 0.8s ease-out;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -176,11 +175,11 @@
 @keyframes thoughtBubbleAppear {
   from {
     opacity: 0;
-    transform: translateY(-30px) scale(0.95);
+    transform: scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: scale(1);
   }
 }
 

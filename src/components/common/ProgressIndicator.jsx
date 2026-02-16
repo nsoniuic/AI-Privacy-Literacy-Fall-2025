@@ -16,13 +16,13 @@ const ProgressIndicator = () => {
     {
       id: 'scenario1',
       title: 'Scenario 1',
-      icon: '🎮',
+      icon: '📖',
       routes: ['/first_scenario/talk', '/first_scenario/memory', '/first_scenario/result']
     },
     {
       id: 'scenario2',
       title: 'Scenario 2',
-      icon: '🎯',
+      icon: '🏫',
       routes: ['/second_scenario/talk', '/second_scenario/puzzle', '/second_scenario/memory', '/second_scenario/result']
     }
   ]
