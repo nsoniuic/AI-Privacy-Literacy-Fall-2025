@@ -15,6 +15,11 @@ export function useClickLogger() {
         id: target.id,
         text: target.textContent?.slice(0, 50),
         page: location.pathname,
+        // Capture data attributes for puzzle cells
+        cellRow: target.dataset.cellRow,
+        cellCol: target.dataset.cellCol,
+        puzzleNumber: target.dataset.puzzleNumber,
+        cellType: target.dataset.cellType,
       };
 
       logClick(clickData);

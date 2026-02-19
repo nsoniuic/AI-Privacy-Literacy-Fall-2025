@@ -1,4 +1,4 @@
-export default function PuzzleGrid({ grid, getCellColor, onCellClick, interactive = false, glowGreen = false, glowYellow = false, glowWhite = false, glowBlue = false, glowDarkBlue = false }) {
+export default function PuzzleGrid({ grid, getCellColor, onCellClick, interactive = false, glowGreen = false, glowYellow = false, glowWhite = false, glowBlue = false, glowDarkBlue = false, puzzleNumber = null }) {
   return (
     <div className="grid-interactive">
       {grid.map((row, rowIndex) => (
@@ -9,6 +9,10 @@ export default function PuzzleGrid({ grid, getCellColor, onCellClick, interactiv
               className={`grid-cell ${interactive && cell === 1 ? 'locked' : ''} ${interactive && cell !== 1 ? 'clickable' : ''} ${glowGreen && cell === 1 ? 'glow-green' : ''} ${glowWhite && cell === 1 ? 'glow-white' : ''} ${glowBlue && cell === 1 ? 'glow-blue' : ''} ${glowDarkBlue && cell === 5 ? 'glow-darkblue' : ''} ${glowYellow && cell === 2 ? 'glow-yellow' : ''}`}
               style={{ backgroundColor: getCellColor(cell) }}
               onClick={interactive ? () => onCellClick(rowIndex, colIndex) : undefined}
+              data-cell-row={rowIndex}
+              data-cell-col={colIndex}
+              data-puzzle-number={puzzleNumber}
+              data-cell-type="puzzle-cell"
             />
           ))}
         </div>

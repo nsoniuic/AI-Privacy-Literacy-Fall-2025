@@ -11,6 +11,7 @@ import SecondScenarioPuzzle from './pages/scenarios/second/SecondScenarioPuzzle'
 import SecondScenarioMemory from './pages/scenarios/second/SecondScenarioMemory'
 import SecondScenarioResult from './pages/scenarios/second/SecondScenarioResult'
 import FinalMessage from './pages/FinalMessage'
+import LogViewer from './components/admin/LogViewer'
 import ProgressIndicator from './components/common/ProgressIndicator'
 import VoiceToggle from './components/common/VoiceToggle'
 import ScreenCounter from './components/common/ScreenCounter'
@@ -56,6 +57,9 @@ function App() {
       <Route path="/second_scenario/memory" element={<SecondScenarioMemory />} />
       <Route path="/second_scenario/result" element={<SecondScenarioResult />} />
       <Route path="/final_screen" element={<FinalMessage />} />
+      
+      {/* Admin/Research Tools */}
+      <Route path="/admin/logs" element={<LogViewer />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
