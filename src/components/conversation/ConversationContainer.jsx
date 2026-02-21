@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import robotHappyImage from '../../assets/robot-happy.png';
 import boyCharacter from '../../assets/boy.png';
 import girlCharacter from '../../assets/girl.png';
-import useSpeech, { getChildFriendlyVoice } from '../../utils/useSpeech';
+import useSpeech from '../../utils/useSpeech';
 import { CHILD_FRIENDLY_VOICES } from '../../services/elevenLabsService';
 import { useScreenNumber } from '../../hooks/useScreenNumber';
 import { useVoice } from '../../contexts/VoiceContext';
@@ -38,7 +38,6 @@ export default function ConversationContainer({
   const { voiceEnabled } = useVoice(); // Use global voice state
   const [shouldSpeakRobot, setShouldSpeakRobot] = useState(false);
   const [shouldSpeakCharacter, setShouldSpeakCharacter] = useState(false);
-  const [friendlyVoice, setFriendlyVoice] = useState(null);
   const [showAnimation, setShowAnimation] = useState(false);
   
   // Update screen number based on current dialogue index and screen state
@@ -59,13 +58,6 @@ export default function ConversationContainer({
 
   const thoughtText = endThoughtText || `Now that I have ${characterPronoun} birthday and grade level, let's see what I can figure out...`;
 
-  // Load child-friendly voice on component mount
-  useEffect(() => {
-    getChildFriendlyVoice().then(voice => {
-      setFriendlyVoice(voice);
-    });
-  }, []);
-
   // Start speech when dialogue starts (synchronize with typing)
   useEffect(() => {
     if (displayedText === '') {
@@ -84,11 +76,7 @@ export default function ConversationContainer({
     currentDialogue.speaker === 'robot' ? currentDialogue.text : '',
     voiceEnabled && shouldSpeakRobot && currentDialogue.speaker === 'robot',
     {
-      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.CALLUM, // Warm male voice for robot
-      rate: 0.9,
-      pitch: 1.0,
-      volume: 1.0,
-      voiceName: friendlyVoice?.name
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.CALLUM // Warm male voice for robot
     }
   );
 
@@ -97,12 +85,17 @@ export default function ConversationContainer({
     currentDialogue.speaker === 'character' ? currentDialogue.text : '',
     voiceEnabled && shouldSpeakCharacter && currentDialogue.speaker === 'character',
     {
-      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.LILY, // Child voice for character
-      rate: 0.6,
-      pitch: 0.2,
-      volume: 1.0
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.LILY // Child voice for character
     }
   );
+
+  // Immediately stop all audio when voice is disabled
+  useEffect(() => {
+    if (!voiceEnabled) {
+      robotSpeechControl.stop();
+      characterSpeechControl.stop();
+    }
+  }, [voiceEnabled]);
 
   useEffect(() => {
     if (isTyping && displayedText.length < currentDialogue.text.length) {
