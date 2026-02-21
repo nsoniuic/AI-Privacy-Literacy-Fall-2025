@@ -6,7 +6,8 @@
   max-width: 1200px;
   gap: 40px;
   margin-top: 5px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
 }
 
 .puzzle-section {
@@ -68,4 +69,73 @@
   color: black;
   font-weight: bold;
   margin: 0 10px;
+}
+
+/* Responsive scaling - maintain same layout structure */
+@media (max-width: 768px) {
+  .puzzles-container {
+    gap: 20px;
+  }
+
+  .puzzle-section {
+    min-width: 200px;
+  }
+
+  .puzzle-title {
+    font-size: 24px;
+  }
+
+  .puzzle-row {
+    gap: 12px;
+  }
+
+  .label {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .grid-container {
+    width: 90px;
+    height: 90px;
+    padding: 4px;
+  }
+
+  .arrow {
+    font-size: 32px;
+    margin: 0 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .puzzles-container {
+    gap: 12px;
+  }
+
+  .puzzle-section {
+    min-width: 140px;
+  }
+
+  .puzzle-title {
+    font-size: 18px;
+  }
+
+  .puzzle-row {
+    gap: 8px;
+  }
+
+  .label {
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  .grid-container {
+    width: 70px;
+    height: 70px;
+    padding: 3px;
+  }
+
+  .arrow {
+    font-size: 24px;
+    margin: 0 4px;
+  }
 }

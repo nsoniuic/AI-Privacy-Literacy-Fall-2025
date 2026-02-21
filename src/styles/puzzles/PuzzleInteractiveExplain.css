@@ -17,7 +17,7 @@
   align-items: center;
   justify-content: center;
   gap: 30px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .user-puzzle-side {
@@ -66,4 +66,65 @@
   font-size: 48px;
   color: white;
   font-weight: bold;
+}
+
+/* Responsive scaling - maintain same layout structure */
+@media (max-width: 768px) {
+  .user-puzzle-container {
+    max-width: 90%;
+  }
+
+  .user-puzzle-title {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .user-puzzle-grids {
+    gap: 20px;
+  }
+
+  .user-label {
+    font-size: 15px;
+  }
+
+  .user-grid-container {
+    padding: 8px;
+  }
+
+  .user-grid-container .grid-cell {
+    width: 16px;
+    height: 16px;
+  }
+
+  .user-arrow-large {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-puzzle-title {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .user-puzzle-grids {
+    gap: 12px;
+  }
+
+  .user-label {
+    font-size: 13px;
+  }
+
+  .user-grid-container {
+    padding: 6px;
+  }
+
+  .user-grid-container .grid-cell {
+    width: 14px;
+    height: 14px;
+  }
+
+  .user-arrow-large {
+    font-size: 28px;
+  }
 }

@@ -384,31 +384,11 @@
   }
 }
 
-@media (max-width: 768px) {
-  .characters-container {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    height: auto;
-    min-height: 100vh;
-    gap: 20px;
-    padding: 20px;
-  }
-
-  .character-avatar,
-  .robot-avatar {
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
-
-  .brain-system {
-    padding-top: 20px;
-    order: 3;
-  }
-
+@media (max-width: 1024px) {
   .brain-system > div {
-    padding: 20px 25px;
-    min-width: 180px;
-    max-width: 100%;
+    padding: 20px 24px;
+    min-width: 160px;
+    max-width: 180px;
   }
 
   .brain-icon {
@@ -416,66 +396,58 @@
   }
 
   .brain-label {
-    font-size: 18px;
+    font-size: 20px;
   }
 
   .collected-info-item {
-    font-size: 13px;
+    font-size: 15px;
     padding: 10px 14px;
-    gap: 8px;
   }
 
   .info-icon {
     font-size: 20px;
   }
 
-  .character-image,
-  .robot-conversation-image {
-    max-width: 200px;
-    max-height: 250px;
-  }
-
   .character-dialog-box,
   .robot-dialog-box {
     max-width: 350px;
-    min-width: 250px;
-    padding: 20px 30px;
+    min-width: 280px;
+    padding: 24px 32px;
   }
 
   .dialog-text {
     font-size: 20px;
+    line-height: 1.5;
   }
 
-  .character-placeholder-img {
-    width: 100px;
-    height: 130px;
+  .character-image,
+  .robot-conversation-image {
+    max-width: 280px;
+    max-height: 340px;
   }
 
-  .empty-memory-message {
-    font-size: 15px;
-  }
-
-  /* Hide connection animations on mobile for simplicity */
-  .thought-connection-container {
-    display: none;
+  .robot-avatar .thought-bubble {
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .characters-container {
-    padding: 10px;
+    grid-template-columns: 150px 1fr 1fr;
     gap: 15px;
+    padding: 15px;
   }
 
   .character-avatar,
   .robot-avatar {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
   }
 
   .brain-system > div {
     padding: 15px 20px;
-    min-width: 150px;
+    min-width: 140px;
   }
 
   .brain-icon {
@@ -487,7 +459,7 @@
   }
 
   .collected-info-item {
-    font-size: 12px;
+    font-size: 11px;
     padding: 8px 12px;
     gap: 6px;
   }
@@ -498,19 +470,90 @@
 
   .character-image,
   .robot-conversation-image {
-    max-width: 150px;
-    max-height: 200px;
+    max-width: 140px;
+    max-height: 180px;
+  }
+
+  .character-dialog-box,
+  .robot-dialog-box {
+    max-width: 240px;
+    min-width: 180px;
+    padding: 12px 20px;
+    border-radius: 16px;
+  }
+
+  .dialog-text {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .character-placeholder-img {
+    width: 70px;
+    height: 90px;
+  }
+
+  .empty-memory-message {
+    font-size: 13px;
+  }
+
+  .thought-connection-container {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .characters-container {
+    grid-template-columns: 100px 1fr 1fr;
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .character-avatar,
+  .robot-avatar {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .brain-system > div {
+    padding: 12px 16px;
+    min-width: 100px;
+  }
+
+  .brain-icon {
+    font-size: 32px;
+  }
+
+  .brain-label {
+    font-size: 14px;
+  }
+
+  .collected-info-item {
+    font-size: 10px;
+    padding: 6px 10px;
+    gap: 4px;
+  }
+
+  .info-icon {
+    font-size: 16px;
+  }
+
+  .character-image,
+  .robot-conversation-image {
+    max-width: 120px;
+    max-height: 160px;
   }
 
   .character-dialog-box,
   .robot-dialog-box {
     max-width: 100%;
-    min-width: 200px;
-    padding: 15px 20px;
+    min-width: 150px;
+    padding: 10px 16px;
+    border-radius: 12px;
   }
 
   .dialog-text {
-    font-size: 16px;
+    font-size: 12px;
+    line-height: 1.3;
   }
 
   .character-placeholder-img {

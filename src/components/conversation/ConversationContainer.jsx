@@ -273,16 +273,18 @@ export default function ConversationContainer({
       }
       
       // If going back before the grade level dialogue, reset that state
-      if (previousIndex < 3) {
+      if (previousIndex < memoryTriggers.gradeLevel) {
         setShowGradeLevelThought(false);
         setShowGradeLevelInMemory(false);
         setShowMemoryContainer(false);
+        setHasTriggeredGradeAnimation(false); // Reset animation trigger
       }
       
       // If going back before the birthday dialogue, reset that state
-      if (previousIndex < 6) {
+      if (previousIndex < memoryTriggers.birthday) {
         setShowBirthdayThought(false);
         setShowBirthdayInMemory(false);
+        setHasTriggeredBirthdayAnimation(false); // Reset animation trigger
       }
     }
   };

@@ -40,7 +40,7 @@ export default function InitialGreeting() {
       image: robotHappyImage,
     },
     {
-      text: "First, you'll solve a puzzle, and then I will so you can compare how your reasoning is similar or different from mine. This will help you understand how I think before we explore how I can use information you share with me to figure out things you never said.",
+      text: "First, you'll solve a puzzle, and then I will so you can compare your reasoning to mine. This will help you understand how I think before we explore how I can use information you share to figure out things you never said.",
       emotion: "explaining",
       image: robotThinkImage,
     },

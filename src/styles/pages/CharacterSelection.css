@@ -85,12 +85,15 @@
 
 @media (max-width: 768px) {
   .character-options {
-    flex-direction: column;
-    gap: 30px;
+    gap: 20px;
   }
 
   .character-placeholder {
-    width: 150px;
-    height: 200px;
+    width: 120px;
+    height: 160px;
+  }
+
+  .character-label {
+    font-size: 16px;
   }
 }
