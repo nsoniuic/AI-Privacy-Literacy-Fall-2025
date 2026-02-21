@@ -38,7 +38,7 @@
 
 .dialog-text {
   margin: 0;
-  font-size: 20px;
+  font-size: 16px;
   color: #333;
   min-height: 24px;
   word-wrap: break-word;
@@ -280,7 +280,7 @@
   }
 
   .dialog-text {
-    font-size: 14px;
+    font-size: 12px;
   }
 }
 
@@ -322,7 +322,7 @@
 /* Navigation buttons container - always at bottom of page */
 .navigation-buttons {
   position: fixed;
-  bottom: 40px;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -330,7 +330,7 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
-  padding: 15px 30px;
+  padding: 10px 20px;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 50px;
   backdrop-filter: blur(10px);
@@ -438,7 +438,7 @@
   }
 
   .dialog-text {
-    font-size: 16px;
+    font-size: 14px;
   }
 }
 

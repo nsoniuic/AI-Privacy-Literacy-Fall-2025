@@ -9,7 +9,7 @@
   justify-content: flex-start;
   gap: 20px;
   position: relative;
-  margin-top: 5%;
+  margin-top: 7%;
   min-height: 30vh;
 }
 
@@ -631,5 +631,44 @@
   .explanation-prompt .continue-button {
     padding: 12px 28px;
     font-size: 16px;
+  }
+}
+
+/* Height-based responsive styling */
+@media (max-height: 800px) {
+  .puzzle-content .dialog-box-top {
+    padding: 16px 28px;
+    font-size: 15px;
+    top: 30%;
+  }
+
+  .puzzle-content .dialog-box-top::after {
+    bottom: -20px;
+    border-top: 25px solid #FFFACD;
+    border-left: 40px solid transparent;
+  }
+
+  .puzzle-robot-image {
+    max-width: 280px;
+    max-height: 320px;
+  }
+}
+
+@media (max-height: 650px) {
+  .puzzle-content .dialog-box-top {
+    padding: 12px 20px;
+    font-size: 13px;
+    top: 25%;
+  }
+
+  .puzzle-content .dialog-box-top::after {
+    bottom: -12px;
+    border-top: 18px solid #FFFACD;
+    border-left: 28px solid transparent;
+  }
+
+  .puzzle-robot-image {
+    max-width: 220px;
+    max-height: 260px;
   }
 }

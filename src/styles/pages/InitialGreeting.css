@@ -278,3 +278,42 @@
     border-radius: 24px;
   }
 }
+
+/* Height-based responsive styling */
+@media (max-height: 800px) {
+  .dialog-box-top {
+    padding: 14px 24px;
+    font-size: 12px;
+  }
+}
+
+@media (max-height: 650px) {
+  .dialog-box-top {
+    padding: 10px 18px;
+    font-size: 12px;
+  }
+
+  .dialog-box-top::after {
+    bottom: -10px;
+    border-top: 15px solid #FFFACD;
+    border-left: 24px solid transparent;
+  }
+
+  .initial-greeting-robot-image {
+    max-width: 220px;
+    max-height: 260px;
+  }
+
+  .initial-greeting-input-section {
+    bottom: 5%;
+  }
+
+  .initial-greeting-prompt-text {
+    font-size: 16px;
+  }
+
+  .initial-greeting-input {
+    font-size: 14px;
+    padding: 10px 18px;
+  }
+}
