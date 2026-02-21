@@ -75,7 +75,7 @@ export default function PuzzleInteractive({ onSubmitResult, onBack, puzzleConfig
           <div className="puzzle-side">
             <p className="label label-finish">Finish</p>
             <div className="puzzle-outside-container">
-              <PuzzleGrid grid={grid} getCellColor={colorFunction} onCellClick={handleCellClick} interactive={true} />
+              <PuzzleGrid grid={grid} getCellColor={colorFunction} onCellClick={handleCellClick} interactive={true} puzzleNumber={puzzleNumber} />
             </div>
             {showButtons && (
               <button className="reset-button" onClick={handleReset}>↺ Reset</button>

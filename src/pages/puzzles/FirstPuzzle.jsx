@@ -349,6 +349,7 @@ export default function FirstPuzzle() {
             key={puzzleKey}
             onSubmitResult={handleSubmitResult}
             onBack={handleBackToOverview}
+            puzzleNumber={3}
           />
         </div>
       )}

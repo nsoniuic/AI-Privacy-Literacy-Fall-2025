@@ -125,9 +125,9 @@ export function playAudioBlob(audioBlob) {
     const audioUrl = URL.createObjectURL(audioBlob);
     const audio = new Audio(audioUrl);
     
+    // Clean up URL when audio ends
     audio.onended = () => {
       URL.revokeObjectURL(audioUrl);
-      resolve(audio);
     };
     
     audio.onerror = (error) => {
@@ -135,6 +135,9 @@ export function playAudioBlob(audioBlob) {
       reject(error);
     };
     
-    audio.play().catch(reject);
+    // Resolve immediately after starting playback so we can get the audio reference
+    audio.play()
+      .then(() => resolve(audio))
+      .catch(reject);
   });
 }

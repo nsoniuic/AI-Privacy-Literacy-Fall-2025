@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getChildFriendlyVoice } from '../utils/useSpeech';
+import React, { createContext, useContext, useState } from 'react';
 
 const VoiceContext = createContext();
 
@@ -13,22 +12,22 @@ export const useVoice = () => {
 
 export const VoiceProvider = ({ children }) => {
   const [voiceEnabled, setVoiceEnabled] = useState(false);
-  const [friendlyVoice, setFriendlyVoice] = useState(null);
-
-  // Load child-friendly voice on mount
-  useEffect(() => {
-    getChildFriendlyVoice().then(voice => {
-      setFriendlyVoice(voice);
-    });
-  }, []);
 
   const toggleVoice = () => {
-    setVoiceEnabled(prev => !prev);
+    const newValue = !voiceEnabled;
+    setVoiceEnabled(newValue);
+    
+    // If disabling voice, force stop all audio immediately
+    if (!newValue) {
+      document.querySelectorAll('audio').forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+    }
   };
 
   const value = {
     voiceEnabled,
-    friendlyVoice,
     toggleVoice,
   };
 
