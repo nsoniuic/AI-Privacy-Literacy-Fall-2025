@@ -200,7 +200,13 @@ async function flushLogQueue() {
       const logRef = doc(
         collection(db, "sessions", currentSessionId, collectionName),
       );
-      batch.set(logRef, logEntry);
+      
+      // Remove undefined fields to avoid Firebase errors
+      const cleanedEntry = Object.fromEntries(
+        Object.entries(logEntry).filter(([_, value]) => value !== undefined)
+      );
+      
+      batch.set(logRef, cleanedEntry);
     }
 
     await batch.commit();
