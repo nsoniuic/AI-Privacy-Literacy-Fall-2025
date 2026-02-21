@@ -28,15 +28,9 @@ function App() {
   // Initialize ElevenLabs TTS on app mount
   useEffect(() => {
     const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY;
+    
     if (apiKey && apiKey !== 'your_api_key_here') {
-      const success = initializeElevenLabs(apiKey);
-      if (success) {
-        console.log('ElevenLabs TTS initialized successfully');
-      } else {
-        console.log('Using browser default TTS');
-      }
-    } else {
-      console.log('ElevenLabs API key not found, using browser default TTS');
+      initializeElevenLabs(apiKey);
     }
   }, []);
 

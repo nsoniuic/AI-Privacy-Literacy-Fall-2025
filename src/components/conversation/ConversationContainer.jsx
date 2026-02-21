@@ -39,6 +39,9 @@ export default function ConversationContainer({
   const [shouldSpeakRobot, setShouldSpeakRobot] = useState(false);
   const [shouldSpeakCharacter, setShouldSpeakCharacter] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
+  const hasSpokeThisDialogue = useRef(false); // Track if we've already spoken for current dialogue
+  const hasSpokeThinkingScreen = useRef(false); // Track if we've spoken the thinking screen
+  const [shouldSpeakThinking, setShouldSpeakThinking] = useState(false);
   
   // Update screen number based on current dialogue index and screen state
   // Each message in conversation gets its own screen number
@@ -58,9 +61,19 @@ export default function ConversationContainer({
 
   const thoughtText = endThoughtText || `Now that I have ${characterPronoun} birthday and grade level, let's see what I can figure out...`;
 
-  // Start speech when dialogue starts (synchronize with typing)
+  // Start speech when dialogue starts OR when voice is enabled
   useEffect(() => {
+    // Reset speech tracking when dialogue changes
     if (displayedText === '') {
+      hasSpokeThisDialogue.current = false;
+      setShouldSpeakRobot(false);
+      setShouldSpeakCharacter(false);
+    }
+    
+    // Trigger speech if voice is enabled and we haven't spoken this dialogue yet
+    if (voiceEnabled && !hasSpokeThisDialogue.current) {
+      hasSpokeThisDialogue.current = true;
+      
       if (currentDialogue.speaker === 'robot') {
         setShouldSpeakRobot(true);
         setShouldSpeakCharacter(false);
@@ -69,7 +82,13 @@ export default function ConversationContainer({
         setShouldSpeakRobot(false);
       }
     }
-  }, [currentDialogueIndex, currentDialogue.speaker, displayedText]);
+    
+    // Stop speech when voice is disabled
+    if (!voiceEnabled) {
+      setShouldSpeakRobot(false);
+      setShouldSpeakCharacter(false);
+    }
+  }, [currentDialogueIndex, currentDialogue.speaker, currentDialogue.text, displayedText, voiceEnabled]);
 
   // Robot speech - warm male voice
   const robotSpeechControl = useSpeech(
@@ -89,11 +108,36 @@ export default function ConversationContainer({
     }
   );
 
+  // TTS for thinking screen (screen 63 for second scenario, varies by startScreenNumber)
+  const thinkingSpeechControl = useSpeech(
+    thoughtText,
+    voiceEnabled && shouldSpeakThinking && currentScreen === 'thinking',
+    {
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.CALLUM
+    }
+  );
+
+  // Trigger speech when thinking screen appears
+  useEffect(() => {
+    if (currentScreen === 'thinking' && voiceEnabled) {
+      hasSpokeThinkingScreen.current = false;
+      setShouldSpeakThinking(false);
+      const timer = setTimeout(() => {
+        if (!hasSpokeThinkingScreen.current) {
+          hasSpokeThinkingScreen.current = true;
+          setShouldSpeakThinking(true);
+        }
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [currentScreen, voiceEnabled]);
+
   // Immediately stop all audio when voice is disabled
   useEffect(() => {
     if (!voiceEnabled) {
       robotSpeechControl.stop();
       characterSpeechControl.stop();
+      thinkingSpeechControl.stop();
     }
   }, [voiceEnabled]);
 
@@ -254,7 +298,7 @@ export default function ConversationContainer({
     if (showGradeLevelInMemory) {
       info.push({ 
         id: 'grade',
-        icon: '📚',
+        icon: '❗',
         text: `Clue ${clueStartNumber}: I learned ${characterName}'s ${memoryLabels.first.toLowerCase()}`,
         isNew: newlyAddedItem === 'grade'
       });
@@ -262,7 +306,7 @@ export default function ConversationContainer({
     if (showBirthdayInMemory) {
       info.push({ 
         id: 'birthday',
-        icon: '🎂',
+        icon: '‼️',
         text: `Clue ${clueStartNumber + 1}: I learned ${characterName}'s ${memoryLabels.second.toLowerCase()}`,
         isNew: newlyAddedItem === 'birthday'
       });

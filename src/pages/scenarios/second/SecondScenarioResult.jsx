@@ -1,10 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import robotHappyImage from '../../../assets/robot-happy.png';
 import boyImage from '../../../assets/boy.png';
 import girlImage from '../../../assets/girl.png';
 import locationImage from '../../../assets/location.png';
 import AppTitle from '../../../components/common/AppTitle';
+import { useScreenNumber } from '../../../hooks/useScreenNumber';
+import useSpeech from '../../../utils/useSpeech';
+import { CHILD_FRIENDLY_VOICES } from '../../../services/elevenLabsService';
+import { useVoice } from '../../../contexts/VoiceContext';
 import '../../../styles/pages/Conversation.css';
 
 export default function SecondScenarioResult() {
@@ -24,12 +28,35 @@ export default function SecondScenarioResult() {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [currentDialogueText, setCurrentDialogueText] = useState('');
+  const { voiceEnabled } = useVoice();
+  const [shouldSpeak, setShouldSpeak] = useState(false);
+  const hasSpokeThisScreen = useRef(false);
 
   // Compute character-specific values once
   const characterName = 'Parker';
   const pronoun = selectedCharacter === 'boy' ? 'he' : 'she';
   const possessivePronoun = selectedCharacter === 'boy' ? 'him' : 'her';
   const characterImage = selectedCharacter === 'boy' ? boyImage : girlImage;
+
+  // Screen numbering: 74-79
+  // Screen 74: currentScreen === 0
+  // Screen 75: currentScreen === 1
+  // Screen 76: currentScreen === 2, initial dialogue
+  // Screen 77: currentScreen === 2, showThirdDialogue
+  // Screen 78: currentScreen === 2, showFourthDialogue (with map)
+  // Screen 79: currentScreen === 2, showFifthDialogue
+  const getScreenNumber = () => {
+    if (currentScreen < 2) {
+      return 74 + currentScreen;
+    } else {
+      // currentScreen === 2
+      if (showFifthDialogue) return 79;
+      if (showFourthDialogue) return 78;
+      if (showThirdDialogue) return 77;
+      return 76;
+    }
+  };
+  useScreenNumber(getScreenNumber());
 
   const typingSpeed = 40;
 
@@ -42,6 +69,37 @@ export default function SecondScenarioResult() {
     screen2_fourth: "You must be talking about Riverbank Park! Do you hang out there at other times too, perhaps on Fridays after school?",
     screen2_fifth: "Yes, I hang out there with my friends sometimes after school!"
   };
+
+  // TTS for robot's thought bubbles (screens 74-75)
+  const robotThought = useSpeech(
+    currentScreen < 2 ? (currentScreen === 0 ? dialogues.screen0 : dialogues.screen1) : '',
+    voiceEnabled && shouldSpeak && currentScreen < 2,
+    {
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.CALLUM
+    }
+  );
+
+  // TTS for robot's dialogue in conversation (screens 76, 78)
+  const isRobotSpeaking = currentScreen === 2 && (!showThirdDialogue || (showFourthDialogue && !showFifthDialogue));
+  const robotDialogueText = !showThirdDialogue ? dialogues.screen2_first : dialogues.screen2_fourth;
+  const robotDialogue = useSpeech(
+    robotDialogueText,
+    voiceEnabled && shouldSpeak && isRobotSpeaking,
+    {
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.CALLUM
+    }
+  );
+
+  // TTS for child's dialogue (screens 77, 79)
+  const isChildSpeaking = currentScreen === 2 && ((showThirdDialogue && !showFourthDialogue) || showFifthDialogue);
+  const childDialogueText = showFifthDialogue ? dialogues.screen2_fifth : dialogues.screen2_third;
+  const childDialogue = useSpeech(
+    childDialogueText,
+    voiceEnabled && shouldSpeak && isChildSpeaking,
+    {
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.LILY
+    }
+  );
 
   // Typing animation effect
   useEffect(() => {
@@ -80,6 +138,45 @@ export default function SecondScenarioResult() {
       setIsTyping(false);
     }
   }, [currentScreen, showThirdDialogue, showFourthDialogue, showFifthDialogue]);
+
+  // Trigger speech for thought bubble screens (74-75)
+  useEffect(() => {
+    if (currentScreen < 2 && voiceEnabled) {
+      hasSpokeThisScreen.current = false;
+      setShouldSpeak(false);
+      const timer = setTimeout(() => {
+        if (!hasSpokeThisScreen.current) {
+          hasSpokeThisScreen.current = true;
+          setShouldSpeak(true);
+        }
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [currentScreen, voiceEnabled]);
+
+  // Trigger speech for conversation screens (76-79)
+  useEffect(() => {
+    if (currentScreen === 2 && voiceEnabled && currentDialogueText) {
+      hasSpokeThisScreen.current = false;
+      setShouldSpeak(false);
+      const timer = setTimeout(() => {
+        if (!hasSpokeThisScreen.current) {
+          hasSpokeThisScreen.current = true;
+          setShouldSpeak(true);
+        }
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [currentScreen, showThirdDialogue, showFourthDialogue, showFifthDialogue, voiceEnabled, currentDialogueText]);
+
+  // Stop all speech when voice is disabled
+  useEffect(() => {
+    if (!voiceEnabled) {
+      if (robotThought) robotThought.stop();
+      if (robotDialogue) robotDialogue.stop();
+      if (childDialogue) childDialogue.stop();
+    }
+  }, [voiceEnabled]);
 
   const handleContinue = () => {
     if (currentScreen < 2) {

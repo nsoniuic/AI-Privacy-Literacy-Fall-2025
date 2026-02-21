@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { 
   textToSpeech, 
   playAudioBlob,
-  CHILD_FRIENDLY_VOICES 
+  CHILD_FRIENDLY_VOICES,
+  isElevenLabsAvailable 
 } from '../services/elevenLabsService';
 
 /**
@@ -50,6 +51,13 @@ export default function useSpeech(text, shouldSpeak = false, options = {}) {
   }, [text, shouldSpeak]);
 
   const handleElevenLabsSpeech = async () => {
+    // Check if ElevenLabs is available
+    if (!isElevenLabsAvailable()) {
+      setError(new Error('ElevenLabs not initialized'));
+      isPlayingRef.current = false;
+      return;
+    }
+
     try {
       setIsLoading(true);
       setError(null);

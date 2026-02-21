@@ -9,16 +9,10 @@ export default function SecondScenarioMemory() {
   const navigate = useNavigate();
   const selectedCharacter = location.state?.character;
   const characterName = 'Parker';
-  const [showThoughtBubble, setShowThoughtBubble] = useState(false);
 
   const handleContinue = () => {
-    if (!showThoughtBubble) {
-      // First click: show thought bubble
-      setShowThoughtBubble(true);
-    } else {
-      // After thinking flow: go to second scenario result page
-      navigate('/second_scenario/result', { state: { selectedCharacter } });
-    }
+    // After thinking flow: go to second scenario result page
+    navigate('/second_scenario/result', { state: { selectedCharacter } });
   };
 
   const handleBack = () => {
@@ -48,8 +42,8 @@ export default function SecondScenarioMemory() {
       <RobotThinking 
         selectedCharacter={selectedCharacter}
         onContinue={handleContinue}
-        showThoughtBubble={showThoughtBubble}
         onBack={handleBack}
+        startScreenNumber={66}
         memoryData={memoryData}
         thoughtBubbles={thoughtBubbles}
         finalDeduction={finalDeduction}

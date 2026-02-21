@@ -1,11 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useScreenNumber } from '../../../hooks/useScreenNumber';
-import robotImage from '../../../assets/robot.png';
+import robotImage from '../../../assets/robot-happy.png';
 import boyImage from '../../../assets/boy.png';
 import girlImage from '../../../assets/girl.png';
 import adVideo from '../../../assets/ad.mp4';
 import AppTitle from '../../../components/common/AppTitle';
+import useSpeech from '../../../utils/useSpeech';
+import { CHILD_FRIENDLY_VOICES } from '../../../services/elevenLabsService';
+import { useVoice } from '../../../contexts/VoiceContext';
 // import '../App.css';
 import '../../../styles/pages/Conversation.css';
 
@@ -19,6 +22,9 @@ export default function ResultPage() {
   const [showThirdDialogue, setShowThirdDialogue] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
+  const { voiceEnabled } = useVoice();
+  const [shouldSpeak, setShouldSpeak] = useState(false);
+  const hasSpokeThisScreen = useRef(false);
 
   // Screen number logic:
   // Screen 48: currentScreen === 0
@@ -65,6 +71,80 @@ export default function ResultPage() {
 
   const currentText = getCurrentText();
   const typingSpeed = 40;
+
+  // TTS for robot's thought bubbles (screens 48-49)
+  const robotThought = useSpeech(
+    currentText,
+    voiceEnabled && shouldSpeak && currentScreen < 2,
+    {
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.CALLUM
+    }
+  );
+
+  // TTS for robot's dialogue in conversation (screens 50, 52)
+  const isRobotSpeaking = currentScreen === 2 && !showVideo && !showThirdDialogue;
+  const robotDialogue = useSpeech(
+    currentText,
+    voiceEnabled && shouldSpeak && isRobotSpeaking,
+    {
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.CALLUM
+    }
+  );
+
+  // TTS for child's dialogue (screen 53)
+  const isChildSpeaking = currentScreen === 2 && showThirdDialogue && !showVideo;
+  const childDialogue = useSpeech(
+    currentText,
+    voiceEnabled && shouldSpeak && isChildSpeaking,
+    {
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.LILY
+    }
+  );
+
+  // Trigger speech when screen changes to a thought bubble screen (48-49)
+  useEffect(() => {
+    // Reset speech tracking when screen changes
+    hasSpokeThisScreen.current = false;
+    setShouldSpeak(false);
+
+    // Trigger speech if on a thought bubble screen (0 or 1) and voice is enabled
+    if (currentScreen < 2 && voiceEnabled && currentText) {
+      // Small delay to let bubble appear first
+      const timer = setTimeout(() => {
+        if (!hasSpokeThisScreen.current) {
+          hasSpokeThisScreen.current = true;
+          setShouldSpeak(true);
+        }
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [currentScreen, voiceEnabled, currentText]);
+
+  // Trigger speech for conversation screens (50, 52, 53)
+  useEffect(() => {
+    if (currentScreen === 2 && !showVideo && voiceEnabled && currentText) {
+      // Reset and trigger speech for dialogue
+      hasSpokeThisScreen.current = false;
+      setShouldSpeak(false);
+      
+      const timer = setTimeout(() => {
+        if (!hasSpokeThisScreen.current) {
+          hasSpokeThisScreen.current = true;
+          setShouldSpeak(true);
+        }
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [currentScreen, showVideo, showSecondDialogue, showThirdDialogue, voiceEnabled, currentText]);
+
+  // Stop all speech when voice is disabled
+  useEffect(() => {
+    if (!voiceEnabled) {
+      if (robotThought) robotThought.stop();
+      if (robotDialogue) robotDialogue.stop();
+      if (childDialogue) childDialogue.stop();
+    }
+  }, [voiceEnabled]);
 
   // Typing animation
   useEffect(() => {

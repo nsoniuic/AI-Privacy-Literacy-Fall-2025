@@ -1,7 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import robotHappyImage from '../assets/robot-happy.png';
 import AppTitle from '../components/common/AppTitle';
+import { useScreenNumber } from '../hooks/useScreenNumber';
+import useSpeech from '../utils/useSpeech';
+import { CHILD_FRIENDLY_VOICES } from '../services/elevenLabsService';
+import { useVoice } from '../contexts/VoiceContext';
 import '../styles/pages/InitialGreeting.css';
 import '../App.css';
 
@@ -15,6 +19,13 @@ export default function FinalMessage() {
   // Typing animation states
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
+  const { voiceEnabled } = useVoice();
+  const [shouldSpeak, setShouldSpeak] = useState(false);
+  const hasSpokeThisScreen = useRef(false);
+
+  // Screen 80: first message, Screen 81: second message
+  const screenNumber = showSecondMessage ? 81 : 80;
+  useScreenNumber(screenNumber);
 
   const typingSpeed = 40;
 
@@ -24,6 +35,37 @@ export default function FinalMessage() {
   };
 
   const currentDialogueText = showSecondMessage ? dialogues.second : dialogues.first;
+
+  // TTS for final messages
+  const robotSpeech = useSpeech(
+    currentDialogueText,
+    voiceEnabled && shouldSpeak,
+    {
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.CALLUM
+    }
+  );
+
+  // Trigger speech when message appears
+  useEffect(() => {
+    if (voiceEnabled) {
+      hasSpokeThisScreen.current = false;
+      setShouldSpeak(false);
+      const timer = setTimeout(() => {
+        if (!hasSpokeThisScreen.current) {
+          hasSpokeThisScreen.current = true;
+          setShouldSpeak(true);
+        }
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [showSecondMessage, voiceEnabled]);
+
+  // Stop speech when voice is disabled
+  useEffect(() => {
+    if (!voiceEnabled && robotSpeech) {
+      robotSpeech.stop();
+    }
+  }, [voiceEnabled]);
 
   // Typing animation effect
   useEffect(() => {

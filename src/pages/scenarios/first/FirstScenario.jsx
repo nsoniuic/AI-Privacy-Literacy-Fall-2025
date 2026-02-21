@@ -1,10 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import robotImage from '../../../assets/robot-happy.png';
 import CharacterSelection from '../../../components/interactive/CharacterSelection';
 import ConversationContainer from '../../../components/conversation/ConversationContainer';
 import AppTitle from '../../../components/common/AppTitle';
 import { useScreenNumber } from '../../../hooks/useScreenNumber';
+import useSpeech from '../../../utils/useSpeech';
+import { CHILD_FRIENDLY_VOICES } from '../../../services/elevenLabsService';
+import { useVoice } from '../../../contexts/VoiceContext';
 import '../../../styles/puzzles/Puzzles.css';
 import '../../../styles/pages/InitialGreeting.css';
 import '../../../App.css';
@@ -17,6 +20,9 @@ export default function FirstScenario() {
   const [showConversation, setShowConversation] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [currentDialogue, setCurrentDialogue] = useState(0);
+  const { voiceEnabled } = useVoice();
+  const [shouldSpeak, setShouldSpeak] = useState(false);
+  const hasSpokeThisDialogue = useRef(false);
 
   const screenNumber = showConversation ? 29 : 23 + currentDialogue;
   useScreenNumber(screenNumber);
@@ -65,6 +71,44 @@ export default function FirstScenario() {
 
   const typingSpeed = 40;
 
+  // TTS for robot's initial dialogues (before conversation)
+  const robotSpeech = useSpeech(
+    !showConversation ? dialogues[currentDialogue] : '',
+    voiceEnabled && shouldSpeak && !showConversation,
+    {
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.CALLUM
+    }
+  );
+
+  // Trigger speech when dialogue is ready and voice is enabled
+  useEffect(() => {
+    if (!showConversation) {
+      // Reset tracking when dialogue changes
+      if (displayedText === '') {
+        hasSpokeThisDialogue.current = false;
+        setShouldSpeak(false);
+      }
+      
+      // Enable speech once typing is done OR if voice is enabled mid-typing
+      if (voiceEnabled && !hasSpokeThisDialogue.current && displayedText.length > 0) {
+        hasSpokeThisDialogue.current = true;
+        setShouldSpeak(true);
+      }
+      
+      // Disable speech when voice is turned off
+      if (!voiceEnabled) {
+        setShouldSpeak(false);
+      }
+    }
+  }, [displayedText, currentDialogue, voiceEnabled, showConversation, dialogues]);
+
+  // Stop speech when voice is disabled
+  useEffect(() => {
+    if (!voiceEnabled && robotSpeech) {
+      robotSpeech.stop();
+    }
+  }, [voiceEnabled]);
+
   useEffect(() => {
     const dialogueText = dialogues[currentDialogue];
     if (isTyping && displayedText.length < dialogueText.length) {
@@ -78,6 +122,7 @@ export default function FirstScenario() {
   }, [displayedText, isTyping, currentDialogue, dialogues]);
 
   const handleContinue = () => {
+    robotSpeech.stop(); // Stop current speech
     if (currentDialogue === 3) {
       // After 4th dialogue, show character selection
       setShowCharacterSelection(true);
@@ -88,6 +133,7 @@ export default function FirstScenario() {
   };
 
   const handleCharacterContinue = () => {
+    robotSpeech.stop(); // Stop current speech
     if (selectedCharacter) {
       // Keep character selection visible and move to next dialogue
       setCurrentDialogue(5);
@@ -101,6 +147,7 @@ export default function FirstScenario() {
   };
 
   const handleBack = () => {
+    robotSpeech.stop(); // Stop current speech
     if (currentDialogue === 5) {
       // Go back to character selection (keep it visible)
       setCurrentDialogue(4);

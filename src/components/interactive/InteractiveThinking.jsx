@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNodeInputLogger } from "../../hooks/useNodeInputLogger";
 import { useScreenNumber } from "../../hooks/useScreenNumber";
-import robotImage from "../../assets/robot.png";
+import robotImage from "../../assets/robot-think.png";
 import cloudImage from "../../assets/cloud.svg";
+import useSpeech from "../../utils/useSpeech";
+import { CHILD_FRIENDLY_VOICES } from "../../services/elevenLabsService";
+import { useVoice } from "../../contexts/VoiceContext";
 import "../../styles/pages/RobotThinking.css";
 
 export default function InteractiveThinking({
@@ -15,9 +18,45 @@ export default function InteractiveThinking({
   const [showEncouragement, setShowEncouragement] = useState(false);
   const characterName = "Parker";
   const { logNodeChange } = useNodeInputLogger();
+  const { voiceEnabled } = useVoice();
+  const [shouldSpeak, setShouldSpeak] = useState(false);
+  const hasSpokeThisScreen = useRef(false);
 
   // Track screen number: startScreenNumber, or +1 if showing encouragement
   useScreenNumber(showEncouragement ? startScreenNumber + 1 : startScreenNumber);
+
+  // TTS for encouragement message (screen 47)
+  const encouragementText = "Great job!";
+  const robotThought = useSpeech(
+    encouragementText,
+    voiceEnabled && shouldSpeak && showEncouragement,
+    {
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.CALLUM
+    }
+  );
+
+  // Trigger speech when encouragement appears
+  useEffect(() => {
+    if (showEncouragement && voiceEnabled) {
+      hasSpokeThisScreen.current = false;
+      setShouldSpeak(false);
+      // Small delay to let bubble appear first
+      const timer = setTimeout(() => {
+        if (!hasSpokeThisScreen.current) {
+          hasSpokeThisScreen.current = true;
+          setShouldSpeak(true);
+        }
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [showEncouragement, voiceEnabled]);
+
+  // Stop speech when voice is disabled
+  useEffect(() => {
+    if (!voiceEnabled && robotThought) {
+      robotThought.stop();
+    }
+  }, [voiceEnabled]);
 
   const handleSubmit = () => {
     if (userInput.trim() && !showEncouragement) {

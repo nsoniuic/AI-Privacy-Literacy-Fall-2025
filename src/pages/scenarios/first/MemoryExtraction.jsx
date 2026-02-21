@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useScreenNumber } from '../../../hooks/useScreenNumber';
 import RobotThinking from '../../../components/conversation/RobotThinking';
 import InteractiveThinking from '../../../components/interactive/InteractiveThinking';
-import robotImage from '../../../assets/robot.png';
+import robotImage from '../../../assets/robot-think.png';
 import AppTitle from '../../../components/common/AppTitle';
+import useSpeech from '../../../utils/useSpeech';
+import { CHILD_FRIENDLY_VOICES } from '../../../services/elevenLabsService';
+import { useVoice } from '../../../contexts/VoiceContext';
 // import '../App.css';
 import '../../../styles/pages/Conversation.css';
 
@@ -13,9 +16,11 @@ export default function MemoryExtraction() {
   const navigate = useNavigate();
   const selectedCharacter = location.state?.character;
   const characterName = 'Parker';
-  const [showThoughtBubble, setShowThoughtBubble] = useState(false);
   const [showTransitionScreen, setShowTransitionScreen] = useState(false);
   const [showInteractiveScreen, setShowInteractiveScreen] = useState(false);
+  const { voiceEnabled } = useVoice();
+  const [shouldSpeak, setShouldSpeak] = useState(false);
+  const hasSpokeThisScreen = useRef(false);
 
   // Screen number logic:
   // RobotThinking screens: 37-44 (8 screens, currentScreen 0-7) - handled by RobotThinking
@@ -28,14 +33,42 @@ export default function MemoryExtraction() {
   const currentScreen = showTransitionScreen && !showInteractiveScreen ? 45 : 37;
   useScreenNumber(currentScreen);
 
-  const handleContinue = () => {
-    if (!showThoughtBubble) {
-      // First click: show thought bubble
-      setShowThoughtBubble(true);
-    } else {
-      // After thinking flow: show transition screen
-      setShowTransitionScreen(true);
+  // TTS for transition screen (screen 45)
+  const transitionText = `Now that you have seen how AI reasons, try guessing what I could know based on another example from ${characterName}!`;
+  const robotThought = useSpeech(
+    transitionText,
+    voiceEnabled && shouldSpeak && showTransitionScreen && !showInteractiveScreen,
+    {
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.CALLUM
     }
+  );
+
+  // Trigger speech when transition screen appears
+  useEffect(() => {
+    if (showTransitionScreen && !showInteractiveScreen && voiceEnabled) {
+      hasSpokeThisScreen.current = false;
+      setShouldSpeak(false);
+      // Small delay to let bubble appear first
+      const timer = setTimeout(() => {
+        if (!hasSpokeThisScreen.current) {
+          hasSpokeThisScreen.current = true;
+          setShouldSpeak(true);
+        }
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [showTransitionScreen, showInteractiveScreen, voiceEnabled]);
+
+  // Stop speech when voice is disabled
+  useEffect(() => {
+    if (!voiceEnabled && robotThought) {
+      robotThought.stop();
+    }
+  }, [voiceEnabled]);
+
+  const handleContinue = () => {
+    // After thinking flow: show transition screen
+    setShowTransitionScreen(true);
   };
 
   const handleBack = () => {
@@ -125,7 +158,6 @@ export default function MemoryExtraction() {
       <RobotThinking 
         selectedCharacter={selectedCharacter}
         onContinue={handleContinue}
-        showThoughtBubble={showThoughtBubble}
         onBack={handleBack}
       />
     </div>

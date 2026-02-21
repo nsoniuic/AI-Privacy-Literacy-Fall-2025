@@ -1,7 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import robotThinkImage from '../../assets/robot-think.png';
 import cloudImage from '../../assets/cloud.svg';
 import { useScreenNumber } from '../../hooks/useScreenNumber';
+import useSpeech from '../../utils/useSpeech';
+import { CHILD_FRIENDLY_VOICES } from '../../services/elevenLabsService';
+import { useVoice } from '../../contexts/VoiceContext';
 import '../../styles/pages/RobotThinking.css';
 
 export default function RobotThinking({ 
@@ -33,9 +36,61 @@ export default function RobotThinking({
   const [showClouds, setShowClouds] = useState(false);
   const [showDeductionBubble, setShowDeductionBubble] = useState(false);
   const [currentScreen, setCurrentScreen] = useState(0);
+  const { voiceEnabled } = useVoice();
+  const [shouldSpeak, setShouldSpeak] = useState(false);
+  const hasSpokeThisScreen = useRef(false);
 
   // Track screen number: startScreenNumber + currentScreen
   useScreenNumber(startScreenNumber + currentScreen);
+
+  // Generate thought bubble text based on current screen
+  const getCurrentThoughtText = () => {
+    if (currentScreen === 1) {
+      return thoughtBubbles.screen1(characterName, pronoun, possessivePronoun);
+    } else if (currentScreen === 3) {
+      return thoughtBubbles.screen3(characterName, pronoun, possessivePronoun);
+    } else if (currentScreen === 5) {
+      return thoughtBubbles.screen5(characterName, pronoun, possessivePronoun);
+    } else if (currentScreen === 6) {
+      return thoughtBubbles.screen6(characterName, pronoun, possessivePronoun);
+    }
+    return '';
+  };
+
+  // TTS for robot's thinking (thought bubbles)
+  const robotThought = useSpeech(
+    getCurrentThoughtText(),
+    voiceEnabled && shouldSpeak && [1, 3, 5, 6].includes(currentScreen),
+    {
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.CALLUM
+    }
+  );
+
+  // Trigger speech when screen changes to a thought bubble screen
+  useEffect(() => {
+    // Reset speech tracking when screen changes
+    hasSpokeThisScreen.current = false;
+    setShouldSpeak(false);
+
+    // Trigger speech if on a thought bubble screen and voice is enabled
+    if ([1, 3, 5, 6].includes(currentScreen) && voiceEnabled) {
+      // Small delay to let bubble appear first
+      const timer = setTimeout(() => {
+        if (!hasSpokeThisScreen.current) {
+          hasSpokeThisScreen.current = true;
+          setShouldSpeak(true);
+        }
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [currentScreen, voiceEnabled]);
+
+  // Stop speech when voice is disabled
+  useEffect(() => {
+    if (!voiceEnabled && robotThought) {
+      robotThought.stop();
+    }
+  }, [voiceEnabled]);
 
   useEffect(() => {
     // Sequence: brain -> arrows -> clouds
@@ -70,6 +125,7 @@ export default function RobotThinking({
 
   // Handle continue button clicks
   const handleContinueClick = () => {
+    robotThought.stop(); // Stop current speech
     if (currentScreen < 7) {
       setCurrentScreen(currentScreen + 1);
     } else {
@@ -80,6 +136,7 @@ export default function RobotThinking({
 
   // Handle back button clicks
   const handleBackClick = () => {
+    robotThought.stop(); // Stop current speech
     if (currentScreen > 0) {
       setCurrentScreen(currentScreen - 1);
     } else if (onBack) {

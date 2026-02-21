@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import robotHappyImage from '../../../assets/robot-happy.png';
 import ConversationContainer from '../../../components/conversation/ConversationContainer';
 import AppTitle from '../../../components/common/AppTitle';
 import { useScreenNumber } from '../../../hooks/useScreenNumber';
+import useSpeech from '../../../utils/useSpeech';
+import { CHILD_FRIENDLY_VOICES } from '../../../services/elevenLabsService';
+import { useVoice } from '../../../contexts/VoiceContext';
 import '../../../styles/puzzles/Puzzles.css';
 import '../../../styles/pages/InitialGreeting.css';
 import '../../../App.css';
@@ -15,6 +18,9 @@ export default function SecondScenario() {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [showConversation, setShowConversation] = useState(false);
+  const { voiceEnabled } = useVoice();
+  const [shouldSpeak, setShouldSpeak] = useState(false);
+  const hasSpokeThisScreen = useRef(false);
 
   // Screen 54: Initial dialogue
   // Screen 55+: Conversation messages (handled by ConversationContainer)
@@ -60,6 +66,32 @@ export default function SecondScenario() {
   ];
 
   const typingSpeed = 40;
+
+  // TTS for initial dialogue (screen 54)
+  const robotSpeech = useSpeech(
+    dialogueText,
+    voiceEnabled && shouldSpeak && !showConversation,
+    {
+      elevenLabsVoiceId: CHILD_FRIENDLY_VOICES.CALLUM
+    }
+  );
+
+  // Trigger speech when screen appears
+  useEffect(() => {
+    if (!showConversation && voiceEnabled && displayedText === dialogueText) {
+      if (!hasSpokeThisScreen.current) {
+        hasSpokeThisScreen.current = true;
+        setShouldSpeak(true);
+      }
+    }
+  }, [displayedText, dialogueText, showConversation, voiceEnabled]);
+
+  // Stop speech when voice is disabled
+  useEffect(() => {
+    if (!voiceEnabled && robotSpeech) {
+      robotSpeech.stop();
+    }
+  }, [voiceEnabled]);
 
   useEffect(() => {
     if (isTyping && displayedText.length < dialogueText.length) {
