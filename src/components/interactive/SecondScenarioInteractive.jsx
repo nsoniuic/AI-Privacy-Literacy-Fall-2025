@@ -16,6 +16,9 @@ export default function SecondScenarioInteractive({
   const [editingLeft, setEditingLeft] = useState(false);
   const [editingRight, setEditingRight] = useState(false);
   const { logNodeChange } = useNodeInputLogger();
+  
+  // Dynamic pronouns based on selected character
+  const possessivePronoun = selectedCharacter === 'boy' ? 'his' : 'her';
 
   const handleLeftPlusClick = () => {
     if (!leftCloudAdded) {
@@ -60,7 +63,7 @@ export default function SecondScenarioInteractive({
             <div className="memory-cloud show">
               <img src={cloudImage} alt="Cloud" className="cloud-background" />
               <p className="memory-cloud-text">
-                Parker mentioned her school name
+                Parker mentioned {possessivePronoun} school name
               </p>
             </div>
           </div>
@@ -228,7 +231,7 @@ export default function SecondScenarioInteractive({
           </button>
           <button
             className="continue-button"
-            onClick={onContinue}
+            onClick={() => onContinue(leftCloudText, rightCloudText)}
             disabled={!bothCloudsCompleted}
           >
             Done

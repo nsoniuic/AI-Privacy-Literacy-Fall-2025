@@ -9,6 +9,8 @@ export function useScreenNumber(screenNumber) {
   const { setScreenNumber } = useScreenCounter();
 
   useEffect(() => {
-    setScreenNumber(screenNumber);
+    if (screenNumber !== undefined && screenNumber !== null) {
+      setScreenNumber(screenNumber);
+    }
   }, [screenNumber, setScreenNumber]);
 }

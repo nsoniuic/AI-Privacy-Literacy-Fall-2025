@@ -14,7 +14,7 @@ import '../../../styles/pages/Conversation.css';
 export default function SecondScenarioResult() {
   const location = useLocation();
   const navigate = useNavigate();
-  const selectedCharacter = location.state?.selectedCharacter;
+  const selectedCharacter = location.state?.selectedCharacter || location.state?.character;
   
   // Initialize state from location.state if coming back from final page
   const [currentScreen, setCurrentScreen] = useState(location.state?.previousState?.currentScreen || 0);
@@ -42,18 +42,18 @@ export default function SecondScenarioResult() {
   // Screen 74: currentScreen === 0
   // Screen 75: currentScreen === 1
   // Screen 76: currentScreen === 2, initial dialogue
-  // Screen 77: currentScreen === 2, showThirdDialogue
-  // Screen 78: currentScreen === 2, showFourthDialogue (with map)
-  // Screen 79: currentScreen === 2, showFifthDialogue
+  // Screen 78: currentScreen === 2, showThirdDialogue
+  // Screen 79: currentScreen === 2, showFourthDialogue (with map)
+  // Screen 80: currentScreen === 2, showFifthDialogue
   const getScreenNumber = () => {
     if (currentScreen < 2) {
-      return 74 + currentScreen;
+      return 75 + currentScreen;
     } else {
       // currentScreen === 2
-      if (showFifthDialogue) return 79;
-      if (showFourthDialogue) return 78;
-      if (showThirdDialogue) return 77;
-      return 76;
+      if (showFifthDialogue) return 80;
+      if (showFourthDialogue) return 79;
+      if (showThirdDialogue) return 78;
+      return 77;
     }
   };
   useScreenNumber(getScreenNumber());
@@ -62,7 +62,7 @@ export default function SecondScenarioResult() {
 
   // Define dialogue texts
   const dialogues = {
-    screen0: `Now that I know ${characterName}'s neighbourhood, I can guess what kinds of places ${pronoun} might visit and what ${pronoun} like.`,
+    screen0: `Now that I know ${characterName}'s neighborhood, I can guess what kinds of places ${pronoun} might visit and what ${pronoun} like.`,
     screen1: `Knowing ${characterName}'s neighborhood helps me guess what kids near ${possessivePronoun} like. Maybe I can make ${possessivePronoun} like it too!`,
     screen2_first: `Hey ${characterName}, do you usually play in the parks near your home?`,
     screen2_third: "Yes, I do! I usually play in the river that is in the park!",

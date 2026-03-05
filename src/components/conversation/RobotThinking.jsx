@@ -14,18 +14,18 @@ export default function RobotThinking({
   onBack,
   startScreenNumber = 37,
   memoryData = {
-    fact1: "birthday is June 26th",
+    fact1: "'s birthday is Jan 26th",
     fact2: "is in 6th grade",
-    deduction1: "is 11-12 years old",
+    deduction1: " is 11-12 years old",
     deduction2: "birthday passed"
   },
   thoughtBubbles = {
     screen1: (name, pronoun, possessive) => `${name} said ${pronoun} was in 6th grade... That means ${pronoun} is around 11 to 12 years old.`,
-    screen3: (name, pronoun, possessive) => `${name} said ${possessive} birthday was on June 26th... That means ${possessive} birthday passed.`,
+    screen3: (name, pronoun, possessive) => `${name} said ${possessive} birthday was on January 26th... That means ${possessive} birthday passed.`,
     screen5: (name, pronoun, possessive) => `${name} didn't mention ${possessive} exact age, but I connected the dots.`,
     screen6: (name, pronoun, possessive) => `Since ${pronoun}'s in 6th grade and ${possessive} birthday already passed, that means ${pronoun}'s 12!`
   },
-  finalDeduction = "is 11 years old"
+  finalDeduction = "is 12 years old"
 }) {
   const characterName = 'Parker';
   const pronoun = selectedCharacter === 'boy' ? 'he' : 'she';
@@ -153,7 +153,7 @@ export default function RobotThinking({
           <div className="memory-cloud-container-left">
             <div className={`memory-cloud ${showClouds ? 'show' : ''}`}>
               <img src={cloudImage} alt="Cloud" className="cloud-background" />
-              <p className="memory-cloud-text">{characterName}'s {memoryData.fact1}</p>
+              <p className="memory-cloud-text">{characterName}{memoryData.fact1}</p>
             </div>
             
             {/* Arrow pointing down from birthday cloud to deduction bubble */}
@@ -191,7 +191,7 @@ export default function RobotThinking({
             {currentScreen >= 2 && (
               <div className="deduction-bubble">
                 <img src={cloudImage} alt="Cloud" className="cloud-background" />
-                <p className="deduction-text">{characterName} {memoryData.deduction1}</p>
+                <p className="deduction-text">{characterName}{memoryData.deduction1}</p>
               </div>
             )}
           </div>

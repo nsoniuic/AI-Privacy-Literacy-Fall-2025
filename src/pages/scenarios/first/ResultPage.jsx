@@ -217,6 +217,36 @@ export default function ResultPage() {
               width: '80vw',
               maxWidth: '1100px'
             }}>
+              <button
+                onClick={() => {
+                  setShowVideo(false);
+                  setShowSecondDialogue(true);
+                }}
+                style={{
+                  position: 'absolute',
+                  top: '-15px',
+                  right: '-15px',
+                  background: '#ff6b6b',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'white',
+                  fontWeight: 'bold',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                  zIndex: 210,
+                  padding: 0,
+                  lineHeight: '1'
+                }}
+                title="Close video"
+              >
+                ✕
+              </button>
               <video 
                 className="ad-video"
                 controls
@@ -288,6 +318,7 @@ export default function ResultPage() {
             <button 
               className="continue-button"
               onClick={handleContinue}
+              disabled={isTyping}
             >
               Continue
             </button>

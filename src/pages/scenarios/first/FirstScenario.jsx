@@ -65,7 +65,7 @@ export default function FirstScenario() {
     },
     {
       speaker: 'character',
-      text: "My birthday is on June 26th!"
+      text: "My birthday is on January 26th!"
     },
   ];
 

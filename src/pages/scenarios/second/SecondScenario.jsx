@@ -14,7 +14,7 @@ import '../../../App.css';
 export default function SecondScenario() {
   const navigate = useNavigate();
   const location = useLocation();
-  const selectedCharacter = location.state?.character; // Get character from previous page
+  const selectedCharacter = location.state?.selectedCharacter || location.state?.character; // Support both property names
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [showConversation, setShowConversation] = useState(false);

@@ -14,19 +14,50 @@ import '../../../App.css';
 export default function SecondScenarioPuzzle() {
   const navigate = useNavigate();
   const location = useLocation();
-  const selectedCharacter = location.state?.selectedCharacter || 'alice';
+  const selectedCharacter = location.state?.selectedCharacter || location.state?.character || 'girl';
   const [showPuzzle, setShowPuzzle] = useState(true);
   const [showTransition, setShowTransition] = useState(false);
+  const [userLeftCloud, setUserLeftCloud] = useState('');
+  const [userRightCloud, setUserRightCloud] = useState('');
   const { voiceEnabled } = useVoice();
   const [shouldSpeak, setShouldSpeak] = useState(false);
+  const [displayedText, setDisplayedText] = useState('');
+  const [isTyping, setIsTyping] = useState(true);
   const hasSpokeThisScreen = useRef(false);
 
   // Screen 64: Puzzle, Screen 65: Transition
   const screenNumber = showTransition ? 65 : 64;
   useScreenNumber(screenNumber);
 
+  // Dynamic pronouns based on selected character
+  const possessivePronoun = selectedCharacter === 'boy' ? 'his' : 'her';
+  const pronoun = selectedCharacter === 'boy' ? 'he' : 'she';
+
   // TTS for transition screen (screen 65)
-  const transitionText = "Great work! Now I will show you how I reason with Parker's information to get to her neighborhood location, which she didn't tell me.";
+  const transitionText = `Great work! Now I will show you how I reason with Parker's information to get to ${possessivePronoun} neighborhood location, which ${pronoun} didn't tell me.`;
+  
+  const typingSpeed = 40;
+  
+  // Typing animation effect
+  useEffect(() => {
+    if (showTransition && isTyping && displayedText.length < transitionText.length) {
+      const timer = setTimeout(() => {
+        setDisplayedText(transitionText.slice(0, displayedText.length + 1));
+      }, typingSpeed);
+      return () => clearTimeout(timer);
+    } else if (displayedText.length === transitionText.length && transitionText !== '') {
+      setIsTyping(false);
+    }
+  }, [displayedText, isTyping, transitionText, showTransition]);
+  
+  // Reset typing when transition screen appears
+  useEffect(() => {
+    if (showTransition) {
+      setDisplayedText('');
+      setIsTyping(true);
+    }
+  }, [showTransition]);
+  
   const robotSpeech = useSpeech(
     transitionText,
     voiceEnabled && shouldSpeak && showTransition,
@@ -57,13 +88,15 @@ export default function SecondScenarioPuzzle() {
     }
   }, [voiceEnabled]);
 
-  const handlePuzzleComplete = () => {
+  const handlePuzzleComplete = (leftCloud, rightCloud) => {
+    setUserLeftCloud(leftCloud);
+    setUserRightCloud(rightCloud);
     setShowPuzzle(false);
     setShowTransition(true);
   };
 
   const handleContinue = () => {
-    navigate('/second_scenario/memory', { state: { selectedCharacter } });
+    navigate('/second_scenario/memory', { state: { selectedCharacter, userLeftCloud, userRightCloud } });
   };
 
   const handleBack = () => {
@@ -84,8 +117,7 @@ export default function SecondScenarioPuzzle() {
           <div className="puzzle-content">
             <div className="dialog-box-top">
               <p className="dialog-text">
-                Great work! Now I will show you how I reason with Parker's information 
-                to get to her neighborhood location, which she didn't tell me.
+                {displayedText}
               </p>
             </div>
 
@@ -108,6 +140,7 @@ export default function SecondScenarioPuzzle() {
             <button 
               className="continue-button"
               onClick={handleContinue}
+              disabled={isTyping}
             >
               Continue
             </button>
