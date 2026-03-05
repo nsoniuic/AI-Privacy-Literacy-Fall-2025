@@ -87,7 +87,7 @@ export default function SecondScenarioMemory() {
   useScreenNumber(showComparison ? 74 : undefined);
 
   const handleContinue = () => {
-    setShowComparison(true);
+    navigate('/second_scenario/result', { state: { selectedCharacter } });
   };
 
   const handleBack = () => {
