@@ -583,7 +583,7 @@
 .robot-avatar .thought-bubble {
   position: relative;
   bottom: auto;
-  left: 20%;
-  transform: none;
+  left: 23%;
+  transform: translateX(-50%);
   margin-bottom: 30px;
 }

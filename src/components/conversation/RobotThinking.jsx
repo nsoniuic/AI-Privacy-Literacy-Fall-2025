@@ -16,8 +16,8 @@ export default function RobotThinking({
   memoryData = {
     fact1: "'s birthday is Jan 26th",
     fact2: "is in 6th grade",
-    deduction1: " is 11-12 years old",
-    deduction2: "birthday passed"
+    deduction1: "age is 11-12 years old",
+    deduction2: "'s birthday passed"
   },
   thoughtBubbles = {
     screen1: (name, pronoun, possessive) => `${name} said ${pronoun} was in 6th grade... That means ${pronoun} is around 11 to 12 years old.`,
