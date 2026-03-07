@@ -365,23 +365,26 @@ export default function ConversationContainer({
     <>
       {currentScreen === 'thinking' ? (
         // AI thinking to itself screen
-        <div className="robot-thinking-container">
-          <div className="robot-thinking-content">
-            {/* Large thought bubble */}
-            <div className="large-thought-bubble">
-              <p className="thought-text">{thoughtText}</p>
-            </div>
+        <>
+          <div className="robot-thinking-container">
+            <div className="robot-thinking-content">
+              {/* Large thought bubble */}
+              <div className="large-thought-bubble">
+                <p className="thought-text">{thoughtText}</p>
+              </div>
 
-            {/* Robot image */}
-            <div className="conversation-robot-image-container">
-              <img 
-                src={robotHappyImage} 
-                alt="Robot" 
-                className="robot-thinking-image"
-              />
+              {/* Robot image */}
+              <div className="conversation-robot-image-container">
+                <img 
+                  src={robotHappyImage} 
+                  alt="Robot" 
+                  className="robot-thinking-image"
+                />
+              </div>
             </div>
+          </div>
 
-            {/* Continue button */}
+          <div className="navigation-buttons">
             <button 
               className="continue-button"
               onClick={handleContinueClick}
@@ -389,7 +392,7 @@ export default function ConversationContainer({
               Continue
             </button>
           </div>
-        </div>
+        </>
       ) : (
         <>
           <div className="characters-container">

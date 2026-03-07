@@ -33,7 +33,7 @@ export default function SecondScenario() {
   const conversation = [
     {
       speaker: 'robot',
-      text: "Hey Parker, good to see you again! Did you just got back from school?"
+      text: "Hey Parker, good to see you again! Did you just get back from school?"
     },
     {
       speaker: 'character',

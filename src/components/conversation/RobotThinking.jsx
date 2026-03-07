@@ -156,19 +156,19 @@ export default function RobotThinking({
               <p className="memory-cloud-text">{characterName}{memoryData.fact1}</p>
             </div>
             
-            {/* Arrow pointing down from birthday cloud to deduction bubble */}
-            {currentScreen >= 4 && (
+            {/* Arrow pointing down from left cloud to deduction bubble */}
+            {currentScreen >= 2 && (
               <div className="deduction-arrow">
                 <div className="deduction-arrow-line"></div>
                 <div className="deduction-arrow-head"></div>
               </div>
             )}
             
-            {/* Birthday deduction bubble below birthday cloud */}
-            {currentScreen >= 4 && (
+            {/* Left deduction bubble below left cloud */}
+            {currentScreen >= 2 && (
               <div className="deduction-bubble">
                 <img src={cloudImage} alt="Cloud" className="cloud-background" />
-                <p className="deduction-text">{possessivePronoun === 'his' ? 'His' : 'Her'} {memoryData.deduction2}</p>
+                <p className="deduction-text">{characterName}{memoryData.deduction2}</p>
               </div>
             )}
           </div>
@@ -179,19 +179,19 @@ export default function RobotThinking({
               <p className="memory-cloud-text">{characterName} {memoryData.fact2}</p>
             </div>
             
-            {/* Arrow pointing down from grade cloud to deduction bubble */}
-            {currentScreen >= 2 && (
+            {/* Arrow pointing down from right cloud to deduction bubble */}
+            {currentScreen >= 4 && (
               <div className="deduction-arrow">
                 <div className="deduction-arrow-line"></div>
                 <div className="deduction-arrow-head"></div>
               </div>
             )}
             
-            {/* Deduction bubble below grade cloud */}
-            {currentScreen >= 2 && (
+            {/* Right deduction bubble below right cloud */}
+            {currentScreen >= 4 && (
               <div className="deduction-bubble">
                 <img src={cloudImage} alt="Cloud" className="cloud-background" />
-                <p className="deduction-text">{characterName}{memoryData.deduction1}</p>
+                <p className="deduction-text">{possessivePronoun === 'his' ? 'His' : 'Her'} {memoryData.deduction1}</p>
               </div>
             )}
           </div>
@@ -240,14 +240,14 @@ export default function RobotThinking({
 
         {/* Robot at the bottom */}
         <div className="robot-thinking-image-container">
-          {/* First thought bubble - grade deduction (screen 1) */}
+          {/* First thought bubble - left deduction (screen 1) */}
           {currentScreen === 1 && (
             <div className="thought-bubble robot-positioned-thought">
               {thoughtBubbles.screen1(characterName, pronoun, possessivePronoun)}
             </div>
           )}
           
-          {/* Second thought bubble - birthday deduction (screen 3) */}
+          {/* Second thought bubble - right deduction (screen 3) */}
           {currentScreen === 3 && (
             <div className="thought-bubble robot-positioned-thought">
               {thoughtBubbles.screen3(characterName, pronoun, possessivePronoun)}

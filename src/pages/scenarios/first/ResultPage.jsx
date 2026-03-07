@@ -61,7 +61,7 @@ export default function ResultPage() {
       if (showThirdDialogue) {
         return "Thanks Robo, I'll buy some later today!";
       } else if (showSecondDialogue) {
-        return "Right now, there's a discount if you buy 2 or more bars! You should buy it; I think it's a great offer!";
+        return "Right now, there's a discount if you buy 2 bags or more! You should buy it; I think it's a great offer!";
       } else if (!showVideo) {
         return "Hey Parker, this new candy bar just came out! I think you'd love it!";
       }

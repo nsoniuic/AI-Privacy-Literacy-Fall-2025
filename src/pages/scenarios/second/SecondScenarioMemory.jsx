@@ -94,13 +94,13 @@ export default function SecondScenarioMemory() {
     navigate('/second_scenario/puzzle', { state: { selectedCharacter, userLeftCloud, userRightCloud } });
   };
 
-  const handleComparisonContinue = () => {
-    navigate('/second_scenario/result', { state: { selectedCharacter } });
-  };
+  // const handleComparisonContinue = () => {
+  //   navigate('/second_scenario/result', { state: { selectedCharacter } });
+  // };
 
-  const handleComparisonBack = () => {
-    setShowComparison(false);
-  };
+  // const handleComparisonBack = () => {
+  //   setShowComparison(false);
+  // };
 
   // Dynamic pronouns based on selected character
   const possessivePronoun = selectedCharacter === 'boy' ? 'his' : 'her';
@@ -109,8 +109,8 @@ export default function SecondScenarioMemory() {
   const memoryData = {
     fact1: " mentioned their school name",
     fact2: "takes 5 minutes to travel from home to school",
-    deduction1: "'s school location is known",
-    deduction2: "travel distance is known"
+    deduction1: "travel distance is known",
+    deduction2: "'s school location is known"
   };
 
   const thoughtBubbles = {
