@@ -284,6 +284,94 @@
   }
 }
 
+/* Handle short viewport heights */
+@media (max-height: 650px) {
+  .thought-bubble {
+    min-width: 280px;
+    max-width: 350px;
+    padding: 35px 45px;
+  }
+
+  .thought-bubble::before {
+    width: 20px;
+    height: 20px;
+    bottom: -25px;
+  }
+
+  .thought-bubble::after {
+    width: 12px;
+    height: 12px;
+    bottom: -40px;
+  }
+
+  .large-thought-bubble {
+    min-width: 320px;
+    max-width: 420px;
+    padding: 50px 45px;
+  }
+
+  .large-thought-bubble::before {
+    width: 28px;
+    height: 28px;
+    bottom: -38px;
+  }
+
+  .large-thought-bubble::after {
+    width: 18px;
+    height: 18px;
+    bottom: -60px;
+  }
+
+  .thought-text {
+    font-size: 18px;
+    line-height: 1.5;
+  }
+}
+
+/* Even more compact for very short viewports */
+@media (max-height: 500px) {
+  .thought-bubble {
+    min-width: 240px;
+    max-width: 300px;
+    padding: 25px 35px;
+  }
+
+  .thought-bubble::before {
+    width: 16px;
+    height: 16px;
+    bottom: -20px;
+  }
+
+  .thought-bubble::after {
+    width: 10px;
+    height: 10px;
+    bottom: -32px;
+  }
+
+  .large-thought-bubble {
+    min-width: 280px;
+    max-width: 360px;
+    padding: 35px 35px;
+  }
+
+  .large-thought-bubble::before {
+    width: 24px;
+    height: 24px;
+    bottom: -32px;
+  }
+
+  .large-thought-bubble::after {
+    width: 15px;
+    height: 15px;
+    bottom: -50px;
+  }
+
+  .thought-text {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+}
+
 /* Final Screen Styles */
 .final-screen-container {
   width: 100%;

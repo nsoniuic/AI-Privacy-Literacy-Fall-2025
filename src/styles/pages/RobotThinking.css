@@ -766,3 +766,243 @@
     height: 80px;
   }
 }
+
+/* Handle short viewport heights */
+@media (max-height: 650px) {
+  .robot-thinking-container {
+    padding: 20px 20px 80px 20px;
+  }
+
+  .robot-thinking-content {
+    max-width: 700px;
+    gap: 10px;
+  }
+
+  .memory-clouds-container {
+    gap: 50px;
+    max-width: 600px;
+  }
+
+  .memory-cloud {
+    min-width: 200px;
+    max-width: 260px;
+    padding: 50px 30px 30px 30px;
+  }
+
+  .memory-cloud-text {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .deduction-bubble {
+    min-width: 200px;
+    max-width: 260px;
+    padding: 50px 30px 30px 30px;
+  }
+
+  .deduction-text {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .arrows-container {
+    height: 70px;
+  }
+
+  .arrow-line {
+    height: 80px;
+  }
+
+  .brain-icon-large {
+    font-size: 100px;
+  }
+
+  .robot-thinking-image {
+    max-width: 120px;
+    max-height: 150px;
+  }
+
+  .converging-arrows {
+    gap: 180px;
+    height: 50px;
+  }
+
+  .converging-arrow-line {
+    height: 40px;
+  }
+
+  .final-deduction-bubble {
+    min-width: 200px;
+    max-width: 260px;
+    padding: 45px 30px 30px 30px;
+  }
+
+  .final-deduction-bubble .deduction-text {
+    font-size: 12px;
+  }
+
+  .deduction-input {
+    font-size: 13px;
+  }
+
+  .interactive {
+    padding: 35px 50px;
+    min-width: 280px;
+    max-width: 340px;
+  }
+
+  .robot-positioned-thought {
+    min-width: 180px;
+    max-width: 230px;
+    padding: 45px 25px 25px 25px;
+  }
+
+  .robot-positioned-thought .memory-cloud-text {
+    font-size: 11px;
+  }
+
+  .add-cloud-button {
+    width: 50px;
+    height: 50px;
+    font-size: 28px;
+    bottom: -50px;
+  }
+
+  .instruction-box {
+    max-width: 250px;
+    padding: 12px 20px;
+  }
+
+  .instruction-text {
+    font-size: 13px;
+  }
+}
+
+/* Even more compact for very short viewports */
+@media (max-height: 500px) {
+  .robot-thinking-container {
+    padding: 15px 15px 60px 15px;
+    min-height: auto;
+  }
+
+  .robot-thinking-content {
+    max-width: 600px;
+    gap: 5px;
+  }
+
+  .memory-clouds-container {
+    gap: 30px;
+    max-width: 500px;
+  }
+
+  .memory-cloud {
+    min-width: 160px;
+    max-width: 200px;
+    padding: 40px 24px 24px 24px;
+  }
+
+  .memory-cloud-text {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .deduction-bubble {
+    min-width: 160px;
+    max-width: 200px;
+    padding: 40px 24px 24px 24px;
+  }
+
+  .deduction-text {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .arrows-container {
+    height: 50px;
+  }
+
+  .arrow-line {
+    height: 60px;
+  }
+
+  .brain-icon-large {
+    font-size: 70px;
+  }
+
+  .robot-thinking-image {
+    max-width: 100px;
+    max-height: 120px;
+  }
+
+  .converging-arrows {
+    gap: 120px;
+    height: 40px;
+  }
+
+  .converging-arrow-line {
+    height: 30px;
+  }
+
+  .final-deduction-bubble {
+    min-width: 160px;
+    max-width: 200px;
+    padding: 35px 24px 24px 24px;
+  }
+
+  .final-deduction-bubble .deduction-text {
+    font-size: 10px;
+  }
+
+  .deduction-input {
+    font-size: 11px;
+  }
+
+  .interactive {
+    padding: 30px 40px;
+    min-width: 240px;
+    max-width: 300px;
+  }
+
+  .robot-positioned-thought {
+    min-width: 140px;
+    max-width: 180px;
+    padding: 35px 20px 20px 20px;
+  }
+
+  .robot-positioned-thought .memory-cloud-text {
+    font-size: 9px;
+  }
+
+  .add-cloud-button {
+    width: 45px;
+    height: 45px;
+    font-size: 24px;
+    bottom: -40px;
+  }
+
+  .instruction-box {
+    max-width: 200px;
+    padding: 10px 16px;
+  }
+
+  .instruction-text {
+    font-size: 11px;
+  }
+
+  .deduction-arrow-line {
+    height: 30px;
+  }
+
+  .arrow-segment-bottom .converging-arrow-line {
+    height: 70px;
+  }
+
+  .interactive-arrows-container {
+    gap: 60px;
+  }
+
+  .arrow-with-cloud-left,
+  .arrow-with-cloud-right {
+    width: 160px;
+  }
+}

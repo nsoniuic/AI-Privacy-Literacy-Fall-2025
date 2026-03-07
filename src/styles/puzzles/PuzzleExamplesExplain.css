@@ -333,3 +333,87 @@
     font-size: 28px;
   }
 }
+
+/* Handle short viewport heights */
+@media (max-height: 650px) {
+  .sample-puzzle-container {
+    padding: 15px;
+    margin: 10px auto;
+  }
+
+  .sample-puzzle-title {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .sample-puzzle-grids {
+    gap: 20px;
+  }
+
+  .sample-puzzle-side {
+    gap: 6px;
+  }
+
+  .sample-label {
+    font-size: 14px;
+  }
+
+  .sample-grid-container {
+    padding: 10px;
+  }
+
+  .sample-grid-container .grid-cell {
+    width: 18px;
+    height: 18px;
+  }
+
+  .sample-puzzle-image {
+    max-width: 200px;
+  }
+
+  .sample-arrow-large {
+    font-size: 40px;
+  }
+}
+
+/* Even more compact for very short viewports */
+@media (max-height: 500px) {
+  .sample-puzzle-container {
+    padding: 10px;
+    margin: 5px auto;
+  }
+
+  .sample-puzzle-title {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .sample-puzzle-grids {
+    gap: 15px;
+  }
+
+  .sample-puzzle-side {
+    gap: 4px;
+  }
+
+  .sample-label {
+    font-size: 12px;
+  }
+
+  .sample-grid-container {
+    padding: 8px;
+  }
+
+  .sample-grid-container .grid-cell {
+    width: 14px;
+    height: 14px;
+  }
+
+  .sample-puzzle-image {
+    max-width: 160px;
+  }
+
+  .sample-arrow-large {
+    font-size: 32px;
+  }
+}

@@ -214,8 +214,9 @@ export default function ResultPage() {
               left: '50%', 
               transform: 'translate(-50%, -50%)',
               zIndex: 200,
-              width: '80vw',
-              maxWidth: '1100px'
+              width: window.innerHeight < 650 ? '85vw' : '80vw',
+              maxWidth: window.innerHeight < 650 ? '900px' : '1100px',
+              maxHeight: window.innerHeight < 650 ? '70vh' : '85vh'
             }}>
               <button
                 onClick={() => {
@@ -229,9 +230,9 @@ export default function ResultPage() {
                   background: '#ff6b6b',
                   border: 'none',
                   borderRadius: '50%',
-                  width: '40px',
-                  height: '40px',
-                  fontSize: '24px',
+                  width: window.innerHeight < 650 ? '32px' : '40px',
+                  height: window.innerHeight < 650 ? '32px' : '40px',
+                  fontSize: window.innerHeight < 650 ? '18px' : '24px',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -254,6 +255,7 @@ export default function ResultPage() {
                 style={{ 
                   width: '100%',
                   height: 'auto',
+                  maxHeight: window.innerHeight < 650 ? '60vh' : '75vh',
                   borderRadius: '15px',
                   boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)'
                 }}

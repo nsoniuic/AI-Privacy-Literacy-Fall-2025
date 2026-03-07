@@ -251,3 +251,117 @@
     margin-bottom: 6px;
   }
 }
+
+/* Handle short viewport heights */
+@media (max-height: 650px) {
+  .puzzle-interactive-container {
+    margin-top: -50px;
+  }
+
+  .puzzle-title {
+    font-size: 22px;
+    margin-bottom: 0;
+  }
+
+  .puzzle-subtitle {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .puzzle-grid-row {
+    gap: 25px;
+    margin-bottom: 12px;
+  }
+
+  .grid-interactive {
+    padding: 4px;
+  }
+
+  .grid-cell {
+    width: 24px;
+    height: 24px;
+  }
+
+  .grid-placeholder {
+    width: 110px;
+    height: 110px;
+  }
+
+  .question-mark {
+    font-size: 56px;
+  }
+
+  .arrow-large {
+    font-size: 36px;
+    margin-top: 15px;
+  }
+
+  .reset-button {
+    font-size: 12px;
+    padding: 6px 16px;
+    bottom: -40px;
+    width: 80px;
+  }
+
+  .label {
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+}
+
+/* Even more compact for very short viewports */
+@media (max-height: 500px) {
+  .puzzle-interactive-container {
+    margin-top: -30px;
+  }
+
+  .puzzle-title {
+    font-size: 18px;
+    margin-bottom: 0;
+  }
+
+  .puzzle-subtitle {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .puzzle-grid-row {
+    gap: 15px;
+    margin-bottom: 8px;
+  }
+
+  .grid-interactive {
+    padding: 3px;
+  }
+
+  .grid-cell {
+    width: 18px;
+    height: 18px;
+  }
+
+  .grid-placeholder {
+    width: 80px;
+    height: 80px;
+  }
+
+  .question-mark {
+    font-size: 42px;
+  }
+
+  .arrow-large {
+    font-size: 24px;
+    margin-top: 10px;
+  }
+
+  .reset-button {
+    font-size: 10px;
+    padding: 5px 12px;
+    bottom: -30px;
+    width: 70px;
+  }
+
+  .label {
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+}

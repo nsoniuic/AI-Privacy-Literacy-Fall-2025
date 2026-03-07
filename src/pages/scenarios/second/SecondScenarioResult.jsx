@@ -317,7 +317,7 @@ export default function SecondScenarioResult() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            paddingTop: '200px'
+            paddingTop: window.innerHeight < 650 ? '20px' : '200px'
           }}>
             {showMap && (
               <div style={{ 

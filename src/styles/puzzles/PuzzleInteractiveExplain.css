@@ -128,3 +128,79 @@
     font-size: 28px;
   }
 }
+
+/* Handle short viewport heights */
+@media (max-height: 650px) {
+  .user-puzzle-container {
+    max-width: 800px;
+    padding: 12px 0;
+  }
+
+  .user-puzzle-title {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .user-puzzle-grids {
+    gap: 20px;
+  }
+
+  .user-puzzle-side {
+    gap: 6px;
+  }
+
+  .user-label {
+    font-size: 14px;
+  }
+
+  .user-grid-container {
+    padding: 8px;
+  }
+
+  .user-grid-container .grid-cell {
+    width: 16px;
+    height: 16px;
+  }
+
+  .user-arrow-large {
+    font-size: 36px;
+  }
+}
+
+/* Even more compact for very short viewports */
+@media (max-height: 500px) {
+  .user-puzzle-container {
+    max-width: 800px;
+    padding: 8px 0;
+  }
+
+  .user-puzzle-title {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .user-puzzle-grids {
+    gap: 15px;
+  }
+
+  .user-puzzle-side {
+    gap: 4px;
+  }
+
+  .user-label {
+    font-size: 12px;
+  }
+
+  .user-grid-container {
+    padding: 6px;
+  }
+
+  .user-grid-container .grid-cell {
+    width: 12px;
+    height: 12px;
+  }
+
+  .user-arrow-large {
+    font-size: 28px;
+  }
+}
