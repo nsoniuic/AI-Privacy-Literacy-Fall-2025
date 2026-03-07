@@ -190,10 +190,10 @@
   position: relative;
   background-color: rgba(255, 250, 205, 0.95);
   border-radius: 20px;
-  padding: 30px 40px;
+  padding: 25px 35px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  max-width: 500px;
-  min-width: 350px;
+  max-width: 400px;
+  min-width: 350px;  
   z-index: 10;
   margin-bottom: 30px;
   transition: all 0.3s ease;
@@ -261,7 +261,7 @@
   justify-content: center;
   align-items: center;
   margin-top: 120px;
-  padding-bottom: 100px;
+  padding-bottom: 20px;
 }
 
 /* Animated connection for thought bubble */
@@ -583,7 +583,7 @@
 .robot-avatar .thought-bubble {
   position: relative;
   bottom: auto;
-  left: 20%;
-  transform: none;
+  left: 23%;
+  transform: translateX(-50%);
   margin-bottom: 30px;
 }

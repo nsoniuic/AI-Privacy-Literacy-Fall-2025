@@ -24,7 +24,7 @@ export default function FinalMessage() {
   const hasSpokeThisScreen = useRef(false);
 
   // Screen 80: first message, Screen 81: second message
-  const screenNumber = showSecondMessage ? 81 : 80;
+  const screenNumber = showSecondMessage ? 82 : 81;
   useScreenNumber(screenNumber);
 
   const typingSpeed = 40;

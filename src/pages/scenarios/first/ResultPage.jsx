@@ -61,7 +61,7 @@ export default function ResultPage() {
       if (showThirdDialogue) {
         return "Thanks Robo, I'll buy some later today!";
       } else if (showSecondDialogue) {
-        return "Right now, there's a discount if you buy 2 or more bars! You should buy it; I think it's a great offer!";
+        return "Right now, there's a discount if you buy 2 bags or more! You should buy it; I think it's a great offer!";
       } else if (!showVideo) {
         return "Hey Parker, this new candy bar just came out! I think you'd love it!";
       }
@@ -217,6 +217,36 @@ export default function ResultPage() {
               width: '80vw',
               maxWidth: '1100px'
             }}>
+              <button
+                onClick={() => {
+                  setShowVideo(false);
+                  setShowSecondDialogue(true);
+                }}
+                style={{
+                  position: 'absolute',
+                  top: '-15px',
+                  right: '-15px',
+                  background: '#ff6b6b',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'white',
+                  fontWeight: 'bold',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                  zIndex: 210,
+                  padding: 0,
+                  lineHeight: '1'
+                }}
+                title="Close video"
+              >
+                ✕
+              </button>
               <video 
                 className="ad-video"
                 controls
@@ -288,6 +318,7 @@ export default function ResultPage() {
             <button 
               className="continue-button"
               onClick={handleContinue}
+              disabled={isTyping}
             >
               Continue
             </button>

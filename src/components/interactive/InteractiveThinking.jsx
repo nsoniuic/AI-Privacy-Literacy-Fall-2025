@@ -75,7 +75,7 @@ export default function InteractiveThinking({
             <div className="memory-cloud show">
               <img src={cloudImage} alt="Cloud" className="cloud-background" />
               <p className="memory-cloud-text">
-                {characterName}'s birthday is July 12th
+                {characterName}'s birthday is March 4th
               </p>
             </div>
 

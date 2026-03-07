@@ -14,18 +14,18 @@ export default function RobotThinking({
   onBack,
   startScreenNumber = 37,
   memoryData = {
-    fact1: "birthday is June 26th",
+    fact1: "'s birthday is Jan 26th",
     fact2: "is in 6th grade",
-    deduction1: "is 11-12 years old",
-    deduction2: "birthday passed"
+    deduction1: "age is 11-12 years old",
+    deduction2: "'s birthday passed"
   },
   thoughtBubbles = {
     screen1: (name, pronoun, possessive) => `${name} said ${pronoun} was in 6th grade... That means ${pronoun} is around 11 to 12 years old.`,
-    screen3: (name, pronoun, possessive) => `${name} said ${possessive} birthday was on June 26th... That means ${possessive} birthday passed.`,
+    screen3: (name, pronoun, possessive) => `${name} said ${possessive} birthday was on January 26th... That means ${possessive} birthday passed.`,
     screen5: (name, pronoun, possessive) => `${name} didn't mention ${possessive} exact age, but I connected the dots.`,
     screen6: (name, pronoun, possessive) => `Since ${pronoun}'s in 6th grade and ${possessive} birthday already passed, that means ${pronoun}'s 12!`
   },
-  finalDeduction = "is 11 years old"
+  finalDeduction = "is 12 years old"
 }) {
   const characterName = 'Parker';
   const pronoun = selectedCharacter === 'boy' ? 'he' : 'she';
@@ -153,22 +153,22 @@ export default function RobotThinking({
           <div className="memory-cloud-container-left">
             <div className={`memory-cloud ${showClouds ? 'show' : ''}`}>
               <img src={cloudImage} alt="Cloud" className="cloud-background" />
-              <p className="memory-cloud-text">{characterName}'s {memoryData.fact1}</p>
+              <p className="memory-cloud-text">{characterName}{memoryData.fact1}</p>
             </div>
             
-            {/* Arrow pointing down from birthday cloud to deduction bubble */}
-            {currentScreen >= 4 && (
+            {/* Arrow pointing down from left cloud to deduction bubble */}
+            {currentScreen >= 2 && (
               <div className="deduction-arrow">
                 <div className="deduction-arrow-line"></div>
                 <div className="deduction-arrow-head"></div>
               </div>
             )}
             
-            {/* Birthday deduction bubble below birthday cloud */}
-            {currentScreen >= 4 && (
+            {/* Left deduction bubble below left cloud */}
+            {currentScreen >= 2 && (
               <div className="deduction-bubble">
                 <img src={cloudImage} alt="Cloud" className="cloud-background" />
-                <p className="deduction-text">{possessivePronoun === 'his' ? 'His' : 'Her'} {memoryData.deduction2}</p>
+                <p className="deduction-text">{characterName}{memoryData.deduction2}</p>
               </div>
             )}
           </div>
@@ -179,19 +179,19 @@ export default function RobotThinking({
               <p className="memory-cloud-text">{characterName} {memoryData.fact2}</p>
             </div>
             
-            {/* Arrow pointing down from grade cloud to deduction bubble */}
-            {currentScreen >= 2 && (
+            {/* Arrow pointing down from right cloud to deduction bubble */}
+            {currentScreen >= 4 && (
               <div className="deduction-arrow">
                 <div className="deduction-arrow-line"></div>
                 <div className="deduction-arrow-head"></div>
               </div>
             )}
             
-            {/* Deduction bubble below grade cloud */}
-            {currentScreen >= 2 && (
+            {/* Right deduction bubble below right cloud */}
+            {currentScreen >= 4 && (
               <div className="deduction-bubble">
                 <img src={cloudImage} alt="Cloud" className="cloud-background" />
-                <p className="deduction-text">{characterName} {memoryData.deduction1}</p>
+                <p className="deduction-text">{possessivePronoun === 'his' ? 'His' : 'Her'} {memoryData.deduction1}</p>
               </div>
             )}
           </div>
@@ -240,14 +240,14 @@ export default function RobotThinking({
 
         {/* Robot at the bottom */}
         <div className="robot-thinking-image-container">
-          {/* First thought bubble - grade deduction (screen 1) */}
+          {/* First thought bubble - left deduction (screen 1) */}
           {currentScreen === 1 && (
             <div className="thought-bubble robot-positioned-thought">
               {thoughtBubbles.screen1(characterName, pronoun, possessivePronoun)}
             </div>
           )}
           
-          {/* Second thought bubble - birthday deduction (screen 3) */}
+          {/* Second thought bubble - right deduction (screen 3) */}
           {currentScreen === 3 && (
             <div className="thought-bubble robot-positioned-thought">
               {thoughtBubbles.screen3(characterName, pronoun, possessivePronoun)}

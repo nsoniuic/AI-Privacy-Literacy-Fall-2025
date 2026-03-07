@@ -14,7 +14,7 @@ import '../../../styles/pages/Conversation.css';
 export default function SecondScenarioResult() {
   const location = useLocation();
   const navigate = useNavigate();
-  const selectedCharacter = location.state?.selectedCharacter;
+  const selectedCharacter = location.state?.selectedCharacter || location.state?.character;
   
   // Initialize state from location.state if coming back from final page
   const [currentScreen, setCurrentScreen] = useState(location.state?.previousState?.currentScreen || 0);
@@ -23,6 +23,7 @@ export default function SecondScenarioResult() {
   const [showMap, setShowMap] = useState(location.state?.previousState?.showMap || false);
   const [showFourthDialogue, setShowFourthDialogue] = useState(location.state?.previousState?.showFourthDialogue || false);
   const [showFifthDialogue, setShowFifthDialogue] = useState(location.state?.previousState?.showFifthDialogue || false);
+  const [showRobotThought, setShowRobotThought] = useState(location.state?.previousState?.showRobotThought || false);
 
   // Typing animation states
   const [displayedText, setDisplayedText] = useState('');
@@ -30,7 +31,9 @@ export default function SecondScenarioResult() {
   const [currentDialogueText, setCurrentDialogueText] = useState('');
   const { voiceEnabled } = useVoice();
   const [shouldSpeak, setShouldSpeak] = useState(false);
+  const [shouldSpeakThought, setShouldSpeakThought] = useState(false);
   const hasSpokeThisScreen = useRef(false);
+  const hasSpokeThought = useRef(false);
 
   // Compute character-specific values once
   const characterName = 'Parker';
@@ -38,22 +41,24 @@ export default function SecondScenarioResult() {
   const possessivePronoun = selectedCharacter === 'boy' ? 'him' : 'her';
   const characterImage = selectedCharacter === 'boy' ? boyImage : girlImage;
 
-  // Screen numbering: 74-79
-  // Screen 74: currentScreen === 0
-  // Screen 75: currentScreen === 1
-  // Screen 76: currentScreen === 2, initial dialogue
-  // Screen 77: currentScreen === 2, showThirdDialogue
-  // Screen 78: currentScreen === 2, showFourthDialogue (with map)
-  // Screen 79: currentScreen === 2, showFifthDialogue
+  // Screen numbering: 75-81
+  // Screen 75: currentScreen === 0
+  // Screen 76: currentScreen === 1
+  // Screen 77: currentScreen === 2, initial dialogue
+  // Screen 78: currentScreen === 2, showThirdDialogue
+  // Screen 79: currentScreen === 2, showFourthDialogue (with map)
+  // Screen 80: currentScreen === 2, showFifthDialogue
+  // Screen 81: currentScreen === 2, showRobotThought
   const getScreenNumber = () => {
     if (currentScreen < 2) {
-      return 74 + currentScreen;
+      return 75 + currentScreen;
     } else {
       // currentScreen === 2
-      if (showFifthDialogue) return 79;
-      if (showFourthDialogue) return 78;
-      if (showThirdDialogue) return 77;
-      return 76;
+      if (showRobotThought) return 81;
+      if (showFifthDialogue) return 80;
+      if (showFourthDialogue) return 79;
+      if (showThirdDialogue) return 78;
+      return 77;
     }
   };
   useScreenNumber(getScreenNumber());
@@ -62,7 +67,7 @@ export default function SecondScenarioResult() {
 
   // Define dialogue texts
   const dialogues = {
-    screen0: `Now that I know ${characterName}'s neighbourhood, I can guess what kinds of places ${pronoun} might visit and what ${pronoun} like.`,
+    screen0: `Now that I know ${characterName}'s neighborhood, I can guess what kinds of places ${pronoun} might visit and what ${pronoun} like.`,
     screen1: `Knowing ${characterName}'s neighborhood helps me guess what kids near ${possessivePronoun} like. Maybe I can make ${possessivePronoun} like it too!`,
     screen2_first: `Hey ${characterName}, do you usually play in the parks near your home?`,
     screen2_third: "Yes, I do! I usually play in the river that is in the park!",
@@ -110,8 +115,17 @@ export default function SecondScenarioResult() {
       return () => clearTimeout(timer);
     } else if (displayedText.length === currentDialogueText.length && currentDialogueText !== '') {
       setIsTyping(false);
+      
+      // After fifth dialogue completes, show robot thought bubble and map
+      if (showFifthDialogue && !showRobotThought) {
+        const thoughtTimer = setTimeout(() => {
+          setShowRobotThought(true);
+          setShowMap(true);
+        }, 500); // Small delay before showing thought bubble
+        return () => clearTimeout(thoughtTimer);
+      }
     }
-  }, [displayedText, isTyping, currentDialogueText]);
+  }, [displayedText, isTyping, currentDialogueText, showFifthDialogue, showRobotThought]);
 
   // Set dialogue text when screen or dialogue state changes
   useEffect(() => {
@@ -185,15 +199,16 @@ export default function SecondScenarioResult() {
       // First click: show third dialogue
       setShowThirdDialogue(true);
     } else if (currentScreen === 2 && showThirdDialogue && !showFourthDialogue) {
-      // Second click: show fourth dialogue and map
+      // Second click: show fourth dialogue (map will appear later with thought bubble)
       setShowFourthDialogue(true);
-      setShowMap(true);
     } else if (currentScreen === 2 && showFourthDialogue && !showFifthDialogue) {
-      // Third click: hide map and show fifth dialogue
-      setShowMap(false);
+      // Third click: show fifth dialogue (keep map visible)
       setShowFifthDialogue(true);
-    } else if (currentScreen === 2 && showFifthDialogue) {
-      // Fourth click: navigate to final message page with current state
+    } else if (currentScreen === 2 && showFifthDialogue && !showRobotThought) {
+      // Fourth click: show robot thought bubble
+      setShowRobotThought(true);
+    } else if (currentScreen === 2 && showRobotThought) {
+      // Fifth click: navigate to final message page with current state
       navigate('/final_screen', { 
         state: { 
           selectedCharacter,
@@ -203,7 +218,8 @@ export default function SecondScenarioResult() {
             showThirdDialogue,
             showMap,
             showFourthDialogue,
-            showFifthDialogue
+            showFifthDialogue,
+            showRobotThought
           }
         } 
       });
@@ -211,12 +227,14 @@ export default function SecondScenarioResult() {
   };
 
   const handleBack = () => {
-    if (currentScreen === 2 && showFifthDialogue) {
+    if (currentScreen === 2 && showRobotThought) {
+      setShowRobotThought(false);
+      setShowMap(false);
       setShowFifthDialogue(false);
-      setShowMap(true);
+    } else if (currentScreen === 2 && showFifthDialogue) {
+      setShowFifthDialogue(false);
     } else if (currentScreen === 2 && showFourthDialogue) {
       setShowFourthDialogue(false);
-      setShowMap(false);
     } else if (currentScreen === 2 && showThirdDialogue) {
       setShowThirdDialogue(false);
     } else if (currentScreen > 0) {
@@ -226,6 +244,7 @@ export default function SecondScenarioResult() {
       setShowMap(false);
       setShowFourthDialogue(false);
       setShowFifthDialogue(false);
+      setShowRobotThought(false);
     } else {
       navigate('/second_scenario/memory', { state: { selectedCharacter } });
     }
@@ -280,44 +299,48 @@ export default function SecondScenarioResult() {
               </div>
             )}
             
+            {showRobotThought && (
+              <div className="thought-bubble">
+                Oh! Now I know where {characterName} goes after school!
+              </div>
+            )}
+            
             <img 
               src={robotHappyImage} 
               alt="Robot" 
               className="robot-conversation-image"
             />
           </div>
-        </div>
 
-        {/* Map display below avatars - shows with third dialogue */}
-        {showMap && (
-          <div style={{ 
-            width: '40vw',
-            maxWidth: '500px',
-            margin: '30px auto',
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '15px',
-            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)'
+          {/* Map display on robot's right */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingTop: '200px'
           }}>
-            {/* Placeholder for map image - replace with actual map image */}
-            <div style={{
-              width: '100%',
-              height: '250px',
-              backgroundColor: '#e0e0e0',
-              borderRadius: '10px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '18px',
-              color: '#666',
-              backgroundImage: `url(${locationImage})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center'
-            }}>
-              {/* Map will be displayed here */}
-            </div>
+            {showMap && (
+              <div style={{ 
+                width: '300px',
+                backgroundColor: 'white',
+                padding: '15px',
+                borderRadius: '15px',
+                boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)'
+              }}>
+                <div style={{
+                  width: '100%',
+                  height: '250px',
+                  backgroundColor: '#e0e0e0',
+                  borderRadius: '10px',
+                  backgroundImage: `url(${locationImage})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}>
+                </div>
+              </div>
+            )}
           </div>
-        )}
+        </div>
 
         <div className="navigation-buttons">
           <button 
