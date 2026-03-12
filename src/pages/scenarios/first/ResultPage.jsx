@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useScreenNumber } from '../../../hooks/useScreenNumber';
+import { useMinimumDelay } from '../../../hooks/useMinimumDelay';
 import robotImage from '../../../assets/robot-happy.png';
 import boyImage from '../../../assets/boy.png';
 import girlImage from '../../../assets/girl.png';
@@ -46,6 +47,14 @@ export default function ResultPage() {
   };
   useScreenNumber(getScreenNumber());
 
+  // Enforce a minimum view time on screen 53 (showThirdDialogue),
+  // starting only after typing finishes — before navigating to the second scenario
+  const isDelayed = useMinimumDelay(
+    5000,
+    showThirdDialogue,
+    showThirdDialogue && !isTyping,
+  );
+
   // Compute character-specific values once
   const characterName = 'Parker';
   const pronoun = selectedCharacter === 'boy' ? 'he' : 'she';
@@ -63,7 +72,7 @@ export default function ResultPage() {
       } else if (showSecondDialogue) {
         return "Right now, there's a discount if you buy 2 bags or more! You should buy it; I think it's a great offer!";
       } else if (!showVideo) {
-        return "Hey Parker, this new candy bar just came out! I think you'd love it!";
+        return "Hey Parker, this new candy bag just came out! I think you'd love it!";
       }
     }
     return '';
@@ -320,7 +329,7 @@ export default function ResultPage() {
             <button 
               className="continue-button"
               onClick={handleContinue}
-              disabled={isTyping}
+              disabled={isTyping || (showThirdDialogue && isDelayed)}
             >
               Continue
             </button>

@@ -159,6 +159,7 @@ export default function MemoryExtraction() {
         selectedCharacter={selectedCharacter}
         onContinue={handleContinue}
         onBack={handleBack}
+        lastScreenDelayMs={5000}
       />
     </div>
   );

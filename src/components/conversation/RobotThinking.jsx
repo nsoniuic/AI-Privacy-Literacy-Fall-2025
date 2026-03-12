@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import robotThinkImage from '../../assets/robot-think.png';
 import cloudImage from '../../assets/cloud.svg';
 import { useScreenNumber } from '../../hooks/useScreenNumber';
+import { useMinimumDelay } from '../../hooks/useMinimumDelay';
 import useSpeech from '../../utils/useSpeech';
 import { CHILD_FRIENDLY_VOICES } from '../../services/elevenLabsService';
 import { useVoice } from '../../contexts/VoiceContext';
@@ -25,7 +26,8 @@ export default function RobotThinking({
     screen5: (name, pronoun, possessive) => `${name} didn't mention ${possessive} exact age, but I connected the dots.`,
     screen6: (name, pronoun, possessive) => `Since ${pronoun}'s in 6th grade and ${possessive} birthday already passed, that means ${pronoun}'s 12!`
   },
-  finalDeduction = "is 12 years old"
+  finalDeduction = "is 12 years old",
+  lastScreenDelayMs = 0 // Extra delay on the last screen (full thinking tree), before continuing
 }) {
   const characterName = 'Parker';
   const pronoun = selectedCharacter === 'boy' ? 'he' : 'she';
@@ -42,6 +44,13 @@ export default function RobotThinking({
 
   // Track screen number: startScreenNumber + currentScreen
   useScreenNumber(startScreenNumber + currentScreen);
+
+  // Enforce a minimum view time on the last screen (full thinking tree)
+  const isDelayed = useMinimumDelay(
+    lastScreenDelayMs,
+    currentScreen,
+    currentScreen === 7,
+  );
 
   // Generate thought bubble text based on current screen
   const getCurrentThoughtText = () => {
@@ -287,6 +296,7 @@ export default function RobotThinking({
           <button 
             className="continue-button"
             onClick={handleContinueClick}
+            disabled={currentScreen === 7 && isDelayed}
           >
             Continue
           </button>

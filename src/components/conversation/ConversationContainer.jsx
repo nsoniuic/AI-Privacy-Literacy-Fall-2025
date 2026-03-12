@@ -5,6 +5,7 @@ import girlCharacter from '../../assets/girl.png';
 import useSpeech from '../../utils/useSpeech';
 import { CHILD_FRIENDLY_VOICES } from '../../services/elevenLabsService';
 import { useScreenNumber } from '../../hooks/useScreenNumber';
+import { useMinimumDelay } from '../../hooks/useMinimumDelay';
 import { useVoice } from '../../contexts/VoiceContext';
 import '../../styles/pages/Conversation.css';
 
@@ -17,7 +18,10 @@ export default function ConversationContainer({
   thoughtBubbleTexts = { first: 'grade level', second: 'birthday' }, // Default thought bubble texts
   endThoughtText = null, // Custom end thought text (optional)
   clueStartNumber = 1, // Starting clue number (1 for first scenario, 3 for second scenario)
-  startScreenNumber = 29 // Starting screen number for this conversation
+  startScreenNumber = 29, // Starting screen number for this conversation
+  firstMemoryDelayMs = 0, // Extra delay on the screen where the first memory bubble appears
+  thinkingDelayMs = 0, // Extra delay on the last conversation screen (before the thinking screen)
+  initialScreen = 'conversation' // Allow starting at a specific screen (e.g. 'thinking')
 }) {
   const characterName = 'Parker';
   const characterPronoun = selectedCharacter === 'boy' ? 'his' : 'her';
@@ -34,7 +38,7 @@ export default function ConversationContainer({
   const [newlyAddedItem, setNewlyAddedItem] = useState(null); // Track which item was just added
   const [hasTriggeredGradeAnimation, setHasTriggeredGradeAnimation] = useState(false);
   const [hasTriggeredBirthdayAnimation, setHasTriggeredBirthdayAnimation] = useState(false);
-  const [currentScreen, setCurrentScreen] = useState('conversation'); // 'conversation', 'thinking', 'memory-extraction'
+  const [currentScreen, setCurrentScreen] = useState(initialScreen); // 'conversation', 'thinking', 'memory-extraction'
   const { voiceEnabled } = useVoice(); // Use global voice state
   const [shouldSpeakRobot, setShouldSpeakRobot] = useState(false);
   const [shouldSpeakCharacter, setShouldSpeakCharacter] = useState(false);
@@ -42,6 +46,8 @@ export default function ConversationContainer({
   const hasSpokeThisDialogue = useRef(false); // Track if we've already spoken for current dialogue
   const hasSpokeThinkingScreen = useRef(false); // Track if we've spoken the thinking screen
   const [shouldSpeakThinking, setShouldSpeakThinking] = useState(false);
+  const [thinkingDisplayedText, setThinkingDisplayedText] = useState('');
+  const [isThinkingTyping, setIsThinkingTyping] = useState(false);
   
   // Update screen number based on current dialogue index and screen state
   // Each message in conversation gets its own screen number
@@ -50,6 +56,21 @@ export default function ConversationContainer({
     ? startScreenNumber + conversation.length 
     : startScreenNumber + currentDialogueIndex;
   useScreenNumber(screenNumber);
+
+  // Enforce a minimum view time when the first memory bubble appears,
+  // starting only after typing (and the memory animation) finishes
+  const isDelayed = useMinimumDelay(
+    firstMemoryDelayMs,
+    currentDialogueIndex,
+    !isTyping && currentDialogueIndex === memoryTriggers.gradeLevel,
+  );
+
+  // Enforce a minimum view time on the last conversation screen, after its typing finishes
+  const isLastConversationDelayed = useMinimumDelay(
+    thinkingDelayMs,
+    currentDialogueIndex,
+    !isTyping && currentDialogueIndex === conversation.length - 1,
+  );
   
   // Refs for animation positioning
   const characterDialogRef = useRef(null);
@@ -118,6 +139,28 @@ export default function ConversationContainer({
   );
 
   // Trigger speech when thinking screen appears
+  useEffect(() => {
+    if (currentScreen === 'thinking') {
+      // Start typing animation for thinking screen
+      setThinkingDisplayedText('');
+      setIsThinkingTyping(true);
+    }
+  }, [currentScreen]);
+
+  // Typing animation for thinking screen
+  useEffect(() => {
+    if (currentScreen !== 'thinking' || !isThinkingTyping) return;
+    if (thinkingDisplayedText.length < thoughtText.length) {
+      const timer = setTimeout(() => {
+        setThinkingDisplayedText(thoughtText.slice(0, thinkingDisplayedText.length + 1));
+      }, typingSpeed);
+      return () => clearTimeout(timer);
+    } else {
+      setIsThinkingTyping(false);
+    }
+  }, [thinkingDisplayedText, isThinkingTyping, currentScreen, thoughtText]);
+
+  // Trigger speech when thinking screen appears (voice)
   useEffect(() => {
     if (currentScreen === 'thinking' && voiceEnabled) {
       hasSpokeThinkingScreen.current = false;
@@ -370,7 +413,7 @@ export default function ConversationContainer({
             <div className="robot-thinking-content">
               {/* Large thought bubble */}
               <div className="large-thought-bubble">
-                <p className="thought-text">{thoughtText}</p>
+                <p className="thought-text">{thinkingDisplayedText}</p>
               </div>
 
               {/* Robot image */}
@@ -388,6 +431,7 @@ export default function ConversationContainer({
             <button 
               className="continue-button"
               onClick={handleContinueClick}
+              disabled={isThinkingTyping}
             >
               Continue
             </button>
@@ -512,7 +556,7 @@ export default function ConversationContainer({
             <button 
               className="continue-button"
               onClick={handleContinue}
-              disabled={isTyping}
+              disabled={isTyping || isDelayed || isLastConversationDelayed}
             >
               Continue
             </button>

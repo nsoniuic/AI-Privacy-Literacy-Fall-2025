@@ -100,7 +100,7 @@ export default function SecondScenarioPuzzle() {
   };
 
   const handleBack = () => {
-    navigate(-1);
+    navigate('/second_scenario/talk', { state: { selectedCharacter, startAtThinking: true } });
   };
 
   return (

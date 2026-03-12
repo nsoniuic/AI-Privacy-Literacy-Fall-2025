@@ -249,6 +249,8 @@ export default function FirstScenario() {
           conversation={conversation}
           onConversationEnd={handleConversationEnd}
           startScreenNumber={29}
+          firstMemoryDelayMs={5000}
+          thinkingDelayMs={5000}
         />
       )}
     </div>

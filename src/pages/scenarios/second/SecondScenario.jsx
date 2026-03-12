@@ -15,9 +15,10 @@ export default function SecondScenario() {
   const navigate = useNavigate();
   const location = useLocation();
   const selectedCharacter = location.state?.selectedCharacter || location.state?.character; // Support both property names
+  const startAtThinking = location.state?.startAtThinking ?? false;
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
-  const [showConversation, setShowConversation] = useState(false);
+  const [showConversation, setShowConversation] = useState(startAtThinking);
   const { voiceEnabled } = useVoice();
   const [shouldSpeak, setShouldSpeak] = useState(false);
   const hasSpokeThisScreen = useRef(false);
@@ -154,6 +155,9 @@ export default function SecondScenario() {
           endThoughtText="Now that you have seen how AI reasons, try guessing what I could know based on what Parker have mentioned!"
           clueStartNumber={3}
           startScreenNumber={55}
+          firstMemoryDelayMs={5000}
+          thinkingDelayMs={5000}
+          initialScreen={startAtThinking ? 'thinking' : 'conversation'}
         />
       )}
     </div>

@@ -8,11 +8,11 @@ import p2input from '../../assets/p2input.png';
 import p2output from '../../assets/p2output.png';
 import PuzzleInteractive from '../../components/puzzles/PuzzleInteractive';
 import PuzzleExamplesExplain from '../../components/puzzles/PuzzleExamplesExplain';
-import PuzzleInteractiveExplain from '../../components/puzzles/PuzzleInteractiveExplain';
 import AppTitle from '../../components/common/AppTitle';
 import useSpeech from '../../utils/useSpeech';
 import { useVoice } from '../../contexts/VoiceContext';
 import { useScreenNumber } from '../../hooks/useScreenNumber';
+import { useMinimumDelay } from '../../hooks/useMinimumDelay';
 import '../../styles/puzzles/Puzzles.css';
 import '../../App.css';
 
@@ -53,6 +53,15 @@ export default function FirstPuzzle() {
     }
   };
   useScreenNumber(getScreenNumber());
+
+  // Enforce a minimum view time on screen 12 (last explanation, index 3),
+  // starting only after typing finishes — before navigating to puzzles 4 & 5
+  const isDelayed = useMinimumDelay(
+    currentView === 'explanation' && currentExplanationIndex === 3 ? 5000 : 0,
+    currentExplanationIndex,
+    !isTyping,
+  );
+
   const [attemptCount, setAttemptCount] = useState(0);
   const [puzzleKey, setPuzzleKey] = useState(0);
 
@@ -383,7 +392,7 @@ export default function FirstPuzzle() {
             <button 
               className="continue-button"
               onClick={handleNextExplanation}
-              disabled={isTyping}
+              disabled={isTyping || (currentExplanationIndex === 3 && isDelayed)}
             >
               {currentExplanationIndex < 3 ? 'Continue' : 'Next'}
             </button>

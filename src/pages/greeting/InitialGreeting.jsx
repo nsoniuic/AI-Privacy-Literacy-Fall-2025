@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { startSession } from "../../services/loggingService";
+import { useMinimumDelay } from "../../hooks/useMinimumDelay";
 // Import different robot emotion images here as they become available
 import robotHappyImage from "../../assets/robot-happy.png";
 import robotWaveImage from "../../assets/robot-wave.png";
@@ -25,6 +26,13 @@ export default function InitialGreeting() {
 
   const screenNumber = currentDialogueIndex + 1;
   useScreenNumber(screenNumber);
+
+  // Enforce a minimum view time on screen 2 (dialogue index 1), starting only after typing finishes
+  const isDelayed = useMinimumDelay(
+    currentDialogueIndex === 1 ? 5000 : 0,
+    currentDialogueIndex,
+    !isTyping,
+  );
 
   // Dialogue configuration with emotion/image syncing
   // Each dialogue has text and corresponding robot emotion image
@@ -203,7 +211,7 @@ export default function InitialGreeting() {
                 e.stopPropagation();
                 handleContinue();
               }}
-              disabled={isTyping}
+              disabled={isTyping || isDelayed}
             >
               {currentDialogueIndex === dialogueConfig.length - 1
                 ? "Start Puzzle"

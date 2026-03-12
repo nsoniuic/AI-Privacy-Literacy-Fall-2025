@@ -14,6 +14,7 @@ import AppTitle from '../../components/common/AppTitle';
 import useSpeech from '../../utils/useSpeech';
 import { useVoice } from '../../contexts/VoiceContext';
 import { useScreenNumber } from '../../hooks/useScreenNumber';
+import { useMinimumDelay } from '../../hooks/useMinimumDelay';
 import '../../styles/puzzles/Puzzles.css';
 import '../../App.css';
 
@@ -55,6 +56,14 @@ export default function SecondPuzzle() {
   };
   useScreenNumber(getScreenNumber());
 
+  // Enforce a minimum view time on screen 22 (last explanation, index 4),
+  // starting only after typing finishes — before navigating to the first scenario
+  const isDelayed = useMinimumDelay(
+    currentView === 'explanation' && currentExplanationIndex === 4 ? 5000 : 0,
+    currentExplanationIndex,
+    !isTyping,
+  );
+
   const getDialogueText = () => {
     switch(currentView) {
       case 'overview':
@@ -68,7 +77,7 @@ export default function SecondPuzzle() {
         if (attemptCount === 1) {
           return "Not quite. Let's try again! Make sure to think about the pattern of the yellow boxes.";
         }
-        return "Now it's your turn! Use the rules you noticed in the earlier examples to solve this new puzzle. Click the blocks that should turn yellow to complete the Finish picture.";
+        return "Now it's your turn! Use the rules you noticed in the earlier examples to solve this new puzzle. Click the blocks that should turn red to complete the Finish picture.";
       
       case 'transition':
         return "Nice work, you figured it out how to solve Puzzle 6 based on the new patterns from Puzzle 4 and Puzzle 5! Now let me show you how I would think about it.";
@@ -386,7 +395,7 @@ export default function SecondPuzzle() {
             <button 
               className="continue-button"
               onClick={handleNextExplanation}
-              disabled={isTyping}
+              disabled={isTyping || (currentExplanationIndex === 4 && isDelayed)}
             >
               {currentExplanationIndex < 4 ? 'Continue' : 'Next'}
             </button>

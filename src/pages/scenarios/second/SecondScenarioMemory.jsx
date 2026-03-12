@@ -184,6 +184,7 @@ export default function SecondScenarioMemory() {
         memoryData={memoryData}
         thoughtBubbles={thoughtBubbles}
         finalDeduction={finalDeduction}
+        lastScreenDelayMs={5000}
       />
     </div>
   );
