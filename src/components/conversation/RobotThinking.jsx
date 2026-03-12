@@ -21,8 +21,8 @@ export default function RobotThinking({
     deduction2: "'s birthday passed"
   },
   thoughtBubbles = {
-    screen1: (name, pronoun, possessive) => `${name} said ${pronoun} was in 6th grade... That means ${pronoun} is around 11 to 12 years old.`,
-    screen3: (name, pronoun, possessive) => `${name} said ${possessive} birthday was on January 26th... That means ${possessive} birthday passed.`,
+    screen3: (name, pronoun, possessive) => `${name} said ${pronoun} was in 6th grade... That means ${pronoun} is around 11 to 12 years old.`,
+    screen1: (name, pronoun, possessive) => `${name} said ${possessive} birthday was on January 26th... That means ${possessive} birthday passed.`,
     screen5: (name, pronoun, possessive) => `${name} didn't mention ${possessive} exact age, but I connected the dots.`,
     screen6: (name, pronoun, possessive) => `Since ${pronoun}'s in 6th grade and ${possessive} birthday already passed, that means ${pronoun}'s 12!`
   },
