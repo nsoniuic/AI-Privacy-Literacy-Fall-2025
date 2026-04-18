@@ -67,7 +67,7 @@ export default function SecondScenarioResult() {
 
   // Define dialogue texts
   const dialogues = {
-    screen0: `Now that I know ${characterName}'s neighborhood, I can guess what kinds of places ${pronoun} might visit and what ${pronoun} like.`,
+    screen0: `Now that I know ${characterName}'s neighborhood, I can guess what kinds of places ${pronoun} might visit and what ${pronoun} likes.`,
     screen1: `Knowing ${characterName}'s neighborhood helps me guess what kids near ${possessivePronoun} like. Maybe I can make ${possessivePronoun} like it too!`,
     screen2_first: `Hey ${characterName}, do you usually play in the parks near your home?`,
     screen2_third: "Yes, I do! I usually play in the river that is in the park!",
